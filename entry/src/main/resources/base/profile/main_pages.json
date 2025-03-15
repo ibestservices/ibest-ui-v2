@@ -1,0 +1,11 @@
+{
+	"src": [
+		"pages/Splash",
+		"pages/Index",
+		"pages/PrivacyPolicy",
+		"pages/Doc",
+		"pages/base/Button",
+		"pages/base/Icon",
+		"pages/base/NavBar"
+	]
+}

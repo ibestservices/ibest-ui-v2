@@ -1,0 +1,53 @@
+{
+	"app": {
+		"signingConfigs": [
+			{
+				"name": "default",
+				"type": "HarmonyOS",
+				"material": {
+					"certpath": "/Users/damengbuxing/.ohos/config/default_ibest-ui-v2_GbiYVTlN0qiZ9PLHtKw1HfI6AoGMxMtewdcF9rn9QDs=.cer",
+					"keyAlias": "debugKey",
+					"keyPassword": "0000001BFDA5008F56743AA4E184A76B5AD657D41B1CEBE1B8CFB7E6105F26179302E0CEAE6645868E26E8",
+					"profile": "/Users/damengbuxing/.ohos/config/default_ibest-ui-v2_GbiYVTlN0qiZ9PLHtKw1HfI6AoGMxMtewdcF9rn9QDs=.p7b",
+					"signAlg": "SHA256withECDSA",
+					"storeFile": "/Users/damengbuxing/.ohos/config/default_ibest-ui-v2_GbiYVTlN0qiZ9PLHtKw1HfI6AoGMxMtewdcF9rn9QDs=.p12",
+					"storePassword": "0000001BF86B4B8D6A033B3553A1111D1351418A946A1AD4D746BF240F6B366B23000791BF41C54960891F"
+				}
+			}
+		],
+		"products": [
+			{
+				"name": "default",
+				"signingConfig": "default",
+				"compatibleSdkVersion": "5.0.0(12)",
+				"runtimeOS": "HarmonyOS"
+			}
+		],
+		"buildModeSet": [
+			{
+				"name": "debug",
+			},
+			{
+				"name": "release"
+			}
+		]
+	},
+	"modules": [
+		{
+			"name": "entry",
+			"srcPath": "./entry",
+			"targets": [
+				{
+					"name": "default",
+					"applyToProducts": [
+						"default"
+					]
+				}
+			]
+		},
+		{
+			"name": "library",
+			"srcPath": "./library"
+		}
+	]
+}
