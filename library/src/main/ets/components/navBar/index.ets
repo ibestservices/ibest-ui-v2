@@ -1,4 +1,4 @@
-import { IBestStringNumber } from '../../model/Global.type'
+import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestUIBaseStyle } from '../../theme-chalk/src/index.type'
 import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit } from '../../utils/utils'
@@ -11,14 +11,12 @@ export struct IBestNavBar{
 	/**
 	 * 全局公共样式
 	 */
-	@Local baseStyle: IBestUIBaseStyle = AppStorageV2.connect(IBestUIBaseStyle, () => new IBestUIBaseStyle({}))!
+	@Local baseStyle: IBestUIBaseStyle = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE, () => new IBestUIBaseStyle({})) as IBestUIBaseStyle
+	@Local topAvoidHeight: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.TOP_AVOID_HEIGHT) as IBestBaseDataType
 	@Local uniId: number = 0
 	// 标题区域左右宽度
 	@Local leftWidth: number = 0
 	@Local rightWidth: number = 0
-
-	// @StorageProp("IBestTopAvoidHeight") topAvoidHeight: number = 0
-	// @StorageProp("IBestIsApp") isApp: boolean = false
 	/**
 	 * 导航栏高度
 	 */
@@ -51,12 +49,6 @@ export struct IBestNavBar{
 	 * 标题文字大小
      */
 	@Param titleFontSize: IBestStringNumber = convertDimensionsWidthUnit(16, true)
-	/**
-	 * 标题图标
-	 * @deprecated 请使用titleIcon
-	 * @useinstead titleIcon
-	 */
-	@Param titleIconName: string = ""
 	/**
 	 * 标题图标
      */
@@ -94,12 +86,6 @@ export struct IBestNavBar{
      */
 	@Param isShowLeft: boolean = true
 	/**
-	 * 左侧图标名称
-	 * @deprecated 请使用leftIcon
-	 * @useinstead leftIcon
-     */
-	@Param leftIconName: string = 'arrow-left'
-	/**
 	 * 左侧图标
      */
 	@Param leftIcon: ResourceStr = "arrow-left"
@@ -131,12 +117,6 @@ export struct IBestNavBar{
 	 * 是否显示右侧
      */
 	@Param isShowRight: boolean = false
-	/**
-	 * 右侧图标名称
-	 * @deprecated 请使用rightIcon
-	 * @useinstead rightIcon
-     */
-	@Param rightIconName: string = ''
 	/**
 	 * 右侧图标
      */
@@ -240,18 +220,18 @@ export struct IBestNavBar{
 			if(this.isShowStatusBar){
 				Row()
 					.width(CONTAINER_SIZE.FULL)
-					// .height(this.topAvoidHeight)
+					.height(this.topAvoidHeight.value)
 					.backgroundColor(this.isKeepBgColorSame ? this.navBarBgColor : this.statusBarBgColor)
 			}
 			Row(){
 				if(this.isShowLeft){
-					Row({space: this.baseStyle.spaceBase as string}){
+					Row({space: this.baseStyle.spaceBase}){
 						if(this.leftBuilder){
 							this.leftBuilder()
 						}else {
-							if(this.leftIcon || this.leftIconName){
+							if(this.leftIcon){
 								IBestIcon({
-									name: this.leftIcon || this.leftIconName,
+									name: this.leftIcon,
 									color: this.leftIconColor,
 									iconSize: this.leftIconSize,
 									iconRadius: this.leftIconRadius
@@ -278,11 +258,11 @@ export struct IBestNavBar{
 					if(this.titleBuilder){
 						this.titleBuilder()
 					}else{
-						Column({space: this.baseStyle.spaceMini as string}){
-							Row({space: this.baseStyle.spaceXs as string}){
-								if(this.titleIcon || this.titleIconName){
+						Column({space: this.baseStyle.spaceMini}){
+							Row({space: this.baseStyle.spaceXs}){
+								if(this.titleIcon){
 									IBestIcon({
-										name: this.titleIcon || this.titleIconName,
+										name: this.titleIcon,
 										color: this.titleIconColor,
 										iconSize: this.titleIconSize,
 										iconRadius: this.titleIconRadius
@@ -322,7 +302,7 @@ export struct IBestNavBar{
 				.alignItems(this.titleBuilder ? HorizontalAlign.Start : HorizontalAlign.Center)
 				.padding({left: this.leftWidth, right: this.rightWidth})
 				if(this.isShowRight){
-					Row({space: this.baseStyle.spaceBase as string}){
+					Row({space: this.baseStyle.spaceBase}){
 						if(this.rightBuilder){
 							this.rightBuilder()
 						}else{
@@ -332,9 +312,9 @@ export struct IBestNavBar{
 									.fontColor(this.rightLabelColor)
 									.lineHeight(this.baseStyle.lineHeightMd)
 							}
-							if(this.rightIcon || this.rightIconName){
+							if(this.rightIcon){
 								IBestIcon({
-									name: this.rightIcon || this.rightIconName,
+									name: this.rightIcon,
 									color: this.rightIconColor,
 									iconSize: this.rightIconSize
 								})

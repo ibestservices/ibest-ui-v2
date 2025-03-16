@@ -26,7 +26,7 @@ export struct IBestIcon {
 	/**
 	 * 点击回调
 	 */
-	onIconClick: (event: TouchEvent) => void = () => {}
+	@Event onIconClick: (event: TouchEvent) => void = () => {}
 	isOnlineImage(): boolean {
 		return (this.name as string).startsWith("http")
 	}

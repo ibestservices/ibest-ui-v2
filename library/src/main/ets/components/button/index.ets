@@ -4,11 +4,11 @@ import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestUIBaseStyle } from '../../theme-chalk/src/index.type'
 import { SIZE, SizeType } from '../../theme-chalk/src/size.type'
 import { ButtonSizeData } from './index.type'
-// import { IBestLoading } from '../loading/index'
+import { IBestLoading } from '../loading/index'
 import { convertDimensionsWidthUnit, getColorByType, getSizeByUnit } from '../../utils/utils'
 import { IBestButtonColor } from './color'
 import { IBestIcon } from '../icon'
-import { IBestStringNumber } from '../../model/Global.type'
+import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { AppStorageV2 } from '@kit.ArkUI'
 @Extend(Button) function btnSizeStyle(data: ButtonSizeData) {
 	.padding({ left: data.padding, right: data.padding, top: 0, bottom: 0 })
@@ -21,7 +21,7 @@ export struct IBestButton {
 	/**
 	 * 全局公共样式
 	 */
-	@Local baseStyle: IBestUIBaseStyle = AppStorageV2.connect(IBestUIBaseStyle, () => new IBestUIBaseStyle({}))!
+	@Local baseStyle: IBestUIBaseStyle = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE, () => new IBestUIBaseStyle({})) as IBestUIBaseStyle
 	/**
 	 * 类型，可选值为 primary success warning danger 默认值为default
 	 */
@@ -121,7 +121,7 @@ export struct IBestButton {
 	/**
 	 * 点击按钮，且按钮状态不为加载或禁用时触发
 	 */
-	onBtnClick: (event: TouchEvent) => void = () => {}
+	@Event onBtnClick: (event: TouchEvent) => void = () => {}
 
 	@Builder iconContent() {
 		if (this.loading) {
@@ -130,15 +130,15 @@ export struct IBestButton {
 				this.loadingIconBuilder()
 			} else {
 				// 默认的loading
-				// IBestLoading({
-				// 	loadingSize: this.getLoadingSize(),
-				// 	loadingColor: this.getBtnTextColor()
-				// }).margin({
-				// 	left: this.iconPosition == "right" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0,
-				// 	right: this.iconPosition == "left" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0,
-				// 	bottom: this.iconPosition == "top" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0,
-				// 	top: this.iconPosition == "bottom" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0
-				// })
+				IBestLoading({
+					loadingSize: this.getLoadingSize(),
+					loadingColor: this.getBtnTextColor()
+				}).margin({
+					left: this.iconPosition == "right" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0,
+					right: this.iconPosition == "left" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0,
+					bottom: this.iconPosition == "top" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0,
+					top: this.iconPosition == "bottom" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0
+				})
 			}
 		} else if (this.iconBuilder) {
 			this.iconBuilder()

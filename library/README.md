@@ -1,4 +1,4 @@
-# IBest-UI
+# IBest-UI-v2
 
 ## 简介
 
@@ -6,9 +6,9 @@ IBest-UI是一个**轻量、简单易用、可定制主题、支持深色模式�
 
 目前 ibestservices 官方推出了V1版本, V2版本正在路上!!!
 
-![IBest-UI-Light](https://ibestservices.github.io/ibest-ui/screenshot/IBest-UI-Light.png)
+![IBest-UI-v2-Light](https://ibestservices.github.io/ibest-ui/screenshot/IBest-UI-Light.png)
 
-![IBest-UI-Dark](https://ibestservices.github.io/ibest-ui/screenshot/IBest-UI-Dark.png)
+![IBest-UI-v2-Dark](https://ibestservices.github.io/ibest-ui/screenshot/IBest-UI-Dark.png)
 
 ## 文档地址
 

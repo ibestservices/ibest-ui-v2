@@ -3,7 +3,7 @@
 width="100">
 </p>
 
-<p align="center" style="font-size: 40px;font-weight: bold;">IBest-UI</p>
+<p align="center" style="font-size: 40px;font-weight: bold;">IBest-UI-v2</p>
 
 <p align="center">轻量、可定制的 HarmonyOS 组件库</p>
 

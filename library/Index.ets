@@ -32,8 +32,13 @@ export { IBestUIBaseStyle } from './src/main/ets/theme-chalk/src/index.type'
 
 export { IBestButton } from './src/main/ets/components/button/index'
 
+export { IBestCell } from './src/main/ets/components/cell/index'
+export { IBestCellGroup } from './src/main/ets/components/cellGroup/index'
+
 export { IBestIcon } from './src/main/ets/components/icon/index'
 export { IBestIconClassify, IBestIconData } from './src/main/ets/components/icon/config'
+
+export { IBestPopup } from './src/main/ets/components/popup/index'
 
 // export { IBestCheckbox } from './src/main/ets/components/checkbox/index'
 //
@@ -43,10 +48,6 @@ export { IBestIconClassify, IBestIconData } from './src/main/ets/components/icon
 // export { IBestSwitch } from './src/main/ets/components/switch/index'
 //
 // export { IBestTag } from './src/main/ets/components/tag/index'
-//
-// export { IBestCell } from './src/main/ets/components/cell/index'
-//
-// export { IBestCellGroup } from './src/main/ets/components/cellGroup/index'
 //
 // export { IBestWatermark } from './src/main/ets/components/waterMark/index'
 //
@@ -66,12 +67,10 @@ export { IBestIconClassify, IBestIconData } from './src/main/ets/components/icon
 // export { IBestCalendarDialog } from './src/main/ets/components/calendar/calendarDialog'
 // export { IBestCalendarConfirmResult, CalendarConfirmResultType, SelectType, SelectedStyleType } from './src/main/ets/components/calendar/index.type'
 //
-// export { IBestLoading } from './src/main/ets/components/loading/index'
+export { IBestLoading } from './src/main/ets/components/loading/index'
 //
 // export { IBestTabs } from './src/main/ets/components/tab/index'
 // export { IBestTabItem, IBestTabItemType, IBestTabController } from './src/main/ets/components/tab/index.type'
-//
-// export { IBestPopup } from './src/main/ets/components/popup/index'
 //
 // export { IBestCascader, IBestCascaderContent } from './src/main/ets/components/cascader/index'
 // export { IBestCascaderOption } from './src/main/ets/components/cascader/index.type'

@@ -1,0 +1,44 @@
+{
+	"routerMap": [
+		{
+			"name": "PrivacyPolicy",
+			"pageSourceFile": "src/main/ets/pages/PrivacyPolicy.ets",
+			"buildFunction": "PrivacyPolicyBuilder"
+		},
+		{
+			"name": "Doc",
+			"pageSourceFile": "src/main/ets/pages/Doc.ets",
+			"buildFunction": "DocBuilder"
+		},
+		{
+			"name": "Button",
+			"pageSourceFile": "src/main/ets/pages/base/Button.ets",
+			"buildFunction": "ButtonBuilder"
+		},
+		{
+			"name": "Cell",
+			"pageSourceFile": "src/main/ets/pages/base/Cell.ets",
+			"buildFunction": "CellBuilder"
+		},
+		{
+			"name": "Icon",
+			"pageSourceFile": "src/main/ets/pages/base/Icon.ets",
+			"buildFunction": "IconBuilder"
+		},
+		{
+			"name": "Popup",
+			"pageSourceFile": "src/main/ets/pages/base/Popup.ets",
+			"buildFunction": "PopupBuilder"
+		},
+		{
+			"name": "Loading",
+			"pageSourceFile": "src/main/ets/pages/base/Loading.ets",
+			"buildFunction": "LoadingBuilder"
+		},
+		{
+			"name": "NavBar",
+			"pageSourceFile": "src/main/ets/pages/base/NavBar.ets",
+			"buildFunction": "NavBarBuilder"
+		}
+	]
+}

@@ -1,5 +1,4 @@
-// import { IBestCell, IBestCellGroup, IBestNavBar } from '@ibestservices/ibest-ui'
-import router from '@ohos.router'
+import { IBestCell, IBestCellGroup, IBestNavBar } from '@ibestservices/ibest-ui'
 import { BORDER_RADIUS, CONTAINER_SIZE, FONT_SIZE, FONT_WEIGHT, modeColor, SPACE } from '../assets/styles/BaseStyle'
 import ComponentShowContainer from '../components/ComponentShowContainer'
 import GlobalStore from '../utils/global'
@@ -8,6 +7,8 @@ import { getAppVersion } from '../utils/utils'
 import { rcp } from '@kit.RemoteCommunicationKit'
 import fs from '@ohos.file.fs'
 import { updateManager } from '@kit.StoreKit'
+import { AppStorageV2 } from '@kit.ArkUI'
+import RouterUtil from '../utils/routerUtil'
 
 interface ComponentPart {
 	title: Resource
@@ -38,27 +39,27 @@ struct Index {
 			list: [
 				{
 					name: $r("app.string.component_button"),
-					path: "pages/base/Button"
+					path: "Button"
 				},
 				{
 					name: $r("app.string.component_cell"),
-					path: "pages/base/Cell"
+					path: "Cell"
 				},
 				{
 					name: $r("app.string.component_icon"),
-					path: "pages/base/Icon"
+					path: "Icon"
 				},
 				{
 					name: $r("app.string.component_popup"),
-					path: "pages/base/Popup"
+					path: "Popup"
 				},
 				{
 					name: $r("app.string.component_theme"),
-					path: "pages/base/Theme"
+					path: "Theme"
 				},
 				{
 					name: $r("app.string.component_toast"),
-					path: "pages/base/Toast"
+					path: "Toast"
 				}
 			]
 		},
@@ -67,79 +68,79 @@ struct Index {
 			list: [
 				{
 					name: $r("app.string.component_calendar"),
-					path: "pages/base/Calendar"
+					path: "Calendar"
 				},
 				{
 					name: $r("app.string.component_cascader"),
-					path: "pages/base/Cascader"
+					path: "Cascader"
 				},
 				{
 					name: $r("app.string.component_checkbox"),
-					path: "pages/base/Checkbox"
+					path: "Checkbox"
 				},
 				{
 					name: $r("app.string.component_datePicker"),
-					path: "pages/base/DatePicker"
+					path: "DatePicker"
 				},
 				{
 					name: $r("app.string.component_field"),
-					path: "pages/base/Field"
+					path: "Field"
 				},
 				{
 					name: $r("app.string.component_form"),
-					path: "pages/base/Form"
+					path: "Form"
 				},
 				{
 					name: $r("app.string.component_numberKeyboard"),
-					path: "pages/base/NumberKeyboard"
+					path: "NumberKeyboard"
 				},
 				{
 					name: $r("app.string.component_passwordInput"),
-					path: "pages/base/PasswordInput"
+					path: "PasswordInput"
 				},
 				{
 					name: $r("app.string.component_picker"),
-					path: "pages/base/Picker"
+					path: "Picker"
 				},
 				{
 					name: $r("app.string.component_pickerGroup"),
-					path: "pages/base/PickerGroup"
+					path: "PickerGroup"
 				},
 				{
 					name: $r("app.string.component_radio"),
-					path: "pages/base/Radio"
+					path: "Radio"
 				},
 				{
 					name: $r("app.string.component_rate"),
-					path: "pages/base/Rate"
+					path: "Rate"
 				},
 				{
 					name: $r("app.string.component_search"),
-					path: "pages/base/Search"
+					path: "Search"
 				},
 				{
 					name: $r("app.string.component_slider"),
-					path: "pages/base/Slider"
+					path: "Slider"
 				},
 				{
 					name: $r("app.string.component_signature"),
-					path: "pages/base/Signature"
+					path: "Signature"
 				},
 				{
 					name: $r("app.string.component_stepper"),
-					path: "pages/base/Stepper"
+					path: "Stepper"
 				},
 				{
 					name: $r("app.string.component_switch"),
-					path: "pages/base/Switch"
+					path: "Switch"
 				},
 				{
 					name: $r("app.string.component_timePicker"),
-					path: "pages/base/TimePicker"
+					path: "TimePicker"
 				},
 				{
 					name: $r("app.string.component_uploader"),
-					path: "pages/base/Uploader"
+					path: "Uploader"
 				}
 			]
 		},
@@ -148,27 +149,27 @@ struct Index {
 			list: [
 				{
 					name: $r("app.string.component_actionSheet"),
-					path: "pages/base/ActionSheet"
+					path: "ActionSheet"
 				},
 				{
 					name: $r("app.string.component_dialog"),
-					path: "pages/base/Dialog"
+					path: "Dialog"
 				},
 				{
 					name: $r("app.string.component_loading"),
-					path: "pages/base/Loading"
+					path: "Loading"
 				},
 				{
 					name: $r("app.string.component_notify"),
-					path: "pages/base/Notify"
+					path: "Notify"
 				},
 				{
 					name: $r("app.string.component_pullRefresh"),
-					path: "pages/base/PullRefresh"
+					path: "PullRefresh"
 				},
 				{
 				  name: $r("app.string.component_swipeCell"),
-				  path: "pages/base/SwipeCell"
+				  path: "SwipeCell"
 				}
 			]
 		},
@@ -177,63 +178,63 @@ struct Index {
 			list: [
 				{
 					name: $r("app.string.component_badge"),
-					path: "pages/base/Badge"
+					path: "Badge"
 				},
 				{
 					name: $r("app.string.component_circleprogress"),
-					path: "pages/base/CircleProgress"
+					path: "CircleProgress"
 				},
 				{
 					name: $r("app.string.component_collapse"),
-					path: "pages/base/Collapse"
+					path: "Collapse"
 				},
 				{
 					name: $r("app.string.component_countdown"),
-					path: "pages/base/CountDown"
+					path: "CountDown"
 				},
 				{
 					name: $r("app.string.component_divider"),
-					path: "pages/base/Divider"
+					path: "Divider"
 				},
 				{
 					name: $r("app.string.component_empty"),
-					path: "pages/base/Empty"
+					path: "Empty"
 				},
 				{
 					name: $r("app.string.component_highlight"),
-					path: "pages/base/Highlight"
+					path: "Highlight"
 				},
 				{
 					name: $r("app.string.component_imagepreview"),
-					path: "pages/base/ImagePreview"
+					path: "ImagePreview"
 				},
 				{
 					name: $r("app.string.component_noticebar"),
-					path: "pages/base/NoticeBar"
+					path: "NoticeBar"
 				},
 				{
 					name: $r("app.string.component_popover"),
-					path: "pages/base/Popover"
+					path: "Popover"
 				},
 				{
 					name: $r("app.string.component_progress"),
-					path: "pages/base/Progress"
+					path: "Progress"
 				},
 				{
 					name: $r("app.string.component_table"),
-					path: "pages/base/Table"
+					path: "Table"
 				},
 				{
 					name: $r("app.string.component_tag"),
-					path: "pages/base/Tag"
+					path: "Tag"
 				},
 				{
 					name: $r("app.string.component_textellipsis"),
-					path: "pages/base/TextEllipsis"
+					path: "TextEllipsis"
 				},
 				{
 					name: $r("app.string.component_watermark"),
-					path: "pages/base/Watermark"
+					path: "Watermark"
 				}
 			]
 		},
@@ -242,15 +243,15 @@ struct Index {
 			list: [
 				{
 					name: $r("app.string.component_navBar"),
-					path: "pages/base/NavBar"
+					path: "NavBar"
 				},
 				{
 					name: $r("app.string.component_sideBar"),
-					path: "pages/base/SideBar"
+					path: "SideBar"
 				},
 				{
 					name: $r("app.string.component_tab"),
-					path: "pages/base/Tab"
+					path: "Tab"
 				}
 			]
 		}
@@ -258,11 +259,11 @@ struct Index {
 	@Local extendComponentList: ComponentItem[] = [
 		{
 			name: $r("app.string.component_canvasDrawer"),
-			path: "pages/extend/CanvasDrawer"
+			path: "CanvasDrawer"
 		},
 		{
 			name: $r("app.string.component_imageCropper"),
-			path: "pages/extend/ImageCropper"
+			path: "ImageCropper"
 		}
 	]
 	private tabsList: Tab[] = [
@@ -285,7 +286,21 @@ struct Index {
 	private scrollerForList1: Scroller = new Scroller()
 	private scrollerForList2: Scroller = new Scroller()
 	private context = getContext(this) as common.UIAbilityContext
+	navPathStack: NavPathStack = new NavPathStack()
 
+	@Builder titleBuilder(){
+		IBestNavBar({
+			title: $r("app.string.app_name"),
+			isShowLeft: false,
+			isShowStatusBar: true,
+			onTitleClick: () => {
+				this.goTop()
+			}
+		})
+			.position({left: 0, top: 0})
+			.zIndex(1)
+			.opacity(this.getTitleOpacity())
+	}
 	@Builder tabBuilder(index: number){
 		Column({space: 5}) {
 			Image(this.tabsList[index].icon)
@@ -301,7 +316,7 @@ struct Index {
 		Column({ space: SPACE.MD }) {
 			Row({ space: SPACE.XS }) {
 				Image($r("app.media.app_icon")).width(32).borderRadius(BORDER_RADIUS.BASE)
-				Text("IBest-UI")
+				Text($r("app.string.app_name"))
 					.fontSize(32)
 					.fontColor(modeColor.textColor2)
 			}.justifyContent(FlexAlign.Center)
@@ -320,6 +335,7 @@ struct Index {
 						this.viewUrl("doc")
 					})
 			}
+			.width(CONTAINER_SIZE.FULL)
 			.fontSize(FONT_SIZE.MD)
 			.fontColor(modeColor.textColor4)
 		}
@@ -327,7 +343,7 @@ struct Index {
 		.alignItems(HorizontalAlign.Start)
 		.padding({ left: 10, top: GlobalStore.topAvoidHeight })
 	}
-	@Builder tabContentBuilder(index: number) {
+	@Builder tabContentBuilder(index: number){
 		if (index == 0) {
 			List({ scroller: this.scrollerForList1 }) {
 				ListItem() {
@@ -369,7 +385,7 @@ struct Index {
 			Column() {
 				Column({ space: SPACE.MD }) {
 					Image($r("app.media.app_icon")).width(100).borderRadius(BORDER_RADIUS.BASE)
-					Text("IBest-UI")
+					Text($r("app.string.app_name"))
 						.fontSize(32)
 						.fontColor(modeColor.textColor2)
 					Text($r("app.string.ibest_ui_desc"))
@@ -377,40 +393,38 @@ struct Index {
 						.textAlign(TextAlign.Center)
 						.fontSize(FONT_SIZE.MD)
 						.fontColor(modeColor.textColor4)
-					// IBestCellGroup({inset: true}){
-					// 	IBestCell({
-					// 		title: $r("app.string.app_version"),
-					// 		value: `v${getAppVersion()}`
-					// 	})
-					// 	IBestCell({
-					// 		title: $r("app.string.ui_version"),
-					// 		value: this.uiVersion ? `v${this.uiVersion}` : ""
-					// 	})
-					// 	IBestCell({
-					// 		title: $r("app.string.ui_doc"),
-					// 		isLink: true,
-					// 		onClickCell: () => {
-					// 			this.viewUrl("doc")
-					// 		}
-					// 	})
-					// 	IBestCell({
-					// 		title: $r("app.string.company_official_website"),
-					// 		isLink: true,
-					// 		onClickCell: () => {
-					// 			this.viewUrl("company")
-					// 		}
-					// 	})
-					// 	IBestCell({
-					// 		title: $r("app.string.privacy_policy"),
-					// 		isLink: true,
-					// 		hasBorder: false,
-					// 		onClickCell: () => {
-					// 			router.pushUrl({
-					// 				url: "pages/PrivacyPolicy"
-					// 			})
-					// 		}
-					// 	})
-					// }
+					IBestCellGroup({inset: true}){
+						IBestCell({
+							title: $r("app.string.app_version"),
+							value: `v${getAppVersion()}`
+						})
+						IBestCell({
+							title: $r("app.string.ui_version"),
+							value: this.uiVersion ? `v${this.uiVersion}` : ""
+						})
+						IBestCell({
+							title: $r("app.string.ui_doc"),
+							isLink: true,
+							onCellClick: () => {
+								this.viewUrl("doc")
+							}
+						})
+						IBestCell({
+							title: $r("app.string.company_official_website"),
+							isLink: true,
+							onCellClick: () => {
+								this.viewUrl("company")
+							}
+						})
+						IBestCell({
+							title: $r("app.string.privacy_policy"),
+							isLink: true,
+							hasBorder: false,
+							onCellClick: () => {
+								RouterUtil.push("PrivacyPolicy")
+							}
+						})
+					}
 				}
 				Column({ space: SPACE.BASE }){
 					Text("皖ICP备16012151号-7A").fontColor(modeColor.primaryColor).fontSize(FONT_SIZE.XS)
@@ -437,56 +451,35 @@ struct Index {
 				.margin({
 					right: SPACE.SM
 				})
-				.rotate({
-					angle: 180
-				})
+				.rotate({ angle: 180 })
 		}
 		.width(CONTAINER_SIZE.FULL)
 		.height(CONTAINER_SIZE.FORTY)
 		.borderRadius(99)
 		.padding({ left: SPACE.LG })
-		.margin({
-			top: SPACE.SM
-		})
+		.margin({ top: SPACE.SM })
 		.backgroundColor(modeColor.bg3)
 		.stateStyles({
 			normal: {
-				.scale({
-					x: 1,
-					y: 1
-				})
+				.scale({ x: 1, y: 1 })
 			},
 			pressed: {
-				.scale({
-					x: .98,
-					y: .98
-				})
+				.scale({ x: .98, y: .98 })
 			}
 		})
-		.animation({
-			duration: 200
-		})
+		.animation({ duration: 200 })
 		.onClick(() => {
-			router.pushUrl({
-				url: item.path,
-				params: {
-					title: item.name
-				}
-			})
+			RouterUtil.push(item.path, item.name)
 		})
 	}
 
 	aboutToAppear(): void {
+		RouterUtil.navPathStackList.push(this.navPathStack)
 		this.checkUpdate()
 		this.getUiVersion()
 		setTimeout(() => {
-			router.pushUrl({
-				url: "pages/base/Button",
-				params: {
-					title: ""
-				}
-			})
-		}, 100)
+			// RouterUtil.push("PrivacyPolicy")
+		}, 300)
 	}
 	// 获取Resource内容
 	getResourceStr(res: Resource){
@@ -521,9 +514,7 @@ struct Index {
 	}
 	viewUrl(type: string){
 		if(type == "doc"){
-			router.pushUrl({
-				url: "pages/Doc"
-			})
+			RouterUtil.push("Doc")
 		}else{
 			let url = this.context.resourceManager.getStringSync($r("app.string.company_url"))
 			let want: Want = {
@@ -557,15 +548,8 @@ struct Index {
 		})
 	}
 	build() {
-		Column(){
-			// IBestNavBar({
-			// 	title: "IBest-UI",
-			// 	isShowLeft: false,
-			// 	isShowStatusBar: true,
-			// 	onTitleClick: () => {
-			// 		this.goTop()
-			// 	}
-			// }).position({left: 0, top: 0}).zIndex(1).opacity(this.getTitleOpacity())
+		Navigation(this.navPathStack){
+			this.titleBuilder()
 			Tabs({barPosition: BarPosition.End, index: $$this.currentTab}){
 				TabContent(){
 					this.tabContentBuilder(0)
@@ -583,9 +567,6 @@ struct Index {
 			.barBackgroundColor(modeColor.bg2)
 			.divider({strokeWidth: 1, color: modeColor.borderColor})
 			.layoutWeight(1)
-			.onChange(() => {
-				this.getScrollTop()
-			})
 		}
 		.backgroundColor(modeColor.bg)
 	}
