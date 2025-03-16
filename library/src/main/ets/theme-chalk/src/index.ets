@@ -7,5 +7,9 @@ import { IBestStorageKey } from '../../model/Global.type'
  * @param styleData
  */
 export function setIBestUIBaseStyle(styleData?: Partial<IBestUIBaseStyleType>) {
+	let style = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE, () => new IBestUIBaseStyle({}))
+	if(style){
+		AppStorageV2.remove(IBestStorageKey.BASE_STYLE)
+	}
 	AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE, () => new IBestUIBaseStyle(styleData || {}))
 }

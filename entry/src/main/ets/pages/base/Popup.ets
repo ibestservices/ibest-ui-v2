@@ -268,6 +268,7 @@ struct PopupPage {
 						}
 					}
 				}
+				ListItem().height(50)
 			}
 			.layoutWeight(1)
 			// 基础展示

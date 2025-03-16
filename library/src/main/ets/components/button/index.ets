@@ -21,7 +21,7 @@ export struct IBestButton {
 	/**
 	 * 全局公共样式
 	 */
-	@Local baseStyle: IBestUIBaseStyle = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE, () => new IBestUIBaseStyle({})) as IBestUIBaseStyle
+	@Local baseStyle: IBestUIBaseStyle = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	/**
 	 * 类型，可选值为 primary success warning danger 默认值为default
 	 */
@@ -156,6 +156,23 @@ export struct IBestButton {
 		}
 	}
 
+	@Computed
+	get btnBgColor() {
+		return this.plain ? "transparent" : this.color ? this.color : this.type == "default" ? IBestButtonColor.defaultBg : getColorByType(this.type)
+		// switch (this.type) {
+		// 	case COLOR_TYPE.PRIMARY:
+		// 		return this.baseStyle.primary
+		// 	case COLOR_TYPE.SUCCESS:
+		// 		return this.baseStyle.success
+		// 	case COLOR_TYPE.WARNING:
+		// 		return this.baseStyle.warning
+		// 	case COLOR_TYPE.DANGER:
+		// 		return this.baseStyle.danger
+		// 	default:
+		// 		return this.baseStyle.default
+		// }
+	}
+
 	/**
 	 * 根据buttonSize换对应的按钮尺寸
 	 */
@@ -214,7 +231,7 @@ export struct IBestButton {
 	 * 根据颜色type获取背景色
 	 */
 	getBackgroundColor() {
-		return this.plain ? "transparent" : this.color ? this.color : this.type == "default" ? IBestButtonColor.defaultBg : getColorByType(this.type)
+		return this.plain ? "transparent" : this.color ? this.color : this.type == "default" ? IBestButtonColor.defaultBg : this.btnBgColor
 	}
 	/**
 	 * 获取loading的大小
