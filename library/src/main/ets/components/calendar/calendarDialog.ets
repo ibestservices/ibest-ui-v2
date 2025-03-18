@@ -11,10 +11,6 @@ export struct IBestCalendarDialog {
 	 */
 	@Param @Require visible: boolean
 	/**
-	 * 已选日期
-	 */
-	@Local selectedDate: IBestCalendarConfirmResult[] = []
-	/**
 	 * 底部偏移
 	 */
 	@Param offsetY: number = 0
@@ -91,10 +87,18 @@ export struct IBestCalendarDialog {
 	 */
 	@Event onConfirm: (value: IBestCalendarConfirmResult[]) => void = () => {}
 	@Event $visible: (value: boolean) => void = () => {}
+	// 已选日期
+	@Local selectedDate: IBestCalendarConfirmResult[] = []
+	@Local popupVisible: boolean = false
+	@Monitor("popupVisible") popupVisibleChange(){
+		this.$visible(this.popupVisible)
+	}
+	@Monitor("visible") visibleChange(){
+		this.popupVisible = this.visible
+	}
 	@Builder baseBuilder() {
 		IBestCalendar({
-			defaultSelectedDate: this.selectedDate.length ? this.selectedDate.map(item => item.dateStr) :
-			this.defaultSelectedDate,
+			defaultSelectedDate: this.selectedDate.length ? this.selectedDate.map(item => item.dateStr) : this.defaultSelectedDate,
 			itemWidth: this.itemWidth,
 			isShowLunar: this.isShowLunar,
 			selectType: this.selectType,
@@ -120,12 +124,12 @@ export struct IBestCalendarDialog {
 		if (value.length) {
 			this.selectedDate = value
 			this.onConfirm(this.selectedDate)
-			this.$visible(false)
+			this.popupVisible = false
 		}
 	}
 	build() {
 		IBestPopup({
-			visible: this.visible!!,
+			visible: this.popupVisible!!,
 			offsetY: this.offsetY,
 			isModal: this.isModal,
 			cornerRadius: this.cornerRadius,

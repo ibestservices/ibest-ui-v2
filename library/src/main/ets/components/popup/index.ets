@@ -354,6 +354,16 @@ export struct IBestPopup{
 	private baseController: PopupBaseController = new PopupBaseController()
 	private promptAction = this.getUIContext().getPromptAction()
 	private dialogId: number = 0
+	@Monitor("visible") visibleChange(){
+		if(this.visible){
+			this.open()
+		}else{
+			this.baseController.hide()
+			setTimeout(() => {
+				this.promptAction.closeCustomDialog(this.dialogId)
+			}, hideDuration)
+		}
+	}
 	@Builder defaultContentBuilder() {
 		IBestPopupBaseContent({
 			popupAlign: this.popupAlign,
@@ -395,16 +405,6 @@ export struct IBestPopup{
 				return DialogAlignment.Center
 		}
 	}
-	@Monitor("visible") visibleChange(){
-		if(this.visible){
-			this.open()
-		}else{
-			this.baseController.hide()
-			setTimeout(() => {
-				this.promptAction.closeCustomDialog(this.dialogId)
-			}, hideDuration)
-		}
-	}
 	async open() {
 		this.dialogId = await this.promptAction.openCustomDialog({
 			builder: () => {
@@ -418,6 +418,7 @@ export struct IBestPopup{
 			offset: { dx: 0, dy: -(this.topAvoidHeight.value as number) },
 			isModal: this.isModal,
 			maskColor: this.maskColor,
+			// autoCancel: this.closeOnClickOverlay,
 			// immersiveMode: ImmersiveMode.EXTEND,
 			onDidAppear: () => {
 				this.onOpen()

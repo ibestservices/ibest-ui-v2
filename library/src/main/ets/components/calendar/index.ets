@@ -53,7 +53,12 @@ struct CalendarItem {
     isToday(){
         return this.dayItem.dateStr == dayjs().format('YYYY-MM-DD')
     }
-    @Monitor("selectedList")
+    @Monitor("dayItem.isSelected") isSelectedChange(){
+        this.itemChange()
+    }
+    @Monitor("dayItem.isClock") isClockChange(){
+        this.itemChange()
+    }
     itemChange(){
         let item = this.dayItem
         if(item.isDisabled){
@@ -313,8 +318,7 @@ export struct IBestCalendar{
     @Local contentHeight: number = 0
     private context = this.getUIContext()
 
-    @Monitor("defaultSelectedDate")
-    defaultSelectedDateChange(){
+    @Monitor("defaultSelectedDate.length") defaultSelectedDateChange(){
         this.initSelectedList()
         this.daysList.forEach(e => {
             e.isSelected = this.clock ? isBeforeToday(e.date) && this.isSelect(e.dateStr) : this.isSelect(e.dateStr)
@@ -324,8 +328,7 @@ export struct IBestCalendar{
         })
     }
 
-    @Monitor("curSelectedDate")
-    selectDateChange(){
+    @Monitor("curSelectedDate") selectDateChange(){
         this.curYearMonth = dayjs(this.curSelectedDate).format('YYYY-MM')
     }
 
@@ -360,7 +363,7 @@ export struct IBestCalendar{
                         })
                             .enabled(!(this.clock || item.isDisabled))
                             .onClick(() => {
-                                this.selectDate(item)
+                                this.selectDate(item, index)
                             })
                     }
                 })
@@ -553,14 +556,14 @@ export struct IBestCalendar{
     /**
      * 点击选择日期
      */
-    selectDate(item: DayItemType){
+    selectDate(item: DayItemType, index: number){
         switch(this.selectType){
             case "single":
                 if(item.isCurMonthDay){
                     this.daysList.forEach(e => {
                         e.isSelected = false
                     })
-                    item.isSelected = true
+                    this.daysList[index].isSelected = true
                     this.curSelectedDate = item.dateStr
                 }else{
                     this.curSelectedDate = item.dateStr
@@ -571,15 +574,15 @@ export struct IBestCalendar{
                 break
             case "multiple":
                 if(item.isCurMonthDay){
-                    item.isSelected = !item.isSelected
+                    this.daysList[index].isSelected = !this.daysList[index].isSelected
                     if(item.isSelected){
                         this.curSelectedDate = item.dateStr
                     }
-                    let index = this.selectedList.findIndex(e => e.dateStr == item.dateStr)
-                    if(index == -1){
+                    let i = this.selectedList.findIndex(e => e.dateStr == item.dateStr)
+                    if(i == -1){
                         this.selectedList.push(item)
                     }else{
-                        this.selectedList.splice(index, 1)
+                        this.selectedList.splice(i, 1)
                     }
                 }else{
                     this.curSelectedDate = item.dateStr
@@ -624,7 +627,7 @@ export struct IBestCalendar{
                     this.selectedList = days
                     !this.isShowConfirmBtn && this.confirm()
                 }else{  // 已选结束日期  重选
-                    item.isSelected = true
+                    this.daysList[index].isSelected = true
                     this.selectedList = [item]
                 }
                 this.daysList.forEach(e => e.isSelected = this.selectedList.some(f => f.dateStr == e.dateStr))
@@ -632,7 +635,7 @@ export struct IBestCalendar{
                     this.initDaysList()
                 }
                 break
-            }
+        }
     }
     /**
      * 获取两个日期之间的所有日期
