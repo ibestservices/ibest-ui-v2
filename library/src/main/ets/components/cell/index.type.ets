@@ -5,13 +5,8 @@ export enum ARROW_DIRECTION {
 	LEFT = 'left'
 }
 export type BorderSizeType = "full" | "center" | "right"
-export class CellSizeData {
-	padding?: string
-	fontSize?: string
-	labelFontSize?: string
-	constructor(padding: string, fontSize: string, labelFontSize: string) {
-		this.padding = padding;
-		this.fontSize = fontSize;
-		this.labelFontSize = labelFontSize
-	}
+export interface CellSizeType {
+	padding: string
+	fontSize: string
+	labelFontSize: string
 }

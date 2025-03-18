@@ -18,9 +18,9 @@ interface PopupSize{
 
 @ComponentV2
 export struct IBestPopupBaseContent{
-	@Local isLandscape: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.IS_LANDSCAPE) as IBestBaseDataType
-	@Local topAvoidHeight: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.TOP_AVOID_HEIGHT) as IBestBaseDataType
-	@Local bottomBarHeight: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.BOTTOM_BAR_HEIGHT) as IBestBaseDataType
+	@Local isLandscape: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.IS_LANDSCAPE)!
+	@Local topAvoidHeight: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.TOP_AVOID_HEIGHT)!
+	@Local bottomBarHeight: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.BOTTOM_BAR_HEIGHT)!
 	@Local transX: IBestStringNumber = ""
 	@Local transY: IBestStringNumber = ""
 	/**
@@ -121,7 +121,6 @@ export struct IBestPopupBaseContent{
 				}
 		}
 	}
-
 	aboutToAppear(): void {
 		this.baseController.hide = (): void => this.init()
 		this.init()
@@ -257,7 +256,7 @@ struct PopupTitle {
 
 @ComponentV2
 export struct IBestPopup{
-	@Local topAvoidHeight: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.TOP_AVOID_HEIGHT) as IBestBaseDataType
+	@Local topAvoidHeight: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.TOP_AVOID_HEIGHT)!
 	/**
 	 * 弹框展示状态
 	 */
@@ -406,10 +405,6 @@ export struct IBestPopup{
 			}, hideDuration)
 		}
 	}
-	// 关闭弹框
-	close() {
-		this.$visible(false)
-	}
 	async open() {
 		this.dialogId = await this.promptAction.openCustomDialog({
 			builder: () => {
@@ -423,7 +418,7 @@ export struct IBestPopup{
 			offset: { dx: 0, dy: -(this.topAvoidHeight.value as number) },
 			isModal: this.isModal,
 			maskColor: this.maskColor,
-			immersiveMode: ImmersiveMode.EXTEND,
+			// immersiveMode: ImmersiveMode.EXTEND,
 			onDidAppear: () => {
 				this.onOpen()
 			},
@@ -438,6 +433,10 @@ export struct IBestPopup{
 				}
 			}
 		})
+	}
+	// 关闭弹框
+	close() {
+		this.$visible(false)
 	}
 	build() {}
 }

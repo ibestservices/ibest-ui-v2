@@ -1,4 +1,4 @@
-import { IBestNavBar } from '@ibestservices/ibest-ui'
+import { IBestNavBar } from '@ibestservices/ibest-ui-v2'
 import { webview } from '@kit.ArkWeb'
 import { CONTAINER_SIZE } from '../assets/styles/BaseStyle'
 import GlobalStore from '../utils/global'
@@ -28,6 +28,6 @@ struct Doc {
 			})
 				.layoutWeight(1)
 		}
-		.hideBackButton(true)
+		.hideTitleBar(true)
 	}
 }

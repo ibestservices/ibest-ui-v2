@@ -1,4 +1,4 @@
-import { IBestUIBaseStyle, IBestUIBaseStyleType } from './index.type'
+import { IBestUIBaseStyle, IBestUIBaseStyleObjType, IBestUIBaseStyleType } from './index.type'
 import { AppStorageV2 } from '@kit.ArkUI'
 import { IBestStorageKey } from '../../model/Global.type'
 
@@ -7,9 +7,15 @@ import { IBestStorageKey } from '../../model/Global.type'
  * @param styleData
  */
 export function setIBestUIBaseStyle(styleData?: Partial<IBestUIBaseStyleType>) {
-	let style = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE, () => new IBestUIBaseStyle({}))
-	if(style){
+	let baseStyle = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE, () => new IBestUIBaseStyle({})) as IBestUIBaseStyleObjType
+	if(baseStyle && styleData){
+		Object.keys(styleData).forEach(item => {
+			if (baseStyle[item]) {
+				baseStyle[item] = (styleData as IBestUIBaseStyleObjType)[item]
+			}
+		})
+	}else{
 		AppStorageV2.remove(IBestStorageKey.BASE_STYLE)
+		AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE, () => new IBestUIBaseStyle({}))
 	}
-	AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE, () => new IBestUIBaseStyle(styleData || {}))
 }

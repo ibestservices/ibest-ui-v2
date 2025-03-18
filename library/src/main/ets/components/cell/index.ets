@@ -6,7 +6,7 @@ import { SIZE } from '../../theme-chalk/src/size.type'
 import { convertDimensionsWidthUnit, getSizeByUnit } from '../../utils/utils'
 import { IBestIcon } from '../icon'
 import { IBestCellColor } from './color'
-import { ARROW_DIRECTION, BorderSizeType, CellSizeData } from './index.type'
+import { ARROW_DIRECTION, BorderSizeType, CellSizeType } from './index.type'
 import { AppStorageV2 } from '@kit.ArkUI'
 
 @ComponentV2
@@ -14,7 +14,7 @@ export struct IBestCell {
 	/**
 	 * 全局公共样式
 	 */
-	@Local baseStyle: IBestUIBaseStyle = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE, () => new IBestUIBaseStyle({})) as IBestUIBaseStyle
+	@Local baseStyle: IBestUIBaseStyle = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	/**
 	 * 左侧标题
 	 */
@@ -82,7 +82,7 @@ export struct IBestCell {
 	/**
 	 * 左侧图标与title间距
 	 */
-	@Param leftIconMarginRight: IBestStringNumber = this.baseStyle.spaceBase as string
+	@Param leftIconMarginRight: IBestStringNumber = this.baseStyle.spaceBase
 	/**
 	 * 右侧图标
 	 */
@@ -98,7 +98,7 @@ export struct IBestCell {
 	/**
 	 * 右侧图标与内容间距
 	 */
-	@Param rightIconMarginLeft: IBestStringNumber = this.baseStyle.spaceBase as string
+	@Param rightIconMarginLeft: IBestStringNumber = this.baseStyle.spaceBase
 	/**
 	 * 左侧内容宽度
 	 */
@@ -106,7 +106,7 @@ export struct IBestCell {
 	/**
 	 * 左右padding
 	 */
-	@Param leftRightPadding: IBestStringNumber = this.baseStyle.spaceMd as string
+	@Param leftRightPadding: IBestStringNumber = this.baseStyle.spaceMd
 	/**
 	 * 底部分割线尺寸类型
 	 */
@@ -156,26 +156,28 @@ export struct IBestCell {
 		[ARROW_DIRECTION.BOTTOM]: 90,
 		[ARROW_DIRECTION.LEFT]: 180,
 	}
-
-
 	/**
 	 * 根据size获取单元格的尺寸
-	 * @returns
 	 */
-	getCellSize() {
-		const cellSize = this.cellSize
-		switch (cellSize) {
+	@Computed
+	get computedCellSize(): CellSizeType {
+		switch (this.cellSize) {
 			case SIZE.LARGE:
-				return new CellSizeData(convertDimensionsWidthUnit(14), this.baseStyle.fontSizeLg as string,
-					this.baseStyle.fontSizeMd as string)
+				return {
+					padding: convertDimensionsWidthUnit(14),
+					fontSize: this.baseStyle.fontSizeLg,
+					labelFontSize: this.baseStyle.fontSizeMd
+				}
 			default:
-				return new CellSizeData(convertDimensionsWidthUnit(12), this.baseStyle.fontSizeMd as string,
-					this.baseStyle.fontSizeSm as string)
+				return {
+					padding: convertDimensionsWidthUnit(12),
+					fontSize: this.baseStyle.fontSizeMd,
+					labelFontSize: this.baseStyle.fontSizeSm
+				}
 		}
 	}
 	getArrowRotateAngle() {
-		return this.arrowDirection2RotateDegMap[this.arrowDirection] ||
-		this.arrowDirection2RotateDegMap[ARROW_DIRECTION.RIGHT]
+		return this.arrowDirection2RotateDegMap[this.arrowDirection] || this.arrowDirection2RotateDegMap[ARROW_DIRECTION.RIGHT]
 	}
 	getAlignItems() {
 		return this.center ? VerticalAlign.Center : VerticalAlign.Top
@@ -221,7 +223,7 @@ export struct IBestCell {
 							// 默认标题内容
 							Text(this.title)
 								.layoutWeight(1)
-								.fontSize(this.getCellSize().fontSize)
+								.fontSize(this.computedCellSize.fontSize)
 								.fontColor(this.titleColor)
 						}.width(CONTAINER_SIZE.FULL)
 						.alignItems(this.getAlignItems())
@@ -235,7 +237,7 @@ export struct IBestCell {
 						if (this.label) {
 							Text(this.label)
 								.width(CONTAINER_SIZE.FULL)
-								.fontSize(this.getCellSize().labelFontSize)
+								.fontSize(this.computedCellSize.labelFontSize)
 								.margin({
 									top: this.baseStyle.spaceBase
 								})
@@ -257,7 +259,7 @@ export struct IBestCell {
 						Row() {
 							Text(this.value)
 								.textAlign(TextAlign.Start)
-								.fontSize(this.getCellSize().fontSize)
+								.fontSize(this.computedCellSize.fontSize)
 								.fontColor(this.valueColor)
 						}.justifyContent(FlexAlign.End).layoutWeight(1)
 						if (this.rightIconBuilder) {
@@ -293,7 +295,7 @@ export struct IBestCell {
 				// 底部边框线
 				if (this.hasBorder && this.borderSizeType == "center") {
 					CellDivider({
-						bottom: "-" + this.getCellSize().padding as Dimension,
+						bottom: "-" + this.computedCellSize.padding as Dimension,
 						bdColor: this.bdColor
 					})
 				}
@@ -301,8 +303,8 @@ export struct IBestCell {
 			.alignItems(this.getAlignItems())
 			.width(CONTAINER_SIZE.FULL)
 			.padding({
-				top: this.getCellSize().padding,
-				bottom: this.getCellSize().padding,
+				top: this.computedCellSize.padding,
+				bottom: this.computedCellSize.padding,
 				left: getSizeByUnit(this.leftRightPadding),
 				right: getSizeByUnit(this.leftRightPadding)
 			})
@@ -326,8 +328,8 @@ export struct IBestCell {
 		})
 		.enabled(!this.disabled)
 		.opacity(this.disabled ? 0.6 : 1)
-		.onClick(() => {
-			this.onCellClick()
+		.onTouch(event => {
+			event.type == TouchType.Up && this.onCellClick()
 		})
 	}
 }

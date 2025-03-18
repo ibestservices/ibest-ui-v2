@@ -1,13 +1,13 @@
-import { IBestCell, IBestCellGroup, IBestNavBar } from '@ibestservices/ibest-ui'
+import { IBestCell, IBestCellGroup, IBestNavBar } from '@ibestservices/ibest-ui-v2'
 import { BORDER_RADIUS, CONTAINER_SIZE, FONT_SIZE, FONT_WEIGHT, modeColor, SPACE } from '../assets/styles/BaseStyle'
 import ComponentShowContainer from '../components/ComponentShowContainer'
 import GlobalStore from '../utils/global'
 import { common, Want } from '@kit.AbilityKit'
-import { getAppVersion } from '../utils/utils'
+import { getAppVersion, getResourceStr } from '../utils/utils'
 import { rcp } from '@kit.RemoteCommunicationKit'
 import fs from '@ohos.file.fs'
 import { updateManager } from '@kit.StoreKit'
-import { AppStorageV2 } from '@kit.ArkUI'
+import { AppStorageV2, router } from '@kit.ArkUI'
 import RouterUtil from '../utils/routerUtil'
 
 interface ComponentPart {
@@ -352,7 +352,7 @@ struct Index {
 				ForEach(this.baseComponentList, (part: ComponentPart) => {
 					ListItem() {
 						ComponentShowContainer({
-							title: `${this.getResourceStr(part.title)}(${part.list.length})`,
+							title: `${getResourceStr(part.title)}(${part.list.length})`,
 							titlePaddingLeft: SPACE.XS
 						}) {
 							ForEach(part.list, (item: ComponentItem) => {
@@ -480,10 +480,6 @@ struct Index {
 		setTimeout(() => {
 			// RouterUtil.push("PrivacyPolicy")
 		}, 300)
-	}
-	// 获取Resource内容
-	getResourceStr(res: Resource){
-		return this.context.resourceManager.getStringSync(res)
 	}
 	getTitleOpacity(){
 		// let scrollY = this.scrollTop < 50 ? this.scrollTop : 50

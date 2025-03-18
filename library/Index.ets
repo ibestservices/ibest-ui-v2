@@ -1,5 +1,5 @@
 import { setIBestUIBaseStyle } from './src/main/ets/theme-chalk/src'
-// import IBestToast from './src/main/ets/apis/IBestToast'
+import IBestToast from './src/main/ets/apis/IBestToast'
 // import IBestActionSheet from './src/main/ets/apis/IBestActionSheet'
 // import IBestImagePreview from './src/main/ets/apis/IBestImagePreview'
 // import IBestDialogUtil from './src/main/ets/apis/IBestDialog'
@@ -15,7 +15,7 @@ export {
 	init as IBestInit,
 	setIBestUIBaseStyle as IBestSetUIBaseStyle,
 	setGlobalConfig as IBestSetGlobalConfig,
-	// IBestToast,
+	IBestToast,
 	// IBestActionSheet,
 	// IBestImagePreview,
 	// IBestDialogUtil,
@@ -40,6 +40,10 @@ export { IBestIconClassify, IBestIconData } from './src/main/ets/components/icon
 
 export { IBestPopup } from './src/main/ets/components/popup/index'
 
+export { IBestCalendar } from './src/main/ets/components/calendar/index'
+export { IBestCalendarDialog } from './src/main/ets/components/calendar/calendarDialog'
+export { IBestCalendarConfirmResult } from './src/main/ets/components/calendar/index.type'
+
 // export { IBestCheckbox } from './src/main/ets/components/checkbox/index'
 //
 // export { IBestCheckboxGroup, CheckboxGroupContext } from './src/main/ets/components/checkboxGroup/index'
@@ -63,10 +67,7 @@ export { IBestPopup } from './src/main/ets/components/popup/index'
 //
 // export { IBestStepper } from './src/main/ets/components/stepper/index'
 //
-// export { IBestCalendar } from './src/main/ets/components/calendar/index'
-// export { IBestCalendarDialog } from './src/main/ets/components/calendar/calendarDialog'
-// export { IBestCalendarConfirmResult, CalendarConfirmResultType, SelectType, SelectedStyleType } from './src/main/ets/components/calendar/index.type'
-//
+
 export { IBestLoading } from './src/main/ets/components/loading/index'
 //
 // export { IBestTabs } from './src/main/ets/components/tab/index'

@@ -83,7 +83,6 @@ export struct IBestLoading {
 	@Local sizeValue: SizeOptions = {}
 
 	@Builder LoadingContent() {
-		// loading图标
 		if (this.loadingIconBuilder) {
 			this.loadingIconBuilder()
 		} else {
@@ -104,7 +103,6 @@ export struct IBestLoading {
 				})
 			}
 		}
-		// 加载的文案
 		if (this.loadingTextBuilder) {
 			this.loadingTextBuilder()
 		} else {
@@ -124,7 +122,6 @@ export struct IBestLoading {
 			if (this.defaultBuilder) {
 				this.defaultBuilder()
 			}
-			// 如果是竖直排列的loading
 			if (this.vertical) {
 				Column() {
 					this.LoadingContent()

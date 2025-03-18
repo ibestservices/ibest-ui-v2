@@ -1,4 +1,4 @@
-import { IBestNavBar } from '@ibestservices/ibest-ui';
+import { IBestNavBar } from '@ibestservices/ibest-ui-v2';
 import { COLOR_BLUE, CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
 import RouterUtil from '../../utils/routerUtil';
@@ -159,7 +159,7 @@ struct NavBarPage {
 			.width(CONTAINER_SIZE.FULL)
 			.layoutWeight(1)
 		}
-		.hideBackButton(true)
+		.hideTitleBar(true)
 		.backgroundColor(modeColor.bg)
 	}
 }

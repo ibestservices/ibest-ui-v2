@@ -1,14 +1,12 @@
-import { IBestButton, IBestNavBar } from '@ibestservices/ibest-ui';
+import { IBestButton, IBestNavBar } from '@ibestservices/ibest-ui-v2';
 import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
 import { LengthMetrics } from '@ohos.arkui.node';
 import RouterUtil from '../../utils/routerUtil';
-
 @Builder
 export function ButtonBuilder(name: string, title: string){
 	ButtonPage({title})
 }
-
 @Entry
 @ComponentV2
 struct ButtonPage {
@@ -225,7 +223,7 @@ struct ButtonPage {
 			.layoutWeight(1)
 			.padding({ left: SPACE.SM, right: SPACE.SM })
 		}
-		.hideBackButton(true)
+		.hideTitleBar(true)
 		.backgroundColor(modeColor.bg)
 	}
 }

@@ -1,11 +1,6 @@
 {
 	"routerMap": [
 		{
-			"name": "PrivacyPolicy",
-			"pageSourceFile": "src/main/ets/pages/PrivacyPolicy.ets",
-			"buildFunction": "PrivacyPolicyBuilder"
-		},
-		{
 			"name": "Doc",
 			"pageSourceFile": "src/main/ets/pages/Doc.ets",
 			"buildFunction": "DocBuilder"
@@ -34,6 +29,16 @@
 			"name": "Theme",
 			"pageSourceFile": "src/main/ets/pages/base/Theme.ets",
 			"buildFunction": "ThemeBuilder"
+		},
+		{
+			"name": "Toast",
+			"pageSourceFile": "src/main/ets/pages/base/Toast.ets",
+			"buildFunction": "ToastBuilder"
+		},
+		{
+			"name": "Calendar",
+			"pageSourceFile": "src/main/ets/pages/base/Calendar.ets",
+			"buildFunction": "CalendarBuilder"
 		},
 		{
 			"name": "Loading",

@@ -9,13 +9,14 @@ import {
 	// IBestSwitch,
 	// IBestTabs,
 	// IBestTag,
-	IBestSetUIBaseStyle
-} from '@ibestservices/ibest-ui';
+	IBestSetUIBaseStyle,
+	IBestUIBaseStyle
+} from '@ibestservices/ibest-ui-v2';
 import { CONTAINER_SIZE, FONT_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
 import RouterUtil from '../../utils/routerUtil';
 import { getRandomColor } from '../../utils/utils';
-
+import { AppStorageV2 } from '@kit.ArkUI';
 @Builder
 export function ThemeBuilder(name: string, title: string){
 	ThemePage({title})
@@ -157,7 +158,7 @@ struct ThemePage {
 			.layoutWeight(1)
 			.padding({ left: SPACE.SM, right: SPACE.SM })
 		}
-		.hideBackButton(true)
+		.hideTitleBar(true)
 		.backgroundColor(modeColor.bg)
 	}
 }

@@ -5,8 +5,8 @@ import {
 	IBestIcon,
 	IBestNavBar,
 	IBestPopup,
-	// IBestToast
-} from '@ibestservices/ibest-ui'
+	IBestToast
+} from '@ibestservices/ibest-ui-v2'
 import ComponentShowContainer from '../../components/ComponentShowContainer'
 import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle'
 import RouterUtil from '../../utils/routerUtil'
@@ -341,10 +341,10 @@ struct PopupPage {
 				visible: this.eventVisible!!,
 				popupAlign: "bottom",
 				onOpen: () => {
-					// IBestToast.show("open")
+					IBestToast.show("open")
 				},
 				onClose: () => {
-					// IBestToast.show("close")
+					IBestToast.show("close")
 				}
 			})
 			// 安全区域适配
@@ -356,7 +356,7 @@ struct PopupPage {
 				safeAreaInsetBottom: true
 			})
 		}
-		.hideBackButton(true)
+		.hideTitleBar(true)
 		.backgroundColor(modeColor.bg)
 	}
 }

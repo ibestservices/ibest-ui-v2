@@ -3,13 +3,13 @@
  */
 export enum SIZE {
 	/**
-	 * 大尺寸
-	 */
-	LARGE = 'large',
-	/**
 	 * 正常尺寸
 	 */
 	NORMAL = 'normal',
+	/**
+	 * 大尺寸
+	 */
+	LARGE = 'large',
 	/**
 	 * 小尺寸
 	 */
@@ -17,7 +17,7 @@ export enum SIZE {
 	/**
 	 * mini尺寸
 	 */
-	MINI = 'mini',
+	MINI = 'mini'
 }
 /**
  * 颜色的类型

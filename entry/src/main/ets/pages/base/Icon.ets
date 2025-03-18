@@ -1,6 +1,6 @@
 import { IBestIcon, IBestIconClassify, IBestNavBar,
 	// IBestTabItemType, IBestTabs
-} from '@ibestservices/ibest-ui';
+} from '@ibestservices/ibest-ui-v2';
 import { CONTAINER_SIZE, FONT_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
 import RouterUtil from '../../utils/routerUtil';
@@ -146,7 +146,7 @@ struct IconsPage {
 			.margin({ top: SPACE.SM })
 		}
 		.height(CONTAINER_SIZE.FULL)
-		.hideBackButton(true)
+		.hideTitleBar(true)
 		.backgroundColor(modeColor.bg)
 	}
 }

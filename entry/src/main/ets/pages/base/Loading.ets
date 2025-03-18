@@ -1,8 +1,6 @@
 import { modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
-import {
-	// IBestEmpty,
-	IBestLoading, IBestNavBar } from '@ibestservices/ibest-ui';
+import { IBestLoading, IBestNavBar } from '@ibestservices/ibest-ui-v2';
 import RouterUtil from '../../utils/routerUtil';
 
 @Builder
@@ -15,7 +13,6 @@ export function LoadingBuilder(name: string, title: string){
 struct LoadingPage {
 	@Param title: string = ''
 	@Builder EmptyContain() {
-		// IBestEmpty()
 		Row().width("100%").height(200)
 	}
 	build() {
@@ -108,7 +105,7 @@ struct LoadingPage {
 			.layoutWeight(1)
 			.padding({ left: SPACE.SM, right: SPACE.SM })
 		}
-		.hideBackButton(true)
+		.hideTitleBar(true)
 		.backgroundColor(modeColor.bg)
 	}
 }

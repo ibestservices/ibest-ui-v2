@@ -1,19 +1,14 @@
-import { IBestNavBar } from '@ibestservices/ibest-ui'
+import { IBestNavBar } from '@ibestservices/ibest-ui-v2'
 import { webview } from '@kit.ArkWeb'
 import { CONTAINER_SIZE } from '../assets/styles/BaseStyle'
 import RouterUtil from '../utils/routerUtil'
 
-@Builder
-export function PrivacyPolicyBuilder(name: string){
-	PrivacyPolicy()
-}
-
 @Entry
-@Component
+@ComponentV2
 struct PrivacyPolicy {
 	private webController: webview.WebviewController = new webview.WebviewController()
 	build() {
-		NavDestination() {
+		Column() {
 			IBestNavBar({
 				title: "隐私政策",
 				isShowStatusBar: true,
@@ -29,6 +24,7 @@ struct PrivacyPolicy {
 				.layoutWeight(1)
 				.expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.BOTTOM])
 		}
-		.hideBackButton(true)
+		.width(CONTAINER_SIZE.FULL)
+		.height(CONTAINER_SIZE.FULL)
 	}
 }

@@ -1,7 +1,7 @@
 import { IBestCell, IBestCellGroup, IBestNavBar,
 	// IBestTag
-} from '@ibestservices/ibest-ui';
-import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
+} from '@ibestservices/ibest-ui-v2';
+import { modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
 import RouterUtil from '../../utils/routerUtil';
 
@@ -108,7 +108,6 @@ struct CellPage {
 				ListItem() {
 					ComponentShowContainer({ title: $r("app.string.custom_size", $r("app.string.custom")), titlePaddingLeft: SPACE.XS }) {
 						IBestCellGroup() {
-							IBestCell({ title: $r("app.string.title"), value: $r("app.string.content"), cellSize: 'large' })
 							IBestCell({
 								title: $r("app.string.title"),
 								value: $r("app.string.content"),
@@ -130,7 +129,7 @@ struct CellPage {
 							IBestCell({
 								title: $r("app.string.title"),
 								value: $r("app.string.content"),
-								iconBuilder: () => this.StarIcon()
+								iconBuilder: (): void => this.StarIcon()
 							})
 							IBestCell({
 								title: $r("app.string.title"),
@@ -198,7 +197,7 @@ struct CellPage {
 							leftContentWidth: 100,
 							value: $r("app.string.long_text"),
 							center: true,
-							iconBuilder: () => this.StarIcon(),
+							iconBuilder: (): void => this.StarIcon(),
 							isLink: true
 						})
 						IBestCell({
@@ -206,7 +205,7 @@ struct CellPage {
 							label: $r("app.string.desc"),
 							value: $r("app.string.long_text"),
 							hasBorder: false,
-							iconBuilder: () => this.StarIcon(),
+							iconBuilder: (): void => this.StarIcon(),
 							isLink: true
 						})
 					}
@@ -216,19 +215,19 @@ struct CellPage {
 						IBestCell({
 							title: $r("app.string.title"),
 							value: $r("app.string.long_text"),
-							iconBuilder: () => this.StarIcon(),
+							iconBuilder: (): void => this.StarIcon(),
 							rightIconBuilder: this.Arrow,
 							clickable: true
 						})
 						IBestCell({
 							titleBuilder: this.Title,
 							value: $r("app.string.content"),
-							rightIconBuilder: this.Arrow,
+							rightIconBuilder: (): void => this.Arrow(),
 							clickable: true
 						})
 						IBestCell({
 							title: $r("app.string.title"),
-							iconBuilder: () => this.StarIcon(),
+							iconBuilder: (): void => this.StarIcon(),
 							hasBorder: false,
 							rightIconBuilder: this.Arrow,
 							clickable: true
@@ -239,7 +238,7 @@ struct CellPage {
 			}
 			.layoutWeight(1)
 		}
-		.hideBackButton(true)
+		.hideTitleBar(true)
 		.backgroundColor(modeColor.bg)
 	}
 }

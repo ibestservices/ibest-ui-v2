@@ -23,6 +23,10 @@ export interface GrayColor {
  */
 export enum COLOR_TYPE {
 	/**
+	 * 默认
+	 */
+	DEFAULT = 'default',
+	/**
 	 * 主要的
 	 */
 	PRIMARY = 'primary',
@@ -37,16 +41,36 @@ export enum COLOR_TYPE {
 	/**
 	 * 警告
 	 */
-	WARNING = 'warning',
-	/**
-	 * 默认
-	 */
-	DEFAULT = 'default'
+	WARNING = 'warning'
 }
 /**
  * 颜色类型
  */
 export type ColorType = `${COLOR_TYPE}`
+
+/**
+ * 主题透明
+ */
+export enum COLOR_OPACITY_TYPE {
+	/**
+	 * 主要透明
+     */
+	PRIMARY_OPACITY = 'primaryOpacity',
+	/**
+	 * 成功透明
+     */
+	SUCCESS_OPACITY = 'successOpacity',
+	/**
+	 * 警告透明
+	 */
+	WARNING_OPACITY = 'warningOpacity',
+	/**
+	 * 危险透明
+	 */
+	DANGER_OPACITY = 'dangerOpacity'
+}
+export type ColorOpacityType = `${COLOR_OPACITY_TYPE}`
+
 export interface ColorData {
 	default: ResourceColor;
 	primary: ResourceColor;

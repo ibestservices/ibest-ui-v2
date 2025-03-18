@@ -6,8 +6,8 @@ import { AnyType } from '../model/AnyType'
 import GlobalStore from './GlobalStore'
 import { util } from '@kit.ArkTS'
 import { image } from '@kit.ImageKit'
-import { ColorType, COLOR_TYPE } from '../theme-chalk/src/color.type'
-import { IBestUIBaseStyle } from '../theme-chalk/src/index.type'
+import { ColorOpacityType, ColorType, COLOR_TYPE } from '../theme-chalk/src/color.type'
+import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../theme-chalk/src/index.type'
 /**
  * 休眠
  * @param {number} time 休眠时间
@@ -267,22 +267,4 @@ export function getResourceStr(res: ResourceStr): string {
 		return res
 	}
 	return GlobalStore.context.resourceManager.getStringSync(res)
-}
-/**
- * 根据类型获取颜色
- */
-export function getColorByType(type: ColorType): ResourceColor {
-	let style = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
-	switch (type) {
-		case COLOR_TYPE.PRIMARY:
-			return style.primary
-		case COLOR_TYPE.SUCCESS:
-			return style.success
-		case COLOR_TYPE.WARNING:
-			return style.warning
-		case COLOR_TYPE.DANGER:
-			return style.danger
-		default:
-			return style.default
-	}
 }
