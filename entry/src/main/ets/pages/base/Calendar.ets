@@ -195,6 +195,7 @@ struct CalendarPage {
                         }
                     }
                 }
+                ListItem().height(50)
             }
             .layoutWeight(1)
             // 弹框展示

@@ -20,7 +20,6 @@ export struct IBestIcon {
 	@Param iconSize: IBestStringNumber = convertDimensionsWidthUnit(16)
 	/**
 	 * 图标圆角
-	 * @since 1.19.0
 	 */
 	@Param iconRadius: IBestStringNumber = 0
 	/**

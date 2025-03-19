@@ -225,8 +225,9 @@ struct ToastPage {
 						}
 					}
 				}
-			}.layoutWeight(1)
-			.padding({ bottom: SPACE.SM })
+				ListItem().height(50)
+			}
+			.layoutWeight(1)
 		}
 		.hideTitleBar(true)
 		.backgroundColor(modeColor.bg)

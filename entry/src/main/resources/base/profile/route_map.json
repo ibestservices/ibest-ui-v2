@@ -46,6 +46,11 @@
 			"buildFunction": "CascaderBuilder"
 		},
 		{
+			"name": "Checkbox",
+			"pageSourceFile": "src/main/ets/pages/base/Checkbox.ets",
+			"buildFunction": "CheckboxBuilder"
+		},
+		{
 			"name": "Loading",
 			"pageSourceFile": "src/main/ets/pages/base/Loading.ets",
 			"buildFunction": "LoadingBuilder"

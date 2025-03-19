@@ -34,7 +34,6 @@ class ToastOption extends LoadingOption {
     icon?: ResourceStr
     /**
      * 自定义图标宽度
-     * @since 1.18.0
      */
     iconWidth?: IBestStringNumber
     /**

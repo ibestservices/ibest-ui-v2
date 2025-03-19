@@ -1,5 +1,5 @@
 import { IBestCascader, IBestCascaderContent, IBestCascaderOption, IBestCell, IBestNavBar, IBestToast } from '@ibestservices/ibest-ui-v2'
-import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle'
+import { modeColor, SPACE } from '../../assets/styles/BaseStyle'
 import ComponentShowContainer from '../../components/ComponentShowContainer'
 import { regionData } from '@ibestservices/area-data'
 import RouterUtil from '../../utils/routerUtil'
@@ -230,6 +230,7 @@ struct CascaderPage {
 						})
 					}
 				}
+				ListItem().height(50)
 			}
 			.layoutWeight(1)
 			.padding({ left: SPACE.SM, right: SPACE.SM })

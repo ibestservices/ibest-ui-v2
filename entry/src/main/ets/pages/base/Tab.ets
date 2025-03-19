@@ -265,10 +265,9 @@ struct TabPage {
                         }
                     }
                 }
+                ListItem().height(50)
             }
-            .width(CONTAINER_SIZE.FULL)
             .layoutWeight(1)
-            .padding({ bottom: SPACE.SM })
         }
         .hideTitleBar(true)
         .backgroundColor(modeColor.bg)

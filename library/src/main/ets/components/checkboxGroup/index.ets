@@ -1,0 +1,123 @@
+import { emitter } from '../../utils/EventEmitter';
+import { convertDimensionsWidthUnit, getEventName, getSizeByUnit, sleep } from '../../utils/utils';
+import { CHECKBOX_GROUP_EVENT_NAME, COMPONENT_NAME, IBestCheckboxGroupController } from './index.type';
+import { CONTAINER_SIZE } from '../../theme-chalk/src/container';
+import { IBestStringNumber } from '../../model/Global.type';
+
+export interface CheckboxGroupContext {
+	/**
+	 * 切换全选反选
+	 * @param { boolean } [isSelectedAll] 切换所有复选框，传 true 为选中，false 为取消选中，不传参为取反
+	 */
+	toggleAll: (isSelectedAll?: boolean) => void
+}
+@ComponentV2
+export struct IBestCheckboxGroup {
+	/**
+	 * 多个相同群组名称的CheckboxGroup，仅第一个CheckboxGroup生效。
+	 */
+	@Param @Require group: IBestStringNumber
+	/**
+	 * 最大可选数量 默认0是都可选
+	 */
+	@Param max: number = 0
+	/**
+	 * 激活的标识列表
+	 */
+	@Param @Require activeList: IBestStringNumber[]
+	/**
+	 * 排列方向
+	 */
+	@Param placeDirection: Axis = Axis.Vertical
+	/**
+	 * 排列间距
+	 */
+	@Param space: IBestStringNumber = convertDimensionsWidthUnit(12)
+	/**
+	 * 默认内容
+	 */
+	@BuilderParam defaultBuilder?: CustomBuilder
+	/**
+	 * 实例控制器
+	 */
+	@Param controller: IBestCheckboxGroupController = new IBestCheckboxGroupController()
+	/**
+	 * 选中变化的回调
+	 */
+	@Event onChange: (checkedItemNames: IBestStringNumber[]) => void = () => {}
+	@Event $activeList: (actives: IBestStringNumber[]) => void = () => {}
+
+	@Local uniId: number = 0
+	
+	aboutToAppear() {
+		this.uniId = this.getUniqueId()
+		this.controller.toggleAll = (isSelectAll?: boolean): void => this.toggleAll(isSelectAll)
+		if (this.group) {
+			emitter.on(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.uniId, (name: string, checked: boolean): void => this.onItemChange(name, checked))
+			sleep().then(() => {
+				this.initChildren()
+				this.handleMaxChange()
+			})
+		}
+	}
+	aboutToDisappear() {
+		if(this.group){
+			emitter.off(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.uniId)
+		}
+	}
+
+	initChildren() {
+		emitter.emit(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.INIT_CHILDREN, this.group), this.activeList)
+	}
+	@Monitor("activeList.length")
+	activeChange(){
+		this.initChildren()
+		this.handleMaxChange()
+	}
+	onItemChange(name: string, checked: boolean) {
+		if(checked){
+			let index = this.activeList.indexOf(name)
+			if(index == -1){
+				this.activeList.push(name)
+			}
+		}else {
+			this.$activeList(this.activeList.filter(item => item !== name))
+		}
+		this.onChange(this.activeList)
+		this.handleMaxChange()
+	}
+	/**
+	 * 当最大数量变化时
+	 */
+	@Monitor("max")
+	handleMaxChange() {
+		this.max > 0 &&
+		emitter.emit(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ON_MAX_CHANGE, this.group), {
+			max: this.max,
+			checkedList: this.activeList
+		})
+	}
+	/**
+	 * 全选与反选
+	 * @param {boolean} [isSelectAll] 切换所有复选框，传 true 为选中，false 为取消选中，不传参为取反
+	 */
+	toggleAll(isSelectAll?: boolean) {
+		emitter.emit(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ON_TOGGLE_ALL, this.group), isSelectAll)
+	}
+	build() {
+		if (this.placeDirection == Axis.Horizontal) {
+			Row({ space: getSizeByUnit(this.space) }) {
+				if (this.defaultBuilder) {
+					this.defaultBuilder()
+				}
+			}
+		} else {
+			Column({ space: getSizeByUnit(this.space) }) {
+				if (this.defaultBuilder) {
+					this.defaultBuilder()
+				}
+			}
+			.alignItems(HorizontalAlign.Start)
+		}
+	}
+}

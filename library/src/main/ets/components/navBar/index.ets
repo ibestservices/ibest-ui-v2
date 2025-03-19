@@ -159,7 +159,6 @@ export struct IBestNavBar{
 	@Param isKeepBgColorSame: boolean = true
 	/**
 	 * 标题对齐方式
-	 * @since 2.0.4
 	 */
 	@Param titleTextAlign: "left" | "center" = "center"
 	/**

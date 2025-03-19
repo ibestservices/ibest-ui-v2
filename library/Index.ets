@@ -47,10 +47,9 @@ export { IBestCalendarConfirmResult } from './src/main/ets/components/calendar/i
 export { IBestCascader, IBestCascaderContent } from './src/main/ets/components/cascader/index'
 export { IBestCascaderOption } from './src/main/ets/components/cascader/index.type'
 
-// export { IBestCheckbox } from './src/main/ets/components/checkbox/index'
-
-// export { IBestCheckboxGroup, CheckboxGroupContext } from './src/main/ets/components/checkboxGroup/index'
-// export { IBestCheckboxGroupController } from './src/main/ets/components/checkboxGroup/index.type'
+export { IBestCheckbox } from './src/main/ets/components/checkbox/index'
+export { IBestCheckboxGroup, CheckboxGroupContext } from './src/main/ets/components/checkboxGroup/index'
+export { IBestCheckboxGroupController } from './src/main/ets/components/checkboxGroup/index.type'
 //
 // export { IBestSwitch } from './src/main/ets/components/switch/index'
 //

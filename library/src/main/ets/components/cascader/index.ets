@@ -67,10 +67,6 @@ export struct IBestCascaderContent{
 	// 数据源实例
 	@Local optionsInstance: IBestCascaderOptionInstance[][] = []
 	private swiperController: SwiperController = new SwiperController()
-	@Monitor("currentTabName")
-	tabChange(){
-		this.swiperController.changeIndex(this.currentTabName, true)
-	}
 
 	aboutToAppear(): void {
 		if(this.value.length){
@@ -124,8 +120,12 @@ export struct IBestCascaderContent{
 					name: `${j}`
 				})
 			})
-			this.currentTabName = this.value.length - 1
+			this.currentTabName = this.swiperIndex = this.value.length - 1
 		}
+	}
+	// 顶部tab切换
+	tabChange(index: number){
+		this.swiperController.changeIndex(index, true)
 	}
 	// 选中item
 	selectItem(index1: number, index2: number, item: IBestCascaderOptionInstance) {
@@ -204,7 +204,10 @@ export struct IBestCascaderContent{
 					tabsList: this.tabList,
 					tabWidthType: "auto",
 					tabLineColor: this.activeColor,
-					currentName: this.currentTabName!!
+					currentName: this.currentTabName!!,
+					onChange: name => {
+						this.tabChange(Number(name))
+					}
 				})
 			}
 			.padding({ left: this.baseStyle.spaceXs, right: this.baseStyle.spaceXs })
@@ -246,10 +249,10 @@ export struct IBestCascaderContent{
 			}
 			.width(CONTAINER_SIZE.FULL)
 			.height(this.getListHeight())
-			.index(this.currentTabName)
 			.indicator(false)
 			.loop(false)
 			.duration(100)
+			.index(this.swiperIndex)
 			.onChange(index => {
 				this.currentTabName = index
 			})

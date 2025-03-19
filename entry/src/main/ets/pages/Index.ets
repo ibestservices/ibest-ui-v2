@@ -559,11 +559,12 @@ struct Index {
 				}.tabBar(this.tabBuilder(2))
 			}
 			.width(CONTAINER_SIZE.FULL)
+			.height(CONTAINER_SIZE.FULL)
 			.barHeight(70)
 			.barBackgroundColor(modeColor.bg2)
 			.divider({strokeWidth: 1, color: modeColor.borderColor})
-			.layoutWeight(1)
 		}
+		.height(CONTAINER_SIZE.FULL)
 		.backgroundColor(modeColor.bg)
 	}
 }
