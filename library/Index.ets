@@ -44,8 +44,11 @@ export { IBestCalendar } from './src/main/ets/components/calendar/index'
 export { IBestCalendarDialog } from './src/main/ets/components/calendar/calendarDialog'
 export { IBestCalendarConfirmResult } from './src/main/ets/components/calendar/index.type'
 
+export { IBestCascader, IBestCascaderContent } from './src/main/ets/components/cascader/index'
+export { IBestCascaderOption } from './src/main/ets/components/cascader/index.type'
+
 // export { IBestCheckbox } from './src/main/ets/components/checkbox/index'
-//
+
 // export { IBestCheckboxGroup, CheckboxGroupContext } from './src/main/ets/components/checkboxGroup/index'
 // export { IBestCheckboxGroupController } from './src/main/ets/components/checkboxGroup/index.type'
 //
@@ -67,15 +70,8 @@ export { IBestCalendarConfirmResult } from './src/main/ets/components/calendar/i
 //
 // export { IBestStepper } from './src/main/ets/components/stepper/index'
 //
-
 export { IBestLoading } from './src/main/ets/components/loading/index'
-//
-// export { IBestTabs } from './src/main/ets/components/tab/index'
-// export { IBestTabItem, IBestTabItemType, IBestTabController } from './src/main/ets/components/tab/index.type'
-//
-// export { IBestCascader, IBestCascaderContent } from './src/main/ets/components/cascader/index'
-// export { IBestCascaderOption } from './src/main/ets/components/cascader/index.type'
-//
+
 // export { IBestField } from './src/main/ets/components/field/index'
 // export { IBestFieldValueType } from './src/main/ets/components/field/index.type'
 //
@@ -145,6 +141,10 @@ export { IBestNavBar } from './src/main/ets/components/navBar/index'
 // export { IBestSideBarItem } from './src/main/ets/components/sideBarItem/index'
 //
 // export { IBestSwipeCell } from './src/main/ets/components/swipeCell/index'
+
+export { IBestTabs } from './src/main/ets/components/tab/index'
+export { IBestTabItem, IBestTabItemType } from './src/main/ets/components/tab/index.type'
+
 //
 // export { IBestCanvasDrawer } from './src/main/ets/components/canvasDrawer/index'
 // export { IBestCanvasContent } from './src/main/ets/components/canvasDrawer/index.type'

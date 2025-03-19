@@ -1,6 +1,4 @@
-import { IBestIcon, IBestIconClassify, IBestNavBar,
-	// IBestTabItemType, IBestTabs
-} from '@ibestservices/ibest-ui-v2';
+import { IBestIcon, IBestIconClassify, IBestNavBar, IBestTabItemType, IBestTabs } from '@ibestservices/ibest-ui-v2';
 import { CONTAINER_SIZE, FONT_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
 import RouterUtil from '../../utils/routerUtil';
@@ -15,24 +13,24 @@ export function IconBuilder(name: string, title: string){
 struct IconsPage {
 	@Param title: string = ''
 	@Local curTabName: string = "1"
-	// @State tabsList: IBestTabItemType[] = [
-	// 	{
-	// 		label: $r("app.string.demo"),
-	// 		name: "1"
-	// 	},
-	// 	{
-	// 		label: $r("app.string.basic_icon"),
-	// 		name: "2"
-	// 	},
-	// 	{
-	// 		label: $r("app.string.outline_style"),
-	// 		name: "3"
-	// 	},
-	// 	{
-	// 		label: $r("app.string.filled_style"),
-	// 		name: "4"
-	// 	}
-	// ]
+	@Local tabsList: IBestTabItemType[] = [
+		{
+			label: $r("app.string.demo"),
+			name: "1"
+		},
+		{
+			label: $r("app.string.basic_icon"),
+			name: "2"
+		},
+		{
+			label: $r("app.string.outline_style"),
+			name: "3"
+		},
+		{
+			label: $r("app.string.filled_style"),
+			name: "4"
+		}
+	]
 	@Builder example() {
 		List() {
 			ListItem() {
@@ -126,10 +124,10 @@ struct IconsPage {
 					RouterUtil.pop()
 				}
 			})
-			// IBestTabs({
-			// 	tabsList: this.tabsList,
-			// 	currentName: $curTabName
-			// })
+			IBestTabs({
+				tabsList: this.tabsList,
+				currentName: this.curTabName!!
+			})
 			Column() {
 				if (this.curTabName === '1') {
 					this.example()

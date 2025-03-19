@@ -41,6 +41,11 @@
 			"buildFunction": "CalendarBuilder"
 		},
 		{
+			"name": "Cascader",
+			"pageSourceFile": "src/main/ets/pages/base/Cascader.ets",
+			"buildFunction": "CascaderBuilder"
+		},
+		{
 			"name": "Loading",
 			"pageSourceFile": "src/main/ets/pages/base/Loading.ets",
 			"buildFunction": "LoadingBuilder"
@@ -49,6 +54,11 @@
 			"name": "NavBar",
 			"pageSourceFile": "src/main/ets/pages/base/NavBar.ets",
 			"buildFunction": "NavBarBuilder"
+		},
+		{
+			"name": "Tab",
+			"pageSourceFile": "src/main/ets/pages/base/Tab.ets",
+			"buildFunction": "TabBuilder"
 		}
 	]
 }

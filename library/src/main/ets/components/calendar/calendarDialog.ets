@@ -135,6 +135,7 @@ export struct IBestCalendarDialog {
 			cornerRadius: this.cornerRadius,
 			popupAlign: "bottom",
 			popupHeight: "auto",
+			closeOnBackPress: true,
 			safeAreaInsetBottom: true,
 			contentBuilder: (): void => this.baseBuilder()
 		})
