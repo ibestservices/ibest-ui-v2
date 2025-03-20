@@ -41,7 +41,7 @@ export struct IBestPicker{
 	/**
 	 * 全局公共样式
 	 */
-	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE) as IBestUIBaseStyleObjType
+	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	@Local colorMode: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.COLOR_MODE)!
 	/**
 	 * 分组id
@@ -531,7 +531,7 @@ export struct IBestPicker{
 
 @ComponentV2
 struct PickerHeader{
-	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE) as IBestUIBaseStyleObjType
+	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	@Param value: IBestStringNumber[] = []
 	@Param @Require title: ResourceStr
 	@Param @Require cancelText: ResourceStr

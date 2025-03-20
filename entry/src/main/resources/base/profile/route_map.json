@@ -51,6 +51,11 @@
 			"buildFunction": "CheckboxBuilder"
 		},
 		{
+			"name": "DatePicker",
+			"pageSourceFile": "src/main/ets/pages/base/DatePicker.ets",
+			"buildFunction": "DatePickerBuilder"
+		},
+		{
 			"name": "Picker",
 			"pageSourceFile": "src/main/ets/pages/base/Picker.ets",
 			"buildFunction": "PickerBuilder"

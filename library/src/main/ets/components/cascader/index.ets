@@ -14,7 +14,7 @@ export struct IBestCascaderContent{
 	/**
 	 * 全局公共样式
 	 */
-	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE) as IBestUIBaseStyleObjType
+	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	@Local isLandscape: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.IS_LANDSCAPE)!
 	/**
 	 * 已选中数据
@@ -268,7 +268,7 @@ export struct IBestCascader{
 	/**
 	 * 全局公共样式
 	 */
-	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE) as IBestUIBaseStyleObjType
+	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	/**
 	 * 弹框显隐
 	 */

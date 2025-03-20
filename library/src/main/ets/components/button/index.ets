@@ -16,7 +16,7 @@ export struct IBestButton {
 	/**
 	 * 全局公共样式
 	 */
-	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE) as IBestUIBaseStyleObjType
+	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	/**
 	 * 类型，可选值为 primary success warning danger 默认值为default
 	 */

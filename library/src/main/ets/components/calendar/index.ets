@@ -26,7 +26,7 @@ import { getDefaultBaseStyle } from '../../theme-chalk/src'
 }
 @ComponentV2
 struct CalendarItem {
-    @Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE) as IBestUIBaseStyleObjType
+    @Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
     @Local fontColor: ResourceColor = IBestCalendarColor.textColor
     @Local bgColor: ResourceColor = "transparent"
     @Param @Require dayItem: DayItemType
@@ -182,7 +182,7 @@ export struct IBestCalendar{
     /**
      * 全局公共样式
      */
-    @Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE) as IBestUIBaseStyleObjType
+    @Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
     @Local isLandscape: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.IS_LANDSCAPE)!
     // 唯一id
     @Local uniId: number = 0

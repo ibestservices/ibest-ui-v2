@@ -1,5 +1,7 @@
 import { AppStorageV2, componentUtils, ComponentUtils, LengthUnit, MeasureOptions, window } from '@kit.ArkUI'
-import { ComAvoidAreaSize, ComInfoType, IBestGlobalConfig,
+import { ComAvoidAreaSize, ComInfoType,
+	IBestBaseDataType,
+	IBestGlobalConfig,
 	IBestStorageKey,
 	IBestStringNumber } from '../model/Global.type'
 import { AnyType } from '../model/AnyType'
@@ -208,7 +210,7 @@ export function getSizeByUnit(val: IBestStringNumber, isFont?: boolean): string 
 	if (typeof val == "string") {
 		return val
 	}
-	let config: IBestGlobalConfig = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG) as IBestGlobalConfig
+	let config: IBestGlobalConfig = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG)!
 	let unit = isFont ? config.fontUnit : config.unit
 	return `${val}${unit}`
 }
@@ -216,14 +218,14 @@ export function getSizeByUnit(val: IBestStringNumber, isFont?: boolean): string 
  * 根据配置获取LengthUnit
  */
 export function getLengthUnit(): LengthUnit {
-	let config: IBestGlobalConfig = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG) as IBestGlobalConfig
+	let config: IBestGlobalConfig = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG)!
 	return config.unit == "lpx" ? LengthUnit.LPX : config.unit == "vp" ? LengthUnit.VP : LengthUnit.PX
 }
 /**
  * 根据单位转换尺寸 用于框架固定尺寸格式化 带单位
  */
 export function convertDimensionsWidthUnit(val: number, isFont?: boolean): string {
-	let config: IBestGlobalConfig | undefined = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG)
+	let config = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG)
 	let unit = "vp"
 	if (config) {
 		unit = (isFont ? config.fontUnit : config.unit) as string
@@ -234,7 +236,7 @@ export function convertDimensionsWidthUnit(val: number, isFont?: boolean): strin
  * 根据单位转换尺寸
  */
 export function convertDimensions(val: number, isFont?: boolean): number {
-	let config: IBestGlobalConfig | undefined = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG)
+	let config = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG)
 	if (config) {
 		let unit = isFont ? config.fontUnit : config.unit
 		switch (unit) {
@@ -267,4 +269,15 @@ export function getResourceStr(res: ResourceStr): string {
 		return res
 	}
 	return GlobalStore.context.resourceManager.getStringSync(res)
+}
+/**
+ * 保存AppStorageV2
+ */
+export function saveAppStorage(key: string, value: boolean | IBestStringNumber) {
+	let val = AppStorageV2.connect(IBestBaseDataType, key, () => new IBestBaseDataType(0))
+	if(val){
+		val.value = value
+	}else{
+		AppStorageV2.connect(IBestBaseDataType, key, () => new IBestBaseDataType(value))
+	}
 }

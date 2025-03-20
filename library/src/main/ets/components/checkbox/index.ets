@@ -14,7 +14,7 @@ export struct IBestCheckbox {
 	/**
 	 * 全局公共样式
 	 */
-	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE) as IBestUIBaseStyleObjType
+	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	/**
 	 * 组名
 	 */

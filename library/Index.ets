@@ -50,6 +50,9 @@ export { IBestCascaderOption } from './src/main/ets/components/cascader/index.ty
 export { IBestCheckbox } from './src/main/ets/components/checkbox/index'
 export { IBestCheckboxGroup, CheckboxGroupContext } from './src/main/ets/components/checkboxGroup/index'
 export { IBestCheckboxGroupController } from './src/main/ets/components/checkboxGroup/index.type'
+
+export { IBestDatePicker } from './src/main/ets/components/datePicker/index'
+export { IBestDatePickerResult } from './src/main/ets/components/datePicker/index.type'
 //
 // export { IBestSwitch } from './src/main/ets/components/switch/index'
 //
@@ -82,8 +85,7 @@ export { IBestPickerOption } from './src/main/ets/components/picker/index.type'
 //
 // export { IBestPickerGroup } from './src/main/ets/components/pickerGroup/index'
 //
-// export { IBestDatePicker } from './src/main/ets/components/datePicker/index'
-// export { IBestDatePickerResultType } from './src/main/ets/components/datePicker/index.type'
+
 //
 // export { IBestTimePicker } from './src/main/ets/components/timePicker/index'
 //

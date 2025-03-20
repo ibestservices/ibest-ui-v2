@@ -11,7 +11,7 @@ export struct IBestTabs{
     /**
      * 全局公共样式
      */
-	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE) as IBestUIBaseStyleObjType
+	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	@Local isLandscape: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.IS_LANDSCAPE)!
 	/**
 	 * 当前激活的tab的name
@@ -356,7 +356,7 @@ export struct IBestTabs{
 
 @ComponentV2
 struct IBestTab{
-	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE) as IBestUIBaseStyleObjType
+	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
     @Consumer() uniId: number = 0
     @Param @Require item: IBestTabItem
     @Param @Require index: number
