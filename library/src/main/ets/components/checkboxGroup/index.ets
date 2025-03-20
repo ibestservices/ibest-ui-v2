@@ -1,7 +1,6 @@
 import { emitter } from '../../utils/EventEmitter';
 import { convertDimensionsWidthUnit, getEventName, getSizeByUnit, sleep } from '../../utils/utils';
 import { CHECKBOX_GROUP_EVENT_NAME, COMPONENT_NAME, IBestCheckboxGroupController } from './index.type';
-import { CONTAINER_SIZE } from '../../theme-chalk/src/container';
 import { IBestStringNumber } from '../../model/Global.type';
 
 export interface CheckboxGroupContext {
@@ -48,12 +47,14 @@ export struct IBestCheckboxGroup {
 	@Event $activeList: (actives: IBestStringNumber[]) => void = () => {}
 
 	@Local uniId: number = 0
+	@Local allCheckNames: IBestStringNumber[] = []
 	
 	aboutToAppear() {
 		this.uniId = this.getUniqueId()
 		this.controller.toggleAll = (isSelectAll?: boolean): void => this.toggleAll(isSelectAll)
 		if (this.group) {
-			emitter.on(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.uniId, (name: string, checked: boolean): void => this.onItemChange(name, checked))
+			emitter.on(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.GET_ALL_NAME, this.group), this.uniId, (name: IBestStringNumber): void => this.getAllNames(name))
+			emitter.on(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.uniId, (name: IBestStringNumber, checked: boolean): void => this.onItemChange(name, checked))
 			sleep().then(() => {
 				this.initChildren()
 				this.handleMaxChange()
@@ -62,10 +63,15 @@ export struct IBestCheckboxGroup {
 	}
 	aboutToDisappear() {
 		if(this.group){
+			emitter.off(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.GET_ALL_NAME, this.group), this.uniId)
 			emitter.off(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.uniId)
 		}
 	}
-
+	getAllNames(name: IBestStringNumber){
+		if(!this.allCheckNames.includes(name)){
+			this.allCheckNames.push(name)
+		}
+	}
 	initChildren() {
 		emitter.emit(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.INIT_CHILDREN, this.group), this.activeList)
 	}
@@ -74,21 +80,21 @@ export struct IBestCheckboxGroup {
 		this.initChildren()
 		this.handleMaxChange()
 	}
-	onItemChange(name: string, checked: boolean) {
+	// 选项变化
+	onItemChange(name: IBestStringNumber, checked: boolean) {
 		if(checked){
 			let index = this.activeList.indexOf(name)
 			if(index == -1){
 				this.activeList.push(name)
 			}
+			this.onChange(this.activeList)
 		}else {
-			this.$activeList(this.activeList.filter(item => item !== name))
+			let arr = this.activeList.filter(item => item !== name)
+			this.$activeList(arr)
+			this.onChange(arr)
 		}
-		this.onChange(this.activeList)
-		this.handleMaxChange()
 	}
-	/**
-	 * 当最大数量变化时
-	 */
+	// 当最大数量变化时
 	@Monitor("max")
 	handleMaxChange() {
 		this.max > 0 &&
@@ -97,12 +103,18 @@ export struct IBestCheckboxGroup {
 			checkedList: this.activeList
 		})
 	}
-	/**
-	 * 全选与反选
-	 * @param {boolean} [isSelectAll] 切换所有复选框，传 true 为选中，false 为取消选中，不传参为取反
-	 */
+	// 全选与反选
 	toggleAll(isSelectAll?: boolean) {
-		emitter.emit(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ON_TOGGLE_ALL, this.group), isSelectAll)
+		if(typeof isSelectAll == 'boolean'){
+			if(isSelectAll){
+				this.$activeList(this.allCheckNames)
+			}else {
+				this.$activeList([])
+			}
+		}else{
+			let arr = this.allCheckNames.filter(item => !this.activeList.includes(item))
+			this.$activeList(arr)
+		}
 	}
 	build() {
 		if (this.placeDirection == Axis.Horizontal) {

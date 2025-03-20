@@ -12,15 +12,16 @@ import { IBestCalendarColor } from './color'
 import { IBestIcon } from '../icon'
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { AppStorageV2 } from '@kit.ArkUI'
-@Extend(Text) function headerStyle(baseStyle: IBestUIBaseStyleObjType, itemWidth: IBestStringNumber){
+import { getDefaultBaseStyle } from '../../theme-chalk/src'
+@Extend(Text) function headerStyle(itemWidth: IBestStringNumber){
     .width(getSizeByUnit(itemWidth))
     .height(CONTAINER_SIZE.FULL)
     .textAlign(TextAlign.Center)
-    .fontSize(baseStyle.fontSizeSm)
+    .fontSize(getDefaultBaseStyle().fontSizeSm)
     .fontColor(IBestCalendarColor.textColor)
 }
-@Extend(Text) function clockStyle(baseStyle: IBestUIBaseStyleObjType, fontColor: ResourceColor){
-    .fontSize(baseStyle.fontSizeSm)
+@Extend(Text) function clockStyle(fontColor: ResourceColor){
+    .fontSize(getDefaultBaseStyle().fontSizeSm)
     .fontColor(fontColor)
 }
 @ComponentV2
@@ -152,14 +153,14 @@ struct CalendarItem {
                     .fontColor(this.fontColor)
                 if (this.isShowLunar) {
                     Text(this.dayItem.lunarDay)
-                        .clockStyle(this.baseStyle, this.fontColor)
+                        .clockStyle(this.fontColor)
                 }else if(this.clock && this.dayItem.isCurMonthDay && isBeforeToday(this.dayItem.date)){
                     if(this.dayItem.isClock){
                         Text(this.clockSuccessText)
-                            .clockStyle(this.baseStyle, this.fontColor)
+                            .clockStyle(this.fontColor)
                     }else if(this.isShowUnClock){
                         Text(this.unClockText)
-                            .clockStyle(this.baseStyle, this.fontColor)
+                            .clockStyle(this.fontColor)
                     }
                 }
             }
@@ -727,7 +728,7 @@ export struct IBestCalendar{
             GridRow({ columns: 7 }) {
                 ForEach(this.headerList, (item: HeaderItemType) => {
                     GridCol() {
-                        Text(item.text).headerStyle(this.baseStyle, this.itemWidth)
+                        Text(item.text).headerStyle(this.itemWidth)
                     }
                 }, (_: HeaderItemType, index: number) => index.toString())
             }

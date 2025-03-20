@@ -1,6 +1,6 @@
 import {
 	IBestButton,
-	// IBestCheckbox,
+	IBestCheckbox,
 	// IBestCircleProgress,
 	IBestNavBar,
 	// IBestProgress,
@@ -75,15 +75,14 @@ struct ThemePage {
 						})
 					}
 				}
-				// ListItem() {
-				// 	ComponentShowContainer({ title: $r("app.string.component_checkbox") }) {
-				// 		IBestCheckbox({
-				// 			value: true,
-				// 			name: '1',
-				// 			label: $r("app.string.content")
-				// 		})
-				// 	}
-				// }
+				ListItem() {
+					ComponentShowContainer({ title: $r("app.string.component_checkbox") }) {
+						IBestCheckbox({
+							value: true,
+							label: $r("app.string.content")
+						})
+					}
+				}
 				// ListItem() {
 				// 	ComponentShowContainer({ title: $r("app.string.component_radio") }) {
 				// 		IBestRadioGroup({ group: this.group, active: $active }) {

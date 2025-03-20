@@ -23,8 +23,8 @@ struct CheckboxPage {
 	@Local activeList3: string[] = ["1"]
 	@Local group4: string = "group4"
 	@Local activeList4: string[] = ["2"]
-	@Local isIndeterminate: boolean = true;
-	@Local isIndeterminateCheckAll: boolean = false;
+	@Local isIndeterminate: boolean = true
+	@Local isIndeterminateCheckAll: boolean = false
 	@Local group5: string = "group5"
 	@Local activeList5: string[] = []
 	@Local cellCheckedMaxNum: number = 2
@@ -57,11 +57,8 @@ struct CheckboxPage {
 				ListItem() {
 					ComponentShowContainer({ title: '基础用法' }) {
 						IBestCheckbox({
-							value: this.isChecked,
-							label: this.isChecked + "",
-							onChange: checked => {
-								this.isChecked = checked
-							}
+							value: this.isChecked!!,
+							label: this.isChecked + ""
 						})
 					}
 				}
@@ -84,12 +81,9 @@ struct CheckboxPage {
 				ListItem() {
 					ComponentShowContainer({ title: '自定义形状' }) {
 						IBestCheckbox({
-							value: this.isChecked,
+							value: this.isChecked!!,
 							shape: 'square',
-							label: '自定义形状',
-							onChange: checked => {
-								this.isChecked = checked
-							}
+							label: '自定义形状'
 						})
 					}
 				}
@@ -97,12 +91,9 @@ struct CheckboxPage {
 					ComponentShowContainer({ title: '自定义颜色' }) {
 						Column({ space: SPACE.SM }) {
 							IBestCheckbox({
-								value: this.isChecked,
+								value: this.isChecked!!,
 								checkedColor: '#ee0a24',
-								label: '自定义颜色',
-								onChange: checked => {
-									this.isChecked = checked
-								}
+								label: '自定义颜色'
 							})
 							IBestCheckbox({
 								value: false,
@@ -116,36 +107,27 @@ struct CheckboxPage {
 				ListItem() {
 					ComponentShowContainer({ title: '自定义大小' }) {
 						IBestCheckbox({
-							value: this.isChecked,
+							value: this.isChecked!!,
 							iconSize: 30,
-							label: '自定义大小',
-							onChange: checked => {
-								this.isChecked = checked
-							}
+							label: '自定义大小'
 						})
 					}
 				}
 				ListItem() {
 					ComponentShowContainer({ title: '左侧文本' }) {
 						IBestCheckbox({
-							value: this.isChecked,
+							value: this.isChecked!!,
 							labelPosition: 'left',
-							label: '左侧文本',
-							onChange: checked => {
-								this.isChecked = checked
-							}
+							label: '左侧文本'
 						})
 					}
 				}
 				ListItem() {
 					ComponentShowContainer({ title: '禁用文本点击' }) {
 						IBestCheckbox({
-							value: this.isChecked,
+							value: this.isChecked!!,
 							label: '复选框',
-							labelDisabled: true,
-							onChange: checked => {
-								this.isChecked = checked
-							}
+							labelDisabled: true
 						})
 					}
 				}
@@ -169,11 +151,7 @@ struct CheckboxPage {
 				ListItem() {
 					ComponentShowContainer({ title: '水平排列', }) {
 						Text("选中标识 " + this.activeList1.join(',')).fontSize(14).margin({ bottom: 10 })
-						IBestCheckboxGroup({
-							group: this.group1,
-							activeList: this.activeList1!!,
-							placeDirection: Axis.Horizontal
-						}) {
+						IBestCheckboxGroup({ group: this.group1, activeList: this.activeList1!!, placeDirection: Axis.Horizontal }) {
 							IBestCheckbox({
 								group: this.group1,
 								label: '复选框1',
@@ -212,11 +190,7 @@ struct CheckboxPage {
 				ListItem() {
 					ComponentShowContainer({ title: '全选与反选' }) {
 						Text("选中标识 " + this.activeList3.join(',')).fontSize(14).margin({ bottom: 10 })
-						IBestCheckboxGroup({
-							group: this.group3,
-							activeList: this.activeList3!!,
-							controller: this.controller
-						}) {
+						IBestCheckboxGroup({ group: this.group3, activeList: this.activeList3!!, controller: this.controller }) {
 							IBestCheckbox({
 								group: this.group3,
 								label: '复选框1',
@@ -263,7 +237,7 @@ struct CheckboxPage {
 						Column() {
 							Text("选中标识 " + this.activeList4.join(',')).fontSize(14).margin({ bottom: 10 })
 							IBestCheckbox({
-								value: this.isIndeterminateCheckAll,
+								value: this.isIndeterminateCheckAll!!,
 								label: '全选',
 								indeterminate: this.isIndeterminate,
 								onChange: checked => {
@@ -310,24 +284,21 @@ struct CheckboxPage {
 							IBestCell({
 								clickable: true,
 								title: '复选框1',
-								disabled: this.activeList5.length >= this.cellCheckedMaxNum &&
-									!this.activeList5.includes('1'),
+								disabled: this.activeList5.length >= this.cellCheckedMaxNum && !this.activeList5.includes('1'),
 								rightIconBuilder: (): void => this.CellCheckbox('1', this.group5),
 								onCellClick: (): void => this.handleClickCell('1')
 							})
 							IBestCell({
 								clickable: true,
 								title: '复选框2',
-								disabled: this.activeList5.length >= this.cellCheckedMaxNum &&
-									!this.activeList5.includes('2'),
+								disabled: this.activeList5.length >= this.cellCheckedMaxNum && !this.activeList5.includes('2'),
 								rightIconBuilder: (): void => this.CellCheckbox('2', this.group5),
 								onCellClick: (): void => this.handleClickCell('2')
 							})
 							IBestCell({
 								clickable: true,
 								title: '复选框3',
-								disabled: this.activeList5.length >= this.cellCheckedMaxNum &&
-									!this.activeList5.includes('3'),
+								disabled: this.activeList5.length >= this.cellCheckedMaxNum && !this.activeList5.includes('3'),
 								hasBorder: false,
 								rightIconBuilder: (): void => this.CellCheckbox('3', this.group5),
 								onCellClick: (): void => this.handleClickCell('3')

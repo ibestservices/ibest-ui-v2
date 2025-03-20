@@ -2,7 +2,7 @@ import { emitter } from '../../utils/EventEmitter'
 import { GRAY_COLOR } from '../../theme-chalk/src/color'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { CHECKBOX_GROUP_EVENT_NAME, COMPONENT_NAME } from '../checkboxGroup/index.type'
-import { BuilderArgs, MaxChangeArgs } from './index.type'
+import { IBestCheckboxBuilderParams, IBestCheckboxMaxChangeParams } from './index.type'
 import { convertDimensionsWidthUnit, getEventName, getSizeByUnit } from '../../utils/utils'
 import { IBestCheckboxColor } from './color'
 import { IBestIcon } from '../icon'
@@ -18,11 +18,11 @@ export struct IBestCheckbox {
 	/**
 	 * 组名
 	 */
-	@Param group: IBestStringNumber = ""
+	@Param @Once group: IBestStringNumber = ""
 	/**
 	 * 标识符，通常为一个唯一的字符串或数字
 	 */
-	@Param name: IBestStringNumber = ""
+	@Param @Once name: IBestStringNumber = ""
 	/**
 	 * 是否选中, 支持双向绑定
 	 */
@@ -34,7 +34,7 @@ export struct IBestCheckbox {
 	/**
 	 * 选中状态颜色
 	 */
-	@Param checkedColor: ResourceColor = this.baseStyle.primary as string
+	@Param checkedColor: ResourceColor = ""
 	/**
 	 * 图标大小
 	 */
@@ -66,7 +66,7 @@ export struct IBestCheckbox {
 	/**
 	 * 背景色
 	 */
-	@Param bgColor: ResourceColor = ''
+	@Param bgColor: ResourceColor = ""
 	/**
 	 * 边框色
      */
@@ -79,13 +79,14 @@ export struct IBestCheckbox {
 	/**
 	 * 自定义文本插槽
 	 */
-	@BuilderParam defaultBuilder?: (data: BuilderArgs) => void
+	@BuilderParam defaultBuilder: (data: IBestCheckboxBuilderParams) => void
 	/**
 	 * 自定义图标插槽
 	 */
-	@BuilderParam iconBuilder?: (data: BuilderArgs) => void
+	@BuilderParam iconBuilder: (data: IBestCheckboxBuilderParams) => void
 
 	@Local uniId: number = 0
+	@Local localValue: boolean = false
 	// 受checkboxgroup的最大可选数量禁用的
 	@Local checkboxGroupMaxDisabled: boolean = false
 	// 合并disabled与checkboxGroupMaxDisabled的最终结果 用来UI渲染
@@ -94,15 +95,11 @@ export struct IBestCheckbox {
 	@Local isShowIndeterminateImg: boolean = false
 	// 当不确定图标从显示变隐藏时 等待动画结束后再变
 	private isShowIndeterminateTimeId: number | null = null
-	@Monitor("value") valueChange(){
-		this.handleValueChange()
-		this.handleIndeterminateChange()
-	}
 
 	@Builder LabelContain() {
 		Row() {
 			if (this.defaultBuilder) {
-				this.defaultBuilder({ checked: this.value, disabled: this.mergeDisabled })
+				this.defaultBuilder({ checked: this.getValue(), disabled: this.mergeDisabled })
 			} else {
 				Text(this.label)
 					.fontColor(this.getLabelColor())
@@ -122,8 +119,8 @@ export struct IBestCheckbox {
 		this.uniId = this.getUniqueId()
 		if (this.group) {
 			emitter.on(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.INIT_CHILDREN, this.group), this.uniId, (actives: IBestStringNumber[]): void => this.init(actives))
-			emitter.on(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ON_MAX_CHANGE, this.group), this.uniId, (data: MaxChangeArgs): void => this.handleMaxChange(data))
-			emitter.on(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ON_TOGGLE_ALL, this.group), this.uniId, (isSelectAll: boolean): void => this.handleCheckedChange(typeof isSelectAll === 'boolean' ? isSelectAll : !this.value))
+			emitter.on(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ON_MAX_CHANGE, this.group), this.uniId, (data: IBestCheckboxMaxChangeParams): void => this.handleMaxChange(data))
+			emitter.emit(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.GET_ALL_NAME, this.group), this.name)
 		} else {
 			this.getIsDisabled()
 		}
@@ -133,23 +130,35 @@ export struct IBestCheckbox {
 		if (this.group) {
 			emitter.off(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.INIT_CHILDREN, this.group), this.uniId)
 			emitter.off(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ON_MAX_CHANGE, this.group), this.uniId)
-			emitter.off(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ON_TOGGLE_ALL, this.group), this.uniId)
 		}
 		clearTimeout(this.isShowIndeterminateTimeId)
 	}
 	init(actives: IBestStringNumber[]) {
-		this.$value(actives.includes(this.name))
+		this.localValue = actives.includes(this.name)
+	}
+	getValue(){
+		if(this.group){
+			return this.localValue
+		}
+		return this.value
+	}
+	setValue(value: boolean) {
+		if (this.group) {
+			this.localValue = value
+		} else {
+			this.$value(value)
+		}
 	}
 	// 是否展示背景色
 	isShowBackground() {
-		return this.value || this.indeterminate
+		return this.getValue() || this.indeterminate
 	}
 	// 获取背景色
 	getBackgroundColor() {
 		if (this.mergeDisabled) {
 			return IBestCheckboxColor.borderColor
 		} else {
-			return this.isShowBackground() ? this.checkedColor : this.bgColor
+			return this.isShowBackground() ? (this.checkedColor || this.baseStyle.primary as string) : this.bgColor
 		}
 	}
 	// 获取边框色
@@ -157,7 +166,7 @@ export struct IBestCheckbox {
 		if (this.mergeDisabled) {
 			return GRAY_COLOR.GRAY_5
 		} else {
-			return this.isShowBackground() ? this.checkedColor : this.bdColor
+			return this.isShowBackground() ? (this.checkedColor || this.baseStyle.primary as string) : this.bdColor
 		}
 	}
 	// 获取label的颜色
@@ -172,25 +181,19 @@ export struct IBestCheckbox {
 	isLeftLabel() {
 		return this.labelPosition === 'left'
 	}
-	updateGroup() {
-		if (this.group) {
-			emitter.emit(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.name, this.value)
-		}
-	}
-	// 改变选中状态的回调
-	handleCheckedChange(status = !this.value) {
+	// 点击改变选中状态的回调
+	handleCheckedChange(status = !this.getValue()) {
 		if (this.mergeDisabled) {
 			return
 		}
-		this.$value(status)
-		this.handleValueChange()
-	}
-	handleValueChange() {
-		this.onChange(this.value)
-		this.updateGroup()
+		this.setValue(status)
+		this.onChange(status)
+		if (this.group) {
+			emitter.emit(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.name, status)
+		}
 	}
 	// 当选中的最大数量变化时 或者选中的数据变化时
-	handleMaxChange(data: MaxChangeArgs) {
+	handleMaxChange(data: IBestCheckboxMaxChangeParams) {
 		if (data.max <= 0) {
 			this.checkboxGroupMaxDisabled = false
 			return
@@ -211,7 +214,7 @@ export struct IBestCheckbox {
 	@Monitor("indeterminate")
 	handleIndeterminateChange() {
 		clearTimeout(this.isShowIndeterminateTimeId)
-		if (!this.value && !this.indeterminate) {
+		if (!this.getValue() && !this.indeterminate) {
 			this.isShowIndeterminateTimeId = setTimeout(() => {
 				this.isShowIndeterminateImg = false
 			}, this.baseStyle.animationDuration as number)
@@ -226,7 +229,7 @@ export struct IBestCheckbox {
 			}
 			Column() {
 				if (typeof this.iconBuilder === 'function') {
-					this.iconBuilder({ checked: this.value, disabled: this.mergeDisabled })
+					this.iconBuilder({ checked: this.getValue(), disabled: this.mergeDisabled })
 				} else {
 					IBestIcon({
 						name: this.isShowIndeterminateImg ? "minus" : "success",
@@ -235,7 +238,7 @@ export struct IBestCheckbox {
 					})
 						.opacity(this.isShowBackground() ? 1 : 0)
 						.animation({
-							duration: this.baseStyle.animationDuration as number,
+							duration: this.baseStyle.animationDuration as number
 						})
 				}
 			}

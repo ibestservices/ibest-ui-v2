@@ -564,7 +564,7 @@ struct Index {
 			.barBackgroundColor(modeColor.bg2)
 			.divider({strokeWidth: 1, color: modeColor.borderColor})
 		}
-		.height(CONTAINER_SIZE.FULL)
+		.hideTitleBar(true)
 		.backgroundColor(modeColor.bg)
 	}
 }

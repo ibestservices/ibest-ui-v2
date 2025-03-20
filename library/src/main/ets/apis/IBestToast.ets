@@ -172,20 +172,20 @@ class Toast{
             transition: TransitionEffect.IDENTITY,
             onDidAppear: () => {
                 params.onOpened?.()
-                if(params.type!="loading"){
-                    Toast._instance.isLock = false
-                    // 自动关闭
-                    if(params.duration){
-                        Toast._instance.timer = setTimeout(()=>{
-                            this.autoHide()
-                        }, params.duration)
-                    }
-                }
             },
             onWillDismiss: (dismissDialogAction: DismissDialogAction) => {
                 // console.log("原因", JSON.stringify(dismissDialogAction.reason))
             }
         })
+		if(params.type!="loading"){
+			Toast._instance.isLock = false
+			// 自动关闭
+			if(params.duration){
+				Toast._instance.timer = setTimeout(()=>{
+					this.autoHide()
+				}, params.duration)
+			}
+		}
         // 监听路由变化，关闭toast
         Toast._instance?.uiObserver?.on("routerPageUpdate", ()=>{
             this.autoHide()

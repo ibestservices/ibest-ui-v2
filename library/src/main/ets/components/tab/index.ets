@@ -12,6 +12,7 @@ export struct IBestTabs{
      * 全局公共样式
      */
 	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE) as IBestUIBaseStyleObjType
+	@Local isLandscape: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.IS_LANDSCAPE)!
 	/**
 	 * 当前激活的tab的name
 	 */
@@ -209,7 +210,9 @@ export struct IBestTabs{
     aboutToAppear(): void {
         this.uniId = this.getUniqueId()
     }
+	// @Monitor("isLandscape.value")
     onDidBuild(): void {
+		console.log("onDidBuild")
         this.initSize()
     }
     initSize: () => void = debounce(() => {

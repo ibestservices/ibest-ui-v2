@@ -19,3 +19,9 @@ export function setIBestUIBaseStyle(styleData?: Partial<IBestUIBaseStyleType>) {
 		AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE, () => new IBestUIBaseStyle({}))
 	}
 }
+/**
+ * 获取全局样式
+ */
+export function getDefaultBaseStyle(): IBestUIBaseStyleObjType {
+	return AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE) as IBestUIBaseStyleObjType
+}

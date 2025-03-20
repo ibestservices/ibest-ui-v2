@@ -43,8 +43,18 @@ export default class GlobalStore {
      */
 	private static getAvoidSize(){
 		let res = getWindowAvoidSize()
-		AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.TOP_AVOID_HEIGHT, () => new IBestBaseDataType(res.topSize))
-		AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.BOTTOM_BAR_HEIGHT, () => new IBestBaseDataType(res.navigationSize))
+		let top = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.TOP_AVOID_HEIGHT)
+		let bottom = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.BOTTOM_BAR_HEIGHT)
+		if(top){
+			top.value = res.topSize
+		}else{
+			AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.TOP_AVOID_HEIGHT, () => new IBestBaseDataType(res.topSize))
+		}
+		if(bottom){
+			bottom.value = res.navigationSize
+		}else {
+			AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.BOTTOM_BAR_HEIGHT, () => new IBestBaseDataType(res.navigationSize))
+		}
 	}
 	/**
 	 * 获取屏幕尺寸
@@ -55,12 +65,22 @@ export default class GlobalStore {
 		let o = display.getDefaultDisplaySync().orientation
 		let screenWidth = o == 1 || o == 3 ? screenInfo.windowRect.height : screenInfo.windowRect.width
 		let screenHeight = o == 1 || o == 3 ? screenInfo.windowRect.width : screenInfo.windowRect.height
+		let isLandscape = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.IS_LANDSCAPE)
 		GlobalStore.screenWidth = screenWidth
 		GlobalStore.screenHeight = screenHeight
-		AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.IS_LANDSCAPE, () => new IBestBaseDataType(o == 1 || o == 3))
+		if(isLandscape){
+			isLandscape.value = o == 1 || o == 3
+		}else{
+			AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.IS_LANDSCAPE, () => new IBestBaseDataType(o == 1 || o == 3))
+		}
 		mainWindow.on("avoidAreaChange", data => {
 			if (data.type == window.AvoidAreaType.TYPE_KEYBOARD) {
-				AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.KEYBOARD_HEIGHT, () => new IBestBaseDataType(px2vp(data.area.bottomRect.height)))
+				let keyHeight = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.KEYBOARD_HEIGHT)
+				if(keyHeight){
+					keyHeight.value = px2vp(data.area.bottomRect.height)
+				}else{
+					AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.KEYBOARD_HEIGHT, () => new IBestBaseDataType(px2vp(data.area.bottomRect.height)))
+				}
 			}
 		})
 	}
@@ -76,15 +96,17 @@ export default class GlobalStore {
 		})
 	}
 	/**
-	 * 监听颜色模式变化
+	 * 监听配置变化
      */
 	private static setColorModeListener(){
 		let appContext = GlobalStore.context.getApplicationContext()
 		AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.COLOR_MODE, () => new IBestBaseDataType(GlobalStore.context.config.colorMode as number))
 		appContext.on('environment', {
 			onConfigurationUpdated(config) {
-				AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.COLOR_MODE, () => new IBestBaseDataType(config.colorMode as number))
-				AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.LANGUAGE, () => new IBestBaseDataType(config.language))
+				let colorMode = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.COLOR_MODE) as IBestBaseDataType
+				let language = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.LANGUAGE) as IBestBaseDataType
+				colorMode.value = config.colorMode
+				language.value = config.language
 			},
 			onMemoryLevel() {}
 		})

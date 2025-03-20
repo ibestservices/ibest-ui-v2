@@ -77,8 +77,8 @@ export { IBestLoading } from './src/main/ets/components/loading/index'
 // export { IBestForm } from './src/main/ets/components/form/index'
 // export { IBestFormController, IBestFormRule } from './src/main/ets/components/form/index.type'
 //
-// export { IBestPicker } from './src/main/ets/components/picker/index'
-// export { IBestPickerOption } from './src/main/ets/components/picker/index.type'
+export { IBestPicker } from './src/main/ets/components/picker/index'
+export { IBestPickerOption } from './src/main/ets/components/picker/index.type'
 //
 // export { IBestPickerGroup } from './src/main/ets/components/pickerGroup/index'
 //

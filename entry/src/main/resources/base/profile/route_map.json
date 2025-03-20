@@ -51,6 +51,11 @@
 			"buildFunction": "CheckboxBuilder"
 		},
 		{
+			"name": "Picker",
+			"pageSourceFile": "src/main/ets/pages/base/Picker.ets",
+			"buildFunction": "PickerBuilder"
+		},
+		{
 			"name": "Loading",
 			"pageSourceFile": "src/main/ets/pages/base/Loading.ets",
 			"buildFunction": "LoadingBuilder"
