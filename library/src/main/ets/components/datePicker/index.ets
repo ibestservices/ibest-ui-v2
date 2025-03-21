@@ -14,7 +14,7 @@ export struct IBestDatePicker {
 	/**
 	 * 分组id
 	 */
-	@Param groupId: string = ""
+	@Param @Once groupId: string = ""
 	/**
 	 * 已选择的值
 	 */
@@ -22,11 +22,11 @@ export struct IBestDatePicker {
 	/**
 	 * 最小时间
 	 */
-	@Param minDate: Date = dayjs().subtract(10, 'year').toDate()
+	@Param @Once minDate: Date = dayjs().subtract(10, 'year').toDate()
 	/**
 	 * 最大时间
 	 */
-	@Param maxDate: Date = dayjs().add(10, 'year').toDate()
+	@Param @Once maxDate: Date = dayjs().add(10, 'year').toDate()
 	/**
 	 * 是否显示日列
 	 */
@@ -92,7 +92,6 @@ export struct IBestDatePicker {
 	 */
 	@Event onChange: (value: IBestDatePickerResult) => void = () => {}
 	@Event $value: (value: string[]) => void = () => {}
-	@Event $minDate: (value: Date) => void = () => {}
 
 	// 唯一id
 	@Local uniId: number = 0
@@ -134,15 +133,20 @@ export struct IBestDatePicker {
 		}
 		this.listType.forEach((item,index) => {
 			let list = item == "year" ? this.getYearsList() : item == "month" ? this.getMonthsList() : this.getDaysList()
-			let min = list[0].value.toString()
-			let max = list[list.length-1]
+			let min = list.length ? list[0].value.toString() : ""
+			let max = list.length ? list[list.length-1].value.toString() : ""
 			let newValue = this.modelValue[index] || min
 			let i = list.findIndex((item) => item.value == newValue)
 			if(i == -1){
-				this.modelValue[index] = this.formatValue(clamp(Number(newValue), Number(min), Number(max)))
+				if(list.length){
+					this.modelValue[index] = this.formatValue(clamp(Number(newValue), Number(min), Number(max)))
+				}else{
+					this.modelValue[index] = ''
+				}
 			}else{
 				this.modelValue[index] = newValue
 			}
+			this.modelValue = this.modelValue.filter(e => e)
 			this.options.push(list)
 		})
 	}
@@ -245,9 +249,9 @@ export struct IBestDatePicker {
 	handleGroupChange(uniId: number, selectedValues: string[]) {
 		if(this.uniId > uniId){
 			let selectDate = dayjs(selectedValues.join("-")).toDate()
-			this.$minDate(dayjs(selectedValues.join("-")).toDate())
+			this.minDate = dayjs(selectedValues.join("-")).toDate()
 			if(selectDate > dayjs(this.maxDate).toDate() || selectDate < dayjs(this.minDate).toDate()){
-				this.$value(selectedValues)
+				this.modelValue = selectedValues
 			}
 			this.init()
 		}

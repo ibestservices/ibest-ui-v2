@@ -35,7 +35,7 @@ export struct IBestCheckboxGroup {
 	/**
 	 * 默认内容
 	 */
-	@BuilderParam defaultBuilder?: CustomBuilder
+	@BuilderParam defaultBuilder: CustomBuilder
 	/**
 	 * 实例控制器
 	 */

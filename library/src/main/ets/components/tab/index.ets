@@ -210,7 +210,7 @@ export struct IBestTabs{
     aboutToAppear(): void {
         this.uniId = this.getUniqueId()
     }
-	// @Monitor("isLandscape.value")
+	@Monitor("isLandscape.value")
     onDidBuild(): void {
 		console.log("onDidBuild")
         this.initSize()

@@ -71,8 +71,6 @@ export { IBestDatePickerResult } from './src/main/ets/components/datePicker/inde
 // export { IBestDialog } from './src/main/ets/components/dialog/index'
 //
 // export { IBestStepper } from './src/main/ets/components/stepper/index'
-//
-export { IBestLoading } from './src/main/ets/components/loading/index'
 
 // export { IBestField } from './src/main/ets/components/field/index'
 // export { IBestFieldValueType } from './src/main/ets/components/field/index.type'
@@ -83,11 +81,11 @@ export { IBestLoading } from './src/main/ets/components/loading/index'
 export { IBestPicker } from './src/main/ets/components/picker/index'
 export { IBestPickerOption } from './src/main/ets/components/picker/index.type'
 //
-// export { IBestPickerGroup } from './src/main/ets/components/pickerGroup/index'
+export { IBestPickerGroup } from './src/main/ets/components/pickerGroup/index'
 //
-
+export { IBestTimePicker } from './src/main/ets/components/timePicker/index'
 //
-// export { IBestTimePicker } from './src/main/ets/components/timePicker/index'
+export { IBestLoading } from './src/main/ets/components/loading/index'
 //
 // export { IBestNumberKeyboard } from './src/main/ets/components/numberKeyboard/index'
 //

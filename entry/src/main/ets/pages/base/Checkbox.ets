@@ -241,6 +241,7 @@ struct CheckboxPage {
 								label: '全选',
 								indeterminate: this.isIndeterminate,
 								onChange: checked => {
+									this.isIndeterminate = false
 									this.controller1.toggleAll(checked)
 								}
 							})

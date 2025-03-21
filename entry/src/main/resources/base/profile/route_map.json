@@ -61,6 +61,16 @@
 			"buildFunction": "PickerBuilder"
 		},
 		{
+			"name": "PickerGroup",
+			"pageSourceFile": "src/main/ets/pages/base/PickerGroup.ets",
+			"buildFunction": "PickerGroupBuilder"
+		},
+		{
+			"name": "TimePicker",
+			"pageSourceFile": "src/main/ets/pages/base/TimePicker.ets",
+			"buildFunction": "TimePickerBuilder"
+		},
+		{
 			"name": "Loading",
 			"pageSourceFile": "src/main/ets/pages/base/Loading.ets",
 			"buildFunction": "LoadingBuilder"
