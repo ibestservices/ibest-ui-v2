@@ -4,10 +4,10 @@ import {
 	// IBestCircleProgress,
 	IBestNavBar,
 	// IBestProgress,
-	// IBestRadio,
-	// IBestRadioGroup,
-	// IBestSwitch,
-	// IBestTabs,
+	IBestRadio,
+	IBestRadioGroup,
+	IBestSwitch,
+	IBestTabs,
 	// IBestTag,
 	IBestSetUIBaseStyle,
 	IBestUIBaseStyle
@@ -83,23 +83,24 @@ struct ThemePage {
 						})
 					}
 				}
-				// ListItem() {
-				// 	ComponentShowContainer({ title: $r("app.string.component_radio") }) {
-				// 		IBestRadioGroup({ group: this.group, active: $active }) {
-				// 			IBestRadio({ group: this.group, label: $r("app.string.content"), name: '1' })
-				// 			IBestRadio({ group: this.group, label: $r("app.string.content"), name: '2' })
-				// 		}
-				// 	}
-				// }
-				// ListItem() {
-				// 	ComponentShowContainer({ title: $r("app.string.component_switch") }) {
-				// 		Row() {
-				// 			IBestSwitch({
-				// 				value: $switchValue
-				// 			})
-				// 		}
-				// 	}
-				// }
+				ListItem() {
+					ComponentShowContainer({ title: $r("app.string.component_radio") }) {
+						IBestRadioGroup({ group: this.group, active: this.active!! }) {
+							IBestRadio({ group: this.group, label: $r("app.string.content"), name: '1' })
+							IBestRadio({ group: this.group, label: $r("app.string.content"), name: '2', shape: "dot" })
+							IBestRadio({ group: this.group, label: $r("app.string.content"), name: '3', shape: "square" })
+						}
+					}
+				}
+				ListItem() {
+					ComponentShowContainer({ title: $r("app.string.component_switch") }) {
+						Row() {
+							IBestSwitch({
+								value: this.switchValue!!
+							})
+						}
+					}
+				}
 				// ListItem() {
 				// 	ComponentShowContainer({ title: $r("app.string.component_circleprogress") }) {
 				// 		IBestCircleProgress({
@@ -115,35 +116,35 @@ struct ThemePage {
 				// 		})
 				// 	}
 				// }
-				// ListItem() {
-				// 	ComponentShowContainer({ title: $r("app.string.component_tab") }) {
-				// 		IBestTabs({
-				// 			tabsList: [
-				// 				{
-				// 					label: $r("app.string.custom_option", 1),
-				// 					name: "1"
-				// 				},
-				// 				{
-				// 					label: $r("app.string.custom_option", 2),
-				// 					name: "2"
-				// 				},
-				// 				{
-				// 					label: $r("app.string.custom_option", 3),
-				// 					name: "3"
-				// 				},
-				// 				{
-				// 					label: $r("app.string.custom_option", 4),
-				// 					name: "4"
-				// 				},
-				// 				{
-				// 					label: $r("app.string.custom_option", 5),
-				// 					name: "5"
-				// 				}
-				// 			],
-				// 			currentName: $curTabName
-				// 		})
-				// 	}
-				// }
+				ListItem() {
+					ComponentShowContainer({ title: $r("app.string.component_tab") }) {
+						IBestTabs({
+							tabsList: [
+								{
+									label: $r("app.string.custom_option", 1),
+									name: "1"
+								},
+								{
+									label: $r("app.string.custom_option", 2),
+									name: "2"
+								},
+								{
+									label: $r("app.string.custom_option", 3),
+									name: "3"
+								},
+								{
+									label: $r("app.string.custom_option", 4),
+									name: "4"
+								},
+								{
+									label: $r("app.string.custom_option", 5),
+									name: "5"
+								}
+							],
+							currentName: this.curTabName!!
+						})
+					}
+				}
 				// ListItem() {
 				// 	ComponentShowContainer({ title: $r("app.string.component_tag") }) {
 				// 		IBestTag({

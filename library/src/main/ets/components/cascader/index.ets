@@ -1,7 +1,7 @@
 import { convertDimensionsWidthUnit, getResourceStr, getSizeByUnit, sleep } from '../../utils/utils'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { IBestTabs } from '../tab'
-import { IBestTabItem, IBestTabItemType } from '../tab/index.type'
+import { IBestTabItem } from '../tab/index.type'
 import { IBestCascaderOption, IBestCascaderOptionInstance, IBestCascaderOptionInstanceType } from './index.type'
 import { IBestPopup } from '../popup/index'
 import { IBestCascaderColor } from './color'

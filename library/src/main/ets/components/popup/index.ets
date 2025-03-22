@@ -418,7 +418,6 @@ export struct IBestPopup{
 			offset: { dx: 0, dy: -(this.topAvoidHeight.value as number) },
 			isModal: this.isModal,
 			maskColor: this.maskColor,
-			// autoCancel: this.closeOnClickOverlay,
 			// immersiveMode: ImmersiveMode.EXTEND,
 			onDidAppear: () => {
 				this.onOpen()

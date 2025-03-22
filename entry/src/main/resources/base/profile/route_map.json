@@ -66,9 +66,24 @@
 			"buildFunction": "PickerGroupBuilder"
 		},
 		{
+			"name": "Radio",
+			"pageSourceFile": "src/main/ets/pages/base/Radio.ets",
+			"buildFunction": "RadioBuilder"
+		},
+		{
+			"name": "Switch",
+			"pageSourceFile": "src/main/ets/pages/base/Switch.ets",
+			"buildFunction": "SwitchBuilder"
+		},
+		{
 			"name": "TimePicker",
 			"pageSourceFile": "src/main/ets/pages/base/TimePicker.ets",
 			"buildFunction": "TimePickerBuilder"
+		},
+		{
+			"name": "Dialog",
+			"pageSourceFile": "src/main/ets/pages/base/Dialog.ets",
+			"buildFunction": "DialogBuilder"
 		},
 		{
 			"name": "Loading",
