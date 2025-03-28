@@ -1,7 +1,7 @@
-import { IBestButton, IBestDatePicker, IBestNavBar, IBestPicker, IBestPickerGroup, IBestPickerOption, IBestToast } from '@ibestservices/ibest-ui-v2'
+import { IBestButton, IBestDatePicker, IBestPicker, IBestPickerGroup, IBestPickerOption, IBestToast } from '@ibestservices/ibest-ui-v2'
 import ComponentShowContainer from '../../components/ComponentShowContainer'
 import { modeColor, SPACE } from '../../assets/styles/BaseStyle'
-import RouterUtil from '../../utils/routerUtil'
+import CustomNavBar from '../../components/CustomNavBar'
 @Builder
 export function PickerGroupBuilder(name: string, title: string){
 	PickerGroupPage({title})
@@ -12,9 +12,6 @@ export function PickerGroupBuilder(name: string, title: string){
 struct PickerGroupPage {
 	@Param title: string = ''
 	@Local groupId: string = "1"
-	@Local groupId1: string = "2"
-	@Local groupId2: string = "3"
-	@Local groupId3: string = "4"
 	@Local options1: IBestPickerOption[] = [
 		{ text: '南京', value: '南京' },
 		{ text: '苏州', value: '苏州' },
@@ -46,18 +43,11 @@ struct PickerGroupPage {
 
 	build() {
 		NavDestination() {
-			IBestNavBar({
-				title: this.title,
-				isShowStatusBar: true,
-				onLeftClick: () => {
-					RouterUtil.pop()
-				}
-			})
+			CustomNavBar({title: this.title})
 			List() {
 				ListItem() {
 					ComponentShowContainer({ title: '基础用法', titlePaddingLeft: SPACE.SM, card: true }) {
 						IBestPickerGroup({
-							groupId: this.groupId,
 							title: "选择地点时间",
 							tabs: this.tabs,
 							onConfirm: () => {
@@ -67,12 +57,10 @@ struct PickerGroupPage {
 							}
 						}){
 							IBestPicker({
-								groupId: this.groupId,
 								options: this.options1,
 								value: this.selectValue1!!
 							})
 							IBestPicker({
-								groupId: this.groupId,
 								options: this.options2,
 								value: this.selectValue2!!
 							})
@@ -82,7 +70,6 @@ struct PickerGroupPage {
 				ListItem() {
 					ComponentShowContainer({ title: '下一步按钮', titlePaddingLeft: SPACE.SM, card: true }) {
 						IBestPickerGroup({
-							groupId: this.groupId1,
 							title: "选择地点时间",
 							tabs: this.tabs,
 							nextStepText: "下一步",
@@ -93,12 +80,10 @@ struct PickerGroupPage {
 							}
 						}){
 							IBestPicker({
-								groupId: this.groupId1,
 								options: this.options1,
 								value: this.selectValue3!!
 							})
 							IBestPicker({
-								groupId: this.groupId1,
 								options: this.options2,
 								value: this.selectValue4!!
 							})
@@ -108,7 +93,6 @@ struct PickerGroupPage {
 				ListItem() {
 					ComponentShowContainer({ title: '选择日期范围', titlePaddingLeft: SPACE.SM, card: true }) {
 						IBestPickerGroup({
-							groupId: this.groupId2,
 							title: "预约日期",
 							tabs: this.tabs1,
 							nextStepText: "下一步",
@@ -119,11 +103,11 @@ struct PickerGroupPage {
 							}
 						}){
 							IBestDatePicker({
-								groupId: this.groupId2,
+								groupId: this.groupId,
 								value: this.selectValue5!!
 							})
 							IBestDatePicker({
-								groupId: this.groupId2,
+								groupId: this.groupId,
 								value: this.selectValue6!!
 							})
 						}
@@ -141,7 +125,6 @@ struct PickerGroupPage {
 								}
 							})
 							IBestPickerGroup({
-								groupId: this.groupId3,
 								title: "选择地点时间",
 								tabs: this.tabs,
 								nextStepText: "下一步",
@@ -156,12 +139,10 @@ struct PickerGroupPage {
 								}
 							}) {
 								IBestPicker({
-									groupId: this.groupId3,
 									options: this.options1,
 									value: this.selectValue1!!
 								})
 								IBestPicker({
-									groupId: this.groupId3,
 									options: this.options2,
 									value: this.selectValue2!!
 								})

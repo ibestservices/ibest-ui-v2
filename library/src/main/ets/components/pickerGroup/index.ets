@@ -13,10 +13,6 @@ export struct IBestPickerGroup{
 	 */
 	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	/**
-	 * 分组id
-	 */
-	@Param @Once groupId: string = ""
-	/**
 	 * 标题
 	 */
 	@Param title: ResourceStr = ""

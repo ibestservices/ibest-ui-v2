@@ -56,6 +56,26 @@
 			"buildFunction": "DatePickerBuilder"
 		},
 		{
+			"name": "Field",
+			"pageSourceFile": "src/main/ets/pages/base/Field.ets",
+			"buildFunction": "FieldBuilder"
+		},
+		{
+			"name": "Form",
+			"pageSourceFile": "src/main/ets/pages/base/Form.ets",
+			"buildFunction": "FormBuilder"
+		},
+		{
+			"name": "NumberKeyboard",
+			"pageSourceFile": "src/main/ets/pages/base/NumberKeyboard.ets",
+			"buildFunction": "NumberKeyboardBuilder"
+		},
+		{
+			"name": "PasswordInput",
+			"pageSourceFile": "src/main/ets/pages/base/PasswordInput.ets",
+			"buildFunction": "PasswordInputBuilder"
+		},
+		{
 			"name": "Picker",
 			"pageSourceFile": "src/main/ets/pages/base/Picker.ets",
 			"buildFunction": "PickerBuilder"
@@ -71,6 +91,31 @@
 			"buildFunction": "RadioBuilder"
 		},
 		{
+			"name": "Rate",
+			"pageSourceFile": "src/main/ets/pages/base/Rate.ets",
+			"buildFunction": "RateBuilder"
+		},
+		{
+			"name": "Search",
+			"pageSourceFile": "src/main/ets/pages/base/Search.ets",
+			"buildFunction": "SearchBuilder"
+		},
+		{
+			"name": "Slider",
+			"pageSourceFile": "src/main/ets/pages/base/Slider.ets",
+			"buildFunction": "SliderBuilder"
+		},
+		{
+			"name": "Signature",
+			"pageSourceFile": "src/main/ets/pages/base/Signature.ets",
+			"buildFunction": "SignatureBuilder"
+		},
+		{
+			"name": "Stepper",
+			"pageSourceFile": "src/main/ets/pages/base/Stepper.ets",
+			"buildFunction": "StepperBuilder"
+		},
+		{
 			"name": "Switch",
 			"pageSourceFile": "src/main/ets/pages/base/Switch.ets",
 			"buildFunction": "SwitchBuilder"
@@ -81,6 +126,16 @@
 			"buildFunction": "TimePickerBuilder"
 		},
 		{
+			"name": "Uploader",
+			"pageSourceFile": "src/main/ets/pages/base/Uploader.ets",
+			"buildFunction": "UploaderBuilder"
+		},
+		{
+			"name": "ActionSheet",
+			"pageSourceFile": "src/main/ets/pages/base/ActionSheet.ets",
+			"buildFunction": "ActionSheetBuilder"
+		},
+		{
 			"name": "Dialog",
 			"pageSourceFile": "src/main/ets/pages/base/Dialog.ets",
 			"buildFunction": "DialogBuilder"
@@ -89,6 +144,71 @@
 			"name": "Loading",
 			"pageSourceFile": "src/main/ets/pages/base/Loading.ets",
 			"buildFunction": "LoadingBuilder"
+		},
+		{
+			"name": "Notify",
+			"pageSourceFile": "src/main/ets/pages/base/Notify.ets",
+			"buildFunction": "NotifyBuilder"
+		},
+		{
+			"name": "PullRefresh",
+			"pageSourceFile": "src/main/ets/pages/base/PullRefresh.ets",
+			"buildFunction": "PullRefreshBuilder"
+		},
+		{
+			"name": "SwipeCell",
+			"pageSourceFile": "src/main/ets/pages/base/SwipeCell.ets",
+			"buildFunction": "SwipeCellBuilder"
+		},
+		{
+			"name": "Badge",
+			"pageSourceFile": "src/main/ets/pages/base/Badge.ets",
+			"buildFunction": "BadgeBuilder"
+		},
+		{
+			"name": "CircleProgress",
+			"pageSourceFile": "src/main/ets/pages/base/CircleProgress.ets",
+			"buildFunction": "CircleProgressBuilder"
+		},
+		{
+			"name": "Collapse",
+			"pageSourceFile": "src/main/ets/pages/base/Collapse.ets",
+			"buildFunction": "CollapseBuilder"
+		},
+		{
+			"name": "CountDown",
+			"pageSourceFile": "src/main/ets/pages/base/CountDown.ets",
+			"buildFunction": "CountDownBuilder"
+		},
+		{
+			"name": "Divider",
+			"pageSourceFile": "src/main/ets/pages/base/Divider.ets",
+			"buildFunction": "DividerBuilder"
+		},
+		{
+			"name": "Empty",
+			"pageSourceFile": "src/main/ets/pages/base/Empty.ets",
+			"buildFunction": "EmptyBuilder"
+		},
+		{
+			"name": "Highlight",
+			"pageSourceFile": "src/main/ets/pages/base/Highlight.ets",
+			"buildFunction": "HighlightBuilder"
+		},
+		{
+			"name": "ImagePreview",
+			"pageSourceFile": "src/main/ets/pages/base/ImagePreview.ets",
+			"buildFunction": "ImagePreviewBuilder"
+		},
+		{
+			"name": "NoticeBar",
+			"pageSourceFile": "src/main/ets/pages/base/NoticeBar.ets",
+			"buildFunction": "NoticeBarBuilder"
+		},
+		{
+			"name": "Tag",
+			"pageSourceFile": "src/main/ets/pages/base/Tag.ets",
+			"buildFunction": "TagBuilder"
 		},
 		{
 			"name": "NavBar",

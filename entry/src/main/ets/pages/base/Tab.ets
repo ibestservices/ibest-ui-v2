@@ -1,9 +1,10 @@
-import { IBestButton, IBestNavBar, IBestTabItem, IBestTabItemType, IBestTabs, IBestToast } from '@ibestservices/ibest-ui-v2'
-import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle'
+import { IBestButton, IBestTabItem, IBestTabItemType, IBestTabs, IBestToast } from '@ibestservices/ibest-ui-v2'
+import {  modeColor, SPACE } from '../../assets/styles/BaseStyle'
 import ComponentShowContainer from '../../components/ComponentShowContainer'
-import RouterUtil from '../../utils/routerUtil'
+import CustomNavBar from '../../components/CustomNavBar'
+
 @Builder
-export function TabBuilder(name: string, title: string){
+export function TabBuilder(_: string, title: string){
 	TabPage({title})
 }
 
@@ -146,13 +147,7 @@ struct TabPage {
 
     build() {
         NavDestination(){
-            IBestNavBar({
-                title: this.title,
-                isShowStatusBar: true,
-                onLeftClick: () => {
-                    RouterUtil.pop()
-                }
-            })
+			CustomNavBar({title: this.title})
             List() {
                 ListItem() {
                     ComponentShowContainer({ title: '基础用法', titlePaddingLeft: SPACE.MD }) {

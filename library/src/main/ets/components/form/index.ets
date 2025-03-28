@@ -1,0 +1,175 @@
+import { emitter } from '../../utils/EventEmitter'
+import { convertDimensionsWidthUnit, getEventName, getSizeByUnit } from '../../utils/utils'
+import { FieldTextAlign, IBestFieldValue, LabelPositionType, RequireAsteriskPositionType } from '../field/index.type'
+import {
+    COMPONENT_NAME,
+    FieldValidateResult,
+    FORM_EVENT_NAME,
+    IBestFieldItem,
+    IBestFieldValidateResult,
+    IBestFormController,
+    IBestFormRule,
+    IBestFormSendFieldCallResult,
+    IBestFormValidateResult
+} from './index.type'
+import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
+import { IBestStringNumber } from '../../model/Global.type'
+
+@ComponentV2
+export struct IBestForm {
+	/**
+     * form id 用于验证
+     */
+	@Param @Require formId: IBestStringNumber
+	/**
+	 * 表单验证规则
+	 */
+	@Param @Once rules: IBestFormRule = {}
+	/**
+	 * 表单项间距
+  	 */
+	@Param @Once space: IBestStringNumber = convertDimensionsWidthUnit(10)
+	/**
+     * 文本宽度
+     */
+	@Param @Once labelWidth: IBestStringNumber = convertDimensionsWidthUnit(80)
+	/**
+     * 文本位置
+     */
+	@Param @Once labelPosition: LabelPositionType = "left"
+	/**
+     * 文本对齐方式
+     */
+	@Param @Once labelAlign: FieldTextAlign = "left"
+	/**
+	 * 是否显示文本后冒号
+	 */
+	@Param @Once colon: boolean = false
+	/**
+     * 星号的位置
+     */
+	@Param @Once requireAsteriskPosition: RequireAsteriskPositionType = 'left'
+	/**
+     * 是否显示验证信息
+     */
+	@Param @Once showMessage: boolean = true
+	/**
+     * 是否禁用
+     */
+	@Param disabled: boolean = false
+	/**
+	 * 表单控制器
+	 */
+	@Param @Once controller: IBestFormController = new IBestFormController()
+	/**
+	 * 表单内容
+	 */
+	@BuilderParam defaultBuilder: CustomBuilder
+
+	@Local uniId: number = 0
+	// 表单子项信息
+	@Local formItems: IBestFieldItem[] = []
+
+	aboutToAppear(): void {
+		this.uniId = this.getUniqueId()
+		this.controller.validate = (callBack?: (valid: boolean, field: FieldValidateResult[]) => void): Promise<IBestFormValidateResult> => this.validateForm(callBack)
+		this.controller.validateField = (name: string, callBack?: (valid: boolean, field?: FieldValidateResult) => void): Promise<IBestFieldValidateResult> => this.validateField(name, callBack)
+		this.controller.resetValidation = (name?: string | string[]): void => this.resetValidation(name)
+		this.controller.getFormValues = (): Record<string, IBestFieldValue> => this.getFormValues()
+		// 初始化收集表单项信息
+		emitter.on(getEventName(COMPONENT_NAME, FORM_EVENT_NAME.SEND_FIELD, this.formId), this.uniId, (data: IBestFieldItem, callBack: (result: IBestFormSendFieldCallResult) => void): void => this.init(data, callBack))
+		// 验证单个表单
+		emitter.on(getEventName(COMPONENT_NAME, FORM_EVENT_NAME.VALIDATE_FIELD, this.formId), this.uniId, (name: string): Promise<IBestFieldValidateResult> => this.validateField(name))
+		// 删除表单项
+		emitter.on(getEventName(COMPONENT_NAME, FORM_EVENT_NAME.DELETE_FORM_ITEM, this.formId), this.uniId, (uniId: number): void => this.deleteField(uniId))
+	}
+	aboutToDisappear(): void {
+		emitter.off(getEventName(COMPONENT_NAME, FORM_EVENT_NAME.SEND_FIELD, this.formId), this.uniId)
+		emitter.off(getEventName(COMPONENT_NAME, FORM_EVENT_NAME.VALIDATE_FIELD, this.formId), this.uniId)
+	}
+	// 初始化
+	init(data: IBestFieldItem, callBack: (result: IBestFormSendFieldCallResult) => void){
+		let standardProp = data.prop.split(".")[0]
+		let index = this.formItems.findIndex((item: IBestFieldItem) => item.prop === data.prop)
+		if(index == -1){
+			this.formItems.push(data)
+		}else{
+			this.formItems[index] = data
+		}
+		callBack({
+			rules: this.rules[standardProp],
+			labelWidth: this.labelWidth,
+			labelPosition: this.labelPosition,
+			labelAlign: this.labelAlign,
+			colon: this.colon,
+			requireAsteriskPosition: this.requireAsteriskPosition,
+			showMessage: this.showMessage,
+			disabled: this.disabled
+		})
+	}
+	// 删除表单项
+	deleteField(uniId: number){
+		this.formItems = this.formItems.filter((item: IBestFieldItem) => item.uniId !== uniId)
+	}
+	// 验证表单
+	validateForm(callBack?: (valid: boolean, field: FieldValidateResult[]) => void): Promise<IBestFormValidateResult> {
+		return new Promise((resolve) => {
+			Promise.all(this.formItems.map((item: IBestFieldItem) => item.validate(this.rules[item.prop.split(".")[0]]))).then((errors) => {
+				errors = errors.filter(Boolean)
+				if(callBack){
+					callBack(!errors.length, errors)
+				}else{
+					resolve({
+						valid: !errors.length,
+						fields: errors
+					})
+				}
+			})
+		})
+	}
+	// 验证单个表单
+	validateField(prop: string, callBack?: (valid: boolean, field?: FieldValidateResult) => void): Promise<IBestFieldValidateResult>{
+		return new Promise((resolve) => {
+			const item = this.formItems.find((item: IBestFieldItem) => item.prop === prop)
+			if (item) {
+				item.validate(this.rules[prop]).then((res: FieldValidateResult) => {
+					if(callBack){
+						callBack(res === undefined, res)
+					}else{
+						resolve({
+							valid: res === undefined,
+							field: res
+						})
+					}
+				})
+			}
+		})
+	}
+	// 重置表单
+	resetValidation(prop?: string | string[]) {
+		let names = prop ? (Array.isArray(prop) ? prop : [prop]) : this.formItems.map((item: IBestFieldItem) => item.prop)
+		names.forEach((name: string) => {
+			const item = this.formItems.find((item: IBestFieldItem) => item.prop === name)
+			if (item) {
+				item.resetValidation()
+			}
+		})
+	}
+	// 获取表单值
+	getFormValues(){
+		let result: Record<string, IBestFieldValue> = {}
+		this.formItems.forEach((item: IBestFieldItem) => {
+			result[item.prop] = item.getValue()
+		})
+		return result
+	}
+	build() {
+		Column({ space: getSizeByUnit(this.space) }){
+			if(this.defaultBuilder){
+				this.defaultBuilder()
+			}
+		}
+		.width(CONTAINER_SIZE.FULL)
+		.alignItems(HorizontalAlign.Start)
+	}
+}

@@ -1,11 +1,10 @@
-import { IBestCell, IBestCellGroup, IBestNavBar, IBestToast } from '@ibestservices/ibest-ui-v2'
+import { IBestCell, IBestCellGroup, IBestToast } from '@ibestservices/ibest-ui-v2'
 import ComponentShowContainer from '../../components/ComponentShowContainer'
-import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle'
-import { common } from '@kit.AbilityKit'
-import RouterUtil from '../../utils/routerUtil'
+import { modeColor, SPACE } from '../../assets/styles/BaseStyle'
 import { getResourceStr } from '../../utils/utils'
+import CustomNavBar from '../../components/CustomNavBar'
 @Builder
-export function ToastBuilder(name: string, title: string){
+export function ToastBuilder(_: string, title: string){
 	ToastPage({title})
 }
 
@@ -19,7 +18,6 @@ struct ToastPage {
 			loadingType: "spinner",
 			message: $r("app.string.loading"),
 			onOpened: () => {
-				// 可在此处延时关闭toast
 				console.log("toast打开成功")
 			}
 		})
@@ -48,13 +46,7 @@ struct ToastPage {
 	}
 	build() {
 		NavDestination() {
-			IBestNavBar({
-				title: this.title,
-				isShowStatusBar: true,
-				onLeftClick: () => {
-					RouterUtil.pop()
-				}
-			})
+			CustomNavBar({title: this.title})
 			List() {
 				ListItem() {
 					ComponentShowContainer({ title: $r("app.string.basic_usage"), titlePaddingLeft: SPACE.XS }) {

@@ -1,10 +1,9 @@
-import { IBestNavBar, IBestPickerOption, IBestTimePicker, IBestToast } from '@ibestservices/ibest-ui-v2'
+import { IBestPickerOption, IBestTimePicker, IBestToast } from '@ibestservices/ibest-ui-v2'
 import ComponentShowContainer from '../../components/ComponentShowContainer'
-import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle'
-import RouterUtil from '../../utils/routerUtil'
-
+import { modeColor, SPACE } from '../../assets/styles/BaseStyle'
+import CustomNavBar from '../../components/CustomNavBar'
 @Builder
-export function TimePickerBuilder(name: string, title: string) {
+export function TimePickerBuilder(_: string, title: string) {
 	TimePickerPage({title})
 }
 @Entry
@@ -24,13 +23,7 @@ struct TimePickerPage {
     }
     build() {
         NavDestination() {
-            IBestNavBar({
-                title: this.title,
-                isShowStatusBar: true,
-                onLeftClick: () => {
-                    RouterUtil.pop()
-                }
-            })
+			CustomNavBar({title: this.title})
             List() {
                 ListItem() {
                     ComponentShowContainer({ title: '基础用法', titlePaddingLeft: SPACE.SM, card: true }) {

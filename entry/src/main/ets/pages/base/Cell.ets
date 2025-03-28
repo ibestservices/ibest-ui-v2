@@ -1,12 +1,10 @@
-import { IBestCell, IBestCellGroup, IBestNavBar,
-	// IBestTag
-} from '@ibestservices/ibest-ui-v2';
+import { IBestCell, IBestCellGroup, IBestTag } from '@ibestservices/ibest-ui-v2';
 import { modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
-import RouterUtil from '../../utils/routerUtil';
+import CustomNavBar from '../../components/CustomNavBar';
 
 @Builder
-export function CellBuilder(name: string, title: string){
+export function CellBuilder(_: string, title: string){
 	CellPage({title})
 }
 
@@ -26,9 +24,9 @@ struct CellPage {
 		Row() {
 			Text($r("app.string.title"))
 				.fontSize(14)
-			// IBestTag({ text: $r("app.string.tag") }).margin({
-			// 	left: SPACE.BASE
-			// })
+			IBestTag({ text: $r("app.string.tag") }).margin({
+				left: SPACE.BASE
+			})
 		}
 	}
 	@Builder InputContain() {
@@ -36,13 +34,7 @@ struct CellPage {
 	}
 	build() {
 		NavDestination() {
-			IBestNavBar({
-				title: this.title,
-				isShowStatusBar: true,
-				onLeftClick: () => {
-					RouterUtil.pop()
-				}
-			})
+			CustomNavBar({title: this.title})
 			List() {
 				ListItem() {
 					ComponentShowContainer({ title: $r("app.string.basic_usage"), titlePaddingLeft: SPACE.XS }) {

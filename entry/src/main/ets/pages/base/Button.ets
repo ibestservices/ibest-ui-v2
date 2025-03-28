@@ -1,8 +1,8 @@
-import { IBestButton, IBestNavBar } from '@ibestservices/ibest-ui-v2';
+import { IBestButton } from '@ibestservices/ibest-ui-v2';
 import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
 import { LengthMetrics } from '@ohos.arkui.node';
-import RouterUtil from '../../utils/routerUtil';
+import CustomNavBar from '../../components/CustomNavBar';
 @Builder
 export function ButtonBuilder(name: string, title: string){
 	ButtonPage({title})
@@ -17,13 +17,7 @@ struct ButtonPage {
 	}
 	build() {
 		NavDestination() {
-			IBestNavBar({
-				title: this.title,
-				isShowStatusBar: true,
-				onLeftClick: () => {
-					RouterUtil.pop()
-				}
-			})
+			CustomNavBar({title: this.title})
 			List() {
 				ListItem() {
 					ComponentShowContainer({ title: $r("app.string.custom_type", $r("app.string.button")) }) {

@@ -1,21 +1,21 @@
 import { IBestStringNumber } from '../../model/Global.type'
-
+import { IBestUploaderFile } from '../uploader/index.type'
 /**
  * field 值类型
  */
-export type IBestFieldValue = IBestStringNumber | boolean | IBestStringNumber[]
+export type IBestFieldValue = IBestStringNumber | boolean | IBestStringNumber[] | IBestUploaderFile[]
 /**
  * 文本对齐方式
  */
-export type FieldTextAlign = '' | 'left' | 'center' | 'right'
+export type FieldTextAlign = 'left' | 'center' | 'right'
 /**
  * 文本位置
  */
-export type LabelPositionType = '' | 'left' | 'top'
+export type LabelPositionType = 'left' | 'top'
 /**
  * 星号位置
  */
-export type RequireAsteriskPositionType = '' | 'left' | 'right'
+export type RequireAsteriskPositionType = 'left' | 'right'
 /**
  * 输入框类型
  */

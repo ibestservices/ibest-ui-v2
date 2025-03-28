@@ -1,8 +1,9 @@
-import { ComponentContent, PromptAction, window } from '@kit.ArkUI'
+import { AppStorageV2, ComponentContent, ImmersiveMode, LevelMode, PromptAction, window } from '@kit.ArkUI'
 import { convertDimensionsWidthUnit, generateId } from '../utils/utils'
 import { IBestDialogView } from '../components/dialog/index'
-import { IBestStringNumber } from '../model/Global.type'
-
+import { IBestStorageKey, IBestStringNumber } from '../model/Global.type'
+import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../theme-chalk/src/index.type'
+@ObservedV2
 class IBestDialogOption {
 	/**
 	 * 弹窗宽度
@@ -127,11 +128,11 @@ class IBestDialogOption {
 	/**
 	 * 取消按钮的loading
 	 */
-	cancelButtonLoading?: boolean
+	@Trace cancelButtonLoading?: boolean
 	/**
 	 * 确认按钮的loading
 	 */
-	confirmButtonLoading?: boolean
+	@Trace confirmButtonLoading?: boolean
 	/**
 	 * 弹窗是否为模态窗口，模态窗口有蒙层，非模态窗口无蒙层
 	 */
@@ -164,6 +165,18 @@ class IBestDialogOption {
 	 * 弹窗相对alignment所在位置的纵向偏移量。
 	 */
 	offsetY?: IBestStringNumber = 0
+	/**
+	 * 弹窗避让键盘后，和键盘之间的距离
+	 */
+	keyboardAvoidDistance?: LengthMetrics
+	/**
+	 * 弹窗显示层级
+	 */
+	levelMode?: LevelMode = LevelMode.OVERLAY
+	/**
+	 * 页面级弹窗需要显示的层级下的节点 uniqueId, 仅当levelMode属性设置为LevelMode.EMBEDDED时生效
+	 */
+	levelUniqueId?: number = 0
 	/**
 	 * 标题区域的builder
 	 */
@@ -204,12 +217,9 @@ class IBestDialogParams extends IBestDialogOption {
 	close: (id: string) => void = () => {}
 	constructor(option: IBestDialogOption) {
 		super()
-		this.bgImage = option.bgImage
-		this.titleBuilder = option.titleBuilder
-		this.defaultBuilder = option.defaultBuilder
-		this.footerBuilder = option.footerBuilder
 		this.dialogWidth = option.dialogWidth
 		this.dialogBorderRadius = option.dialogBorderRadius
+		this.bgImage = option.bgImage
 		this.title = option.title
 		this.titleColor = option.titleColor
 		this.titlePaddingTop = option.titlePaddingTop
@@ -228,38 +238,47 @@ class IBestDialogParams extends IBestDialogOption {
 		this.messageMaxHeight = option.messageMaxHeight
 		this.theme = option.theme
 		this.buttonSpace = option.buttonSpace
-		this.showConfirmButton = option.showConfirmButton !== undefined ? option.showConfirmButton : true
+		this.showConfirmButton = option.showConfirmButton ?? true
 		this.showCancelButton = option.showCancelButton
 		this.confirmButtonText = option.confirmButtonText
 		this.cancelButtonText = option.cancelButtonText
+		this.buttonFontSize = option.buttonFontSize
 		this.confirmButtonColor = option.confirmButtonColor
 		this.confirmButtonBgColor = option.confirmButtonBgColor
 		this.cancelButtonColor = option.cancelButtonColor
 		this.cancelButtonBgColor = option.cancelButtonBgColor
-		this.buttonFontSize = option.buttonFontSize
 		this.confirmButtonLoading = option.confirmButtonLoading
-		this.showOverlay = option.showOverlay !== undefined ? option.showOverlay : true
-		this.showInSubWindow = option.showInSubWindow
-		this.overlayColor = option.overlayColor
-		this.closeOnClickOverlay = option.closeOnClickOverlay
-		this.closeOnBackPress = option.closeOnBackPress !== undefined ? option.closeOnBackPress : true
+		this.cancelButtonLoading = option.cancelButtonLoading
 		this.beforeClose = option.beforeClose
+		this.titleBuilder = option.titleBuilder
+		this.defaultBuilder = option.defaultBuilder
+		this.footerBuilder = option.footerBuilder
 		this.onCancel = option.onCancel
 		this.onConfirm = option.onConfirm
-		this.onOpen = option.onOpen
-		this.onClose = option.onClose
 	}
+}
+
+async function handleBeforeClose(option: IBestDialogParams, action: 'cancel' | 'confirm'){
+	let status = true
+	if(option.beforeClose){
+		try {
+			status = await option.beforeClose(action)
+		} catch (e) {
+			status = false
+		}
+	}
+	return status
 }
 
 @ComponentV2
 struct DialogContent{
+	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	@Param @Require option: IBestDialogParams
 	async handleBtnClick(action: 'cancel' | 'confirm') {
 		if (this.option.beforeClose) {
 			action == 'cancel' ? this.option.cancelButtonLoading = true : this.option.confirmButtonLoading = true
 			this.option.contentNode?.update(this.option)
-			const status = await this.option.beforeClose(action)
-			// console.log('status', status)
+			let status = await handleBeforeClose(this.option, action)
 			action == 'cancel' ? this.option.cancelButtonLoading = false : this.option.confirmButtonLoading = false
 			this.option.contentNode?.update(this.option)
 			if (!status) {
@@ -276,9 +295,9 @@ struct DialogContent{
 	}
 	build() {
 		IBestDialogView({
+			dialogWidth: this.option.dialogWidth,
 			dialogBorderRadius: this.option.dialogBorderRadius,
 			bgImage: this.option.bgImage,
-			dialogWidth: this.option.dialogWidth,
 			title: this.option.title,
 			titleFontSize: this.option.titleFontSize,
 			titleColor: this.option.titleColor,
@@ -339,8 +358,6 @@ interface DialogMapValue{
 }
 function getAlignment(type: string) {
 	switch (type) {
-		case 'center':
-			return DialogAlignment.Center
 		case 'top':
 			return DialogAlignment.Top
 		case 'bottom':
@@ -373,30 +390,37 @@ class Dialog{
 			params: params
 		})
 		await promptAction.openCustomDialog(contentNode, {
-			alignment: getAlignment(params.alignment),
+			alignment: getAlignment(option.alignment),
 			offset: {
-				dx: params.offsetX,
-				dy: params.offsetY
+				dx: option.offsetX,
+				dy: option.offsetY
 			},
-			isModal: params.showOverlay,
-			maskColor: params.overlayColor,
+			isModal: option.showOverlay ?? true,
+			maskColor: option.overlayColor,
+			showInSubWindow: option.showInSubWindow,
+			keyboardAvoidDistance: option.keyboardAvoidDistance,
+			levelMode: option.levelMode,
+			levelUniqueId: option.levelUniqueId,
+			immersiveMode: ImmersiveMode.EXTEND,
+			onDidAppear: () => {
+				option.onOpen?.()
+			},
+			onDidDisappear: () => {
+				option.onClose?.()
+			},
 			onWillDismiss: async(dismissDialogAction: DismissDialogAction)=> {
 				// 1 点击遮罩返回  0 物理返回(左滑右滑、返回键)
 				let reason = dismissDialogAction.reason
-				if (reason == DismissReason.PRESS_BACK && !params.closeOnBackPress || reason == DismissReason.TOUCH_OUTSIDE && !params.closeOnClickOverlay) {
+				if (reason == DismissReason.PRESS_BACK && !(option.closeOnBackPress ?? true) || reason == DismissReason.TOUCH_OUTSIDE && !option.closeOnClickOverlay) {
 					return
 				}
-				if (params.beforeClose) {
-					const status = await params.beforeClose("cancel")
-					if (!status) {
-						return
-					}
+				let status = await handleBeforeClose(params, "cancel")
+				if (!status) {
+					return
 				}
 				dismissDialogAction.dismiss()
-				params.onClose?.()
 			}
 		})
-		params.onOpen?.()
 		return key
 	}
 	/**
@@ -408,7 +432,6 @@ class Dialog{
 			let dialog = this.contentNodeMap.get(key)
 			dialog?.promptAction?.closeCustomDialog(dialog?.contentNode).then(() => {
 				dialog?.contentNode?.dispose()
-				dialog?.params.onClose?.()
 			})
 		}
 	}

@@ -75,6 +75,10 @@ export struct IBestCheckbox {
 	 * 改变的回调
 	 */
 	@Event onChange: (checked: boolean) => void = () => {}
+	/**
+	 * 改变前的回调
+	 */
+	@Event beforeChange?: (value: boolean) => Promise<boolean> | boolean = undefined
 	@Event $value: (checked: boolean) => void = () => {}
 	/**
 	 * 自定义文本插槽
@@ -181,9 +185,24 @@ export struct IBestCheckbox {
 	isLeftLabel() {
 		return this.labelPosition === 'left'
 	}
+	async handleBeforeClose(value: boolean) {
+		let status = true
+		try {
+			if (this.beforeChange) {
+				status = await this.beforeChange(value)
+			}
+		} catch (e) {
+			status = false
+		}
+		return status
+	}
 	// 点击改变选中状态的回调
-	handleCheckedChange(status = !this.getValue()) {
+	async handleCheckedChange(status = !this.getValue()) {
 		if (this.mergeDisabled) {
+			return
+		}
+		let state = await this.handleBeforeClose(status)
+		if(!state){
 			return
 		}
 		this.setValue(status)

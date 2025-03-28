@@ -1,10 +1,10 @@
-import { IBestButton, IBestCell, IBestCheckbox, IBestCheckboxGroup, IBestCheckboxGroupController, IBestNavBar } from '@ibestservices/ibest-ui-v2';
+import { IBestButton, IBestCell, IBestCheckbox, IBestCheckboxGroup, IBestCheckboxGroupController, IBestDialogUtil } from '@ibestservices/ibest-ui-v2';
 import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
-import RouterUtil from '../../utils/routerUtil';
+import CustomNavBar from '../../components/CustomNavBar';
 
 @Builder
-export function CheckboxBuilder(name: string, title: string){
+export function CheckboxBuilder(_: string, title: string){
 	CheckboxPage({title})
 }
 
@@ -46,13 +46,7 @@ struct CheckboxPage {
 	}
 	build() {
 		NavDestination() {
-			IBestNavBar({
-				title: this.title,
-				isShowStatusBar: true,
-				onLeftClick: () => {
-					RouterUtil.pop()
-				}
-			})
+			CustomNavBar({title: this.title})
 			List() {
 				ListItem() {
 					ComponentShowContainer({ title: '基础用法' }) {
@@ -132,9 +126,49 @@ struct CheckboxPage {
 					}
 				}
 				ListItem() {
+					ComponentShowContainer({ title: '异步切换' }) {
+						IBestCheckbox({
+							value: this.isChecked,
+							label: '复选框',
+							beforeChange: () => {
+								return new Promise((resolve, reject) => {
+									IBestDialogUtil.open({
+										title: "提示",
+										message: "确定更改状态?",
+										showCancelButton: true,
+										onConfirm: () => {
+											resolve(true)
+										},
+										onCancel: () => {
+											reject(false)
+										}
+									})
+								})
+							},
+							onChange: checked => {
+								this.isChecked = checked
+							}
+						})
+					}
+				}
+				ListItem() {
 					ComponentShowContainer({ title: '复选框组', }) {
 						Text("选中标识 " + this.activeList.join(',')).fontSize(14).margin({ bottom: 10 })
-						IBestCheckboxGroup({ group: this.group, activeList: this.activeList!! }) {
+						IBestCheckboxGroup({ group: this.group, activeList: this.activeList!!, beforeChange: () => {
+							return new Promise((resolve, reject) => {
+								IBestDialogUtil.open({
+									title: "提示",
+									message: "确定更改状态?",
+									showCancelButton: true,
+									onConfirm: () => {
+										resolve(true)
+									},
+									onCancel: () => {
+										reject(false)
+									}
+								})
+							})
+						}}) {
 							IBestCheckbox({
 								group: this.group,
 								label: '复选框1',

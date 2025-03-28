@@ -1,10 +1,10 @@
-import { IBestIcon, IBestIconClassify, IBestNavBar, IBestTabItemType, IBestTabs } from '@ibestservices/ibest-ui-v2';
+import { IBestIcon, IBestIconClassify, IBestTabItemType, IBestTabs } from '@ibestservices/ibest-ui-v2';
 import { CONTAINER_SIZE, FONT_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
-import RouterUtil from '../../utils/routerUtil';
+import CustomNavBar from '../../components/CustomNavBar'
 
 @Builder
-export function IconBuilder(name: string, title: string){
+export function IconBuilder(_: string, title: string){
 	IconsPage({title})
 }
 
@@ -117,13 +117,7 @@ struct IconsPage {
 	}
 	build() {
 		NavDestination() {
-			IBestNavBar({
-				title: this.title,
-				isShowStatusBar: true,
-				onLeftClick: () => {
-					RouterUtil.pop()
-				}
-			})
+			CustomNavBar({title: this.title})
 			IBestTabs({
 				tabsList: this.tabsList,
 				currentName: this.curTabName!!

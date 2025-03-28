@@ -1,7 +1,7 @@
-import { IBestCell, IBestNavBar, IBestRadio, IBestRadioGroup } from '@ibestservices/ibest-ui-v2'
+import { IBestCell, IBestDialogUtil, IBestRadio, IBestRadioGroup } from '@ibestservices/ibest-ui-v2'
 import { modeColor, SPACE } from '../../assets/styles/BaseStyle'
 import ComponentShowContainer from '../../components/ComponentShowContainer'
-import RouterUtil from '../../utils/routerUtil'
+import CustomNavBar from '../../components/CustomNavBar'
 
 @Builder
 export function RadioBuilder(_: string, title: string){
@@ -23,7 +23,10 @@ struct RadioPage {
 	@Local active2: number = 1
 
 	@Local group3: string = "group3"
-	@Local active3: boolean = false
+	@Local active3: number = 1
+
+	@Local group4: string = "group4"
+	@Local active4: boolean = false
 
 	@Builder
 	CellRadio(name: boolean, group: string) {
@@ -31,13 +34,7 @@ struct RadioPage {
 	}
 	build() {
 		NavDestination() {
-			IBestNavBar({
-				title: this.title,
-				isShowStatusBar: true,
-				onLeftClick: () => {
-					RouterUtil.pop()
-				}
-			})
+			CustomNavBar({title: this.title})
 			List() {
 				ListItem() {
 					ComponentShowContainer({ title: '基础用法' }) {
@@ -198,25 +195,55 @@ struct RadioPage {
 					}
 				}
 				ListItem() {
+					ComponentShowContainer({ title: '异步切换' }) {
+						IBestRadioGroup({ group: this.group3, active: this.active3!!, beforeChange: () => {
+							return new Promise((resolve, reject) => {
+								IBestDialogUtil.open({
+									title: "提示",
+									message: "确定切换?",
+									showCancelButton: true,
+									onConfirm: () => {
+										resolve(true)
+									},
+									onCancel: () => {
+										reject(false)
+									}
+								})
+							})
+						} }){
+							IBestRadio({
+								group: this.group3,
+								label: '单选框',
+								name: 1
+							})
+							IBestRadio({
+								group: this.group3,
+								label: '单选框',
+								name: 2
+							})
+						}
+					}
+				}
+				ListItem() {
 					ComponentShowContainer({ title: '搭配单元格组件使用' }) {
-						IBestRadioGroup({ group: this.group3, active: this.active3!! }){
+						IBestRadioGroup({ group: this.group4, active: this.active4!! }){
 							IBestCell({
 								title: '是',
 								center: true,
-								rightIconBuilder: () => this.CellRadio(true, this.group3),
+								rightIconBuilder: () => this.CellRadio(true, this.group4),
 								clickable: true,
 								onCellClick: () => {
-									this.active3 = true
+									this.active4 = true
 								}
 							})
 							IBestCell({
 								title: '否',
 								center: true,
-								rightIconBuilder: () => this.CellRadio(false, this.group3),
+								rightIconBuilder: () => this.CellRadio(false, this.group4),
 								hasBorder: false,
 								clickable: true,
 								onCellClick: () => {
-									this.active3 = false
+									this.active4 = false
 								}
 							})
 						}

@@ -3,16 +3,14 @@ import {
 	IBestCell,
 	IBestCellGroup,
 	IBestIcon,
-	IBestNavBar,
 	IBestPopup,
 	IBestToast
 } from '@ibestservices/ibest-ui-v2'
 import ComponentShowContainer from '../../components/ComponentShowContainer'
 import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle'
-import RouterUtil from '../../utils/routerUtil'
-
+import CustomNavBar from '../../components/CustomNavBar'
 @Builder
-export function PopupBuilder(name: string, title: string){
+export function PopupBuilder(_: string, title: string){
 	PopupPage({title})
 }
 
@@ -91,13 +89,7 @@ struct PopupPage {
 
 	build() {
 		NavDestination(){
-			IBestNavBar({
-				title: this.title,
-				isShowStatusBar: true,
-				onLeftClick: () => {
-					RouterUtil.pop()
-				}
-			})
+			CustomNavBar({title: this.title})
 			List() {
 				ListItem() {
 					ComponentShowContainer({ title: $r("app.string.basic_usage"), titlePaddingLeft: SPACE.MD }) {

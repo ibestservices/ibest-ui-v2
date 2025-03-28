@@ -1,10 +1,9 @@
 import { modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
-import { IBestLoading, IBestNavBar } from '@ibestservices/ibest-ui-v2';
-import RouterUtil from '../../utils/routerUtil';
-
+import { IBestLoading } from '@ibestservices/ibest-ui-v2';
+import CustomNavBar from '../../components/CustomNavBar';
 @Builder
-export function LoadingBuilder(name: string, title: string){
+export function LoadingBuilder(_: string, title: string){
 	LoadingPage({title})
 }
 
@@ -17,13 +16,7 @@ struct LoadingPage {
 	}
 	build() {
 		NavDestination() {
-			IBestNavBar({
-				title: this.title,
-				isShowStatusBar: true,
-				onLeftClick: () => {
-					RouterUtil.pop()
-				}
-			})
+			CustomNavBar({title: this.title})
 			List() {
 				ListItem() {
 					ComponentShowContainer({ title: '加载类型' }) {

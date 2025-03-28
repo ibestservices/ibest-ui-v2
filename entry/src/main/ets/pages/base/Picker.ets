@@ -1,16 +1,10 @@
-import {
-    // IBestField,
-    IBestNavBar,
-    IBestPicker,
-    IBestPickerOption,
-    IBestPopup,
-    IBestToast
-} from '@ibestservices/ibest-ui-v2'
+import { IBestField, IBestPicker, IBestPickerOption, IBestPopup, IBestToast } from '@ibestservices/ibest-ui-v2'
 import ComponentShowContainer from '../../components/ComponentShowContainer'
 import { modeColor, SPACE } from '../../assets/styles/BaseStyle'
-import RouterUtil from '../../utils/routerUtil'
+import CustomNavBar from '../../components/CustomNavBar'
+
 @Builder
-export function PickerBuilder(name: string, title: string){
+export function PickerBuilder(_: string, title: string){
 	PickerPage({title})
 }
 
@@ -34,9 +28,6 @@ struct PickerPage {
 			title: "标题",
 			visibleItemCount: 5,
 			value: this.selectValue1!!,
-			onChange: (selectedValues, selectTexts) => {
-				IBestToast.show(selectTexts.join('-'))
-			},
 			onConfirm: (selectedValues, selectTexts) => {
 				this.visible = false
 				this.filedValue = selectTexts.join('-')
@@ -139,13 +130,7 @@ struct PickerPage {
 
 	build() {
 		NavDestination() {
-			IBestNavBar({
-				title: this.title,
-				isShowStatusBar: true,
-				onLeftClick: () => {
-					RouterUtil.pop()
-				}
-			})
+			CustomNavBar({title: this.title})
 			List() {
 				ListItem() {
 					ComponentShowContainer({ title: '基础用法', titlePaddingLeft: SPACE.SM, card: true }) {
@@ -178,20 +163,20 @@ struct PickerPage {
 						})
 					}
 				}
-				// ListItem() {
-				// 	ComponentShowContainer({ title: '搭配弹出层使用', titlePaddingLeft: SPACE.SM, card: true }) {
-				// 		IBestField({
-				// 			label: '城市',
-				// 			value: $filedValue,
-				// 			placeholder: "请选择城市",
-				// 			isLink: true,
-				// 			hasBorder: false,
-				// 			onFieldClick: () => {
-				// 				this.visible = true
-				// 			}
-				// 		})
-				// 	}
-				// }
+				ListItem() {
+					ComponentShowContainer({ title: '搭配弹出层使用', titlePaddingLeft: SPACE.SM, card: true }) {
+						IBestField({
+							label: '城市',
+							value: this.filedValue,
+							placeholder: "请选择城市",
+							isLink: true,
+							hasBorder: false,
+							onFieldClick: () => {
+								this.visible = true
+							}
+						})
+					}
+				}
 				ListItem() {
 					ComponentShowContainer({ title: '默认选中', titlePaddingLeft: SPACE.SM, card: true }) {
 						IBestPicker({

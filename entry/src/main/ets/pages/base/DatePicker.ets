@@ -1,10 +1,9 @@
-import { IBestDatePicker, IBestNavBar, IBestPickerOption, IBestToast } from '@ibestservices/ibest-ui-v2'
+import { IBestDatePicker, IBestPickerOption, IBestToast } from '@ibestservices/ibest-ui-v2'
 import ComponentShowContainer from '../../components/ComponentShowContainer'
 import { modeColor, SPACE } from '../../assets/styles/BaseStyle'
-import RouterUtil from '../../utils/routerUtil'
-
+import CustomNavBar from '../../components/CustomNavBar'
 @Builder
-export function DatePickerBuilder(name: string, title: string){
+export function DatePickerBuilder(_: string, title: string){
 	DatePickerPage({title})
 }
 
@@ -24,13 +23,7 @@ struct DatePickerPage {
 	}
 	build() {
 		NavDestination() {
-			IBestNavBar({
-				title: this.title,
-				isShowStatusBar: true,
-				onLeftClick: () => {
-					RouterUtil.pop()
-				}
-			})
+			CustomNavBar({title: this.title})
 			List() {
 				ListItem() {
 					ComponentShowContainer({ title: '基础用法', titlePaddingLeft: SPACE.SM, card: true }) {

@@ -1,10 +1,10 @@
-import { IBestCascader, IBestCascaderContent, IBestCascaderOption, IBestCell, IBestNavBar, IBestToast } from '@ibestservices/ibest-ui-v2'
+import { IBestCascader, IBestCascaderContent, IBestCascaderOption, IBestCell, IBestToast } from '@ibestservices/ibest-ui-v2'
 import { modeColor, SPACE } from '../../assets/styles/BaseStyle'
 import ComponentShowContainer from '../../components/ComponentShowContainer'
 import { regionData } from '@ibestservices/area-data'
-import RouterUtil from '../../utils/routerUtil'
+import CustomNavBar from '../../components/CustomNavBar'
 @Builder
-export function CascaderBuilder(name: string, title: string){
+export function CascaderBuilder(_: string, title: string){
 	CascaderPage({title})
 }
 
@@ -149,13 +149,7 @@ struct CascaderPage {
 
 	build() {
 		NavDestination() {
-			IBestNavBar({
-				title: this.title,
-				isShowStatusBar: true,
-				onLeftClick: () => {
-					RouterUtil.pop()
-				}
-			})
+			CustomNavBar({title: this.title})
 			List() {
 				ListItem() {
 					ComponentShowContainer({ title: '基础用法', titlePaddingLeft: SPACE.XS }) {

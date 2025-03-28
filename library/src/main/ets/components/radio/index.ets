@@ -71,10 +71,6 @@ export struct IBestRadio {
 	 * 自定义图标插槽
 	 */
 	@BuilderParam iconBuilder: (data: BuilderArgs) => void
-	/**
-	 * 改变的回调
-	 */
-	@Event onChange: (checked: boolean) => void = () => {}
 
 	@Local uniId: number = 0
 	@Local isChecked: boolean = false
@@ -107,6 +103,10 @@ export struct IBestRadio {
 		if (this.group) {
 			emitter.off(getEventName(COMPONENT_NAME, RADIO_GROUP_EVENT_NAME.INIT_CHILDREN, this.group), this.uniId)
 		}
+	}
+	// 初始化
+	handleRadioGroupInit(name: IBestStringNumber | boolean) {
+		this.isChecked = name === this.name
 	}
 	// 获取背景色
 	getBackgroundColor() {
@@ -150,14 +150,9 @@ export struct IBestRadio {
 		if (this.disabled || this.isChecked) {
 			return
 		}
-		this.isChecked = true
-		this.onChange(this.isChecked)
 		this.updateGroup()
 	}
-	// 初始化
-	handleRadioGroupInit(name: IBestStringNumber | boolean) {
-		this.isChecked = name === this.name
-	}
+
 	build() {
 		Row() {
 			if (this.labelPosition === 'left') {

@@ -212,7 +212,6 @@ export struct IBestTabs{
     }
 	@Monitor("isLandscape.value")
     onDidBuild(): void {
-		console.log("onDidBuild")
         this.initSize()
     }
     initSize: () => void = debounce(() => {

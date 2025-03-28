@@ -1,11 +1,11 @@
 import { IBestNavBar } from '@ibestservices/ibest-ui-v2';
 import { COLOR_BLUE, CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
-import RouterUtil from '../../utils/routerUtil';
+import CustomNavBar from '../../components/CustomNavBar';
 import { getRandomColor } from '../../utils/utils';
 
 @Builder
-export function NavBarBuilder(name: string, title: string){
+export function NavBarBuilder(_: string, title: string){
 	NavBarPage({title})
 }
 
@@ -36,13 +36,7 @@ struct NavBarPage {
 
 	build() {
 		NavDestination() {
-			IBestNavBar({
-				title: this.title,
-				isShowStatusBar: true,
-				onLeftClick: () => {
-					RouterUtil.pop()
-				}
-			})
+			CustomNavBar({title: this.title})
 			List() {
 				ListItem() {
 					ComponentShowContainer({ title: '基础用法', titlePaddingLeft: SPACE.MD }){

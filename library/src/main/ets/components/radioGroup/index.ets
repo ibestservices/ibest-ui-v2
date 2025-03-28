@@ -29,6 +29,10 @@ export struct IBestRadioGroup {
 	 * 选中变化的回调
 	 */
 	@Event onChange: (name: IBestStringNumber | boolean) => void = () => {}
+	/**
+	 * 改变前的回调
+	 */
+	@Event beforeChange?: (name: IBestStringNumber | boolean) => Promise<boolean> | boolean = undefined
 	@Event $active: (name: IBestStringNumber | boolean) => void = () => {}
 
 	@Local uniId: number = 0
@@ -36,7 +40,7 @@ export struct IBestRadioGroup {
 	aboutToAppear() {
 		this.uniId = this.getUniqueId()
 		if(this.group){
-			emitter.on(getEventName(COMPONENT_NAME, RADIO_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.uniId, (name: IBestStringNumber | boolean): void => this.onItemChange(name))
+			emitter.on(getEventName(COMPONENT_NAME, RADIO_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.uniId, (name: IBestStringNumber | boolean): Promise<void> => this.onItemChange(name))
 			sleep(50).then(() => {
 				this.initRadio()
 			})
@@ -51,7 +55,22 @@ export struct IBestRadioGroup {
 	initRadio() {
 		emitter.emit(getEventName(COMPONENT_NAME, RADIO_GROUP_EVENT_NAME.INIT_CHILDREN, this.group), this.active)
 	}
-	onItemChange(name: IBestStringNumber | boolean) {
+	async handleBeforeClose(name: IBestStringNumber | boolean) {
+		let status = true
+		try {
+			if (this.beforeChange) {
+				status = await this.beforeChange(name)
+			}
+		} catch (e) {
+			status = false
+		}
+		return status
+	}
+	async onItemChange(name: IBestStringNumber | boolean) {
+		let status = await this.handleBeforeClose(name)
+		if(!status){
+			return
+		}
 		this.$active(name)
 		this.onChange(name)
 	}

@@ -1,8 +1,9 @@
 import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle'
 import ComponentShowContainer from '../../components/ComponentShowContainer'
-import { IBestButton, IBestCell, IBestCellGroup, IBestDialog, IBestDialogUtil, IBestNavBar } from '@ibestservices/ibest-ui-v2'
+import { IBestButton, IBestCell, IBestCellGroup, IBestDialog, IBestDialogUtil } from '@ibestservices/ibest-ui-v2'
+import CustomNavBar from '../../components/CustomNavBar'
+import { LevelMode } from '@kit.ArkUI'
 import RouterUtil from '../../utils/routerUtil'
-
 export interface TextData {
 	title: string,
 	code: string,
@@ -29,6 +30,8 @@ struct DialogPage {
 	@Local formInputError: boolean = false
 	@Local dialogVisible: boolean = false
 	@Local dialogWidth: number | string = "90%"
+	@Local uniId: number = 0
+	private uiContext = this.getUIContext()
 	@Builder formInputContain() {
 		Column({ space: SPACE.MD }) {
 			IBestButton({
@@ -55,8 +58,15 @@ struct DialogPage {
 		}.padding(SPACE.MD)
 	}
 	@Builder customComponentContent() {
-		Column() {
+		Column({space: SPACE.MD}) {
 			Text(textData.program)
+			IBestButton({
+				type: 'primary',
+				text: "跳转页面",
+				onBtnClick: () => {
+					RouterUtil.push("Button", "Button 按钮")
+				}
+			})
 		}
 		.padding(20)
 	}
@@ -69,15 +79,19 @@ struct DialogPage {
 		.padding(20)
 		.justifyContent(FlexAlign.Center)
 	}
+
+	onDidBuild(): void {
+		setTimeout(() => {
+			let uniId = this.uiContext.getFrameNodeById("main")?.getUniqueId()
+			if(uniId){
+				this.uniId = uniId
+			}
+		}, 0)
+	}
+
 	build() {
 		NavDestination() {
-			IBestNavBar({
-				title: this.title,
-				isShowStatusBar: true,
-				onLeftClick: () => {
-					RouterUtil.pop()
-				}
-			})
+			CustomNavBar({title: this.title})
 			// 使用组件
 			IBestDialog({
 				visible: this.dialogVisible!!,
@@ -212,6 +226,7 @@ struct DialogPage {
 														title: "提示",
 														message: "确认关闭？",
 														showCancelButton: true,
+														alignment: "bottom",
 														onConfirm: () => {
 															resolve(true)
 														},
@@ -230,10 +245,10 @@ struct DialogPage {
 					}
 				}
 				ListItem() {
-					ComponentShowContainer({ title: '使用插槽', titlePaddingLeft: SPACE.MD }) {
+					ComponentShowContainer({ title: '内部跳转', titlePaddingLeft: SPACE.MD }) {
 						IBestCellGroup({ inset: true }) {
 							IBestCell({
-								title: '使用插槽',
+								title: '内部跳转',
 								isLink: true,
 								hasBorder: false,
 								onCellClick: () => {
@@ -241,6 +256,8 @@ struct DialogPage {
 										title: textData.title,
 										message: textData.life,
 										showCancelButton: true,
+										levelMode: 1,
+										levelUniqueId: this.uniId,
 										defaultBuilder: (): void => this.customComponentContent()
 									})
 								}
@@ -262,9 +279,11 @@ struct DialogPage {
 						}
 					}
 				}
-			}.layoutWeight(1)
+			}
+			.layoutWeight(1)
 		}
 		.hideTitleBar(true)
 		.backgroundColor(modeColor.bg)
+		.id("main")
 	}
 }

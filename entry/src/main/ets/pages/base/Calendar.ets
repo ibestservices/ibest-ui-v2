@@ -1,11 +1,11 @@
 import { IBestButton,IBestCalendar,IBestCalendarConfirmResult,IBestCalendarDialog,IBestCell,IBestCellGroup,IBestNavBar } from '@ibestservices/ibest-ui-v2'
 import promptAction from '@ohos.promptAction'
 import ComponentShowContainer from '../../components/ComponentShowContainer'
-import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle'
+import {  modeColor, SPACE } from '../../assets/styles/BaseStyle'
 import dayjs from '@hview/dayjs'
-import RouterUtil from '../../utils/routerUtil'
+import CustomNavBar from '../../components/CustomNavBar'
 @Builder
-export function CalendarBuilder(name: string, title: string){
+export function CalendarBuilder(_: string, title: string){
     CalendarPage({title})
 }
 
@@ -70,13 +70,7 @@ struct CalendarPage {
 
     build() {
         NavDestination(){
-            IBestNavBar({
-                title: this.title,
-                isShowStatusBar: true,
-                onLeftClick: () => {
-                    RouterUtil.pop()
-                }
-            })
+			CustomNavBar({title: this.title})
             List() {
                 ListItem() {
                     ComponentShowContainer({ title: '基础用法', titlePaddingLeft: SPACE.XS }) {

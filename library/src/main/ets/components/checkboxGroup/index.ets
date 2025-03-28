@@ -44,6 +44,10 @@ export struct IBestCheckboxGroup {
 	 * 选中变化的回调
 	 */
 	@Event onChange: (checkedItemNames: IBestStringNumber[]) => void = () => {}
+	/**
+	 * 改变前回调
+     */
+	@Event beforeChange?: (checkedItemNames: IBestStringNumber[]) => Promise<boolean> | boolean = undefined
 	@Event $activeList: (actives: IBestStringNumber[]) => void = () => {}
 
 	@Local uniId: number = 0
@@ -54,7 +58,7 @@ export struct IBestCheckboxGroup {
 		this.controller.toggleAll = (isSelectAll?: boolean): void => this.toggleAll(isSelectAll)
 		if (this.group) {
 			emitter.on(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.GET_ALL_NAME, this.group), this.uniId, (name: IBestStringNumber): void => this.getAllNames(name))
-			emitter.on(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.uniId, (name: IBestStringNumber, checked: boolean): void => this.onItemChange(name, checked))
+			emitter.on(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.uniId, (name: IBestStringNumber, checked: boolean): Promise<void> => this.onItemChange(name, checked))
 			sleep().then(() => {
 				this.initChildren()
 				this.handleMaxChange()
@@ -75,24 +79,41 @@ export struct IBestCheckboxGroup {
 	initChildren() {
 		emitter.emit(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.INIT_CHILDREN, this.group), this.activeList)
 	}
-	@Monitor("activeList.length")
+	@Monitor("activeList")
 	activeChange(){
 		this.initChildren()
 		this.handleMaxChange()
 	}
+	async handleBeforeClose(checkedNames: IBestStringNumber[]) {
+		let status = true
+		try {
+			if (this.beforeChange) {
+				status = await this.beforeChange(checkedNames)
+			}
+		} catch (e) {
+			status = false
+		}
+		return status
+	}
 	// 选项变化
-	onItemChange(name: IBestStringNumber, checked: boolean) {
+	async onItemChange(name: IBestStringNumber, checked: boolean) {
+		let checkedNames: IBestStringNumber[] = [...this.activeList]
 		if(checked){
 			let index = this.activeList.indexOf(name)
 			if(index == -1){
-				this.activeList.push(name)
+				checkedNames.push(name)
 			}
-			this.onChange(this.activeList)
 		}else {
-			let arr = this.activeList.filter(item => item !== name)
-			this.$activeList(arr)
-			this.onChange(arr)
+			checkedNames = checkedNames.filter(item => item !== name)
 		}
+		let status = await this.handleBeforeClose(checkedNames)
+		if(!status){
+			this.$activeList([...this.activeList])
+			return
+		}
+		this.$activeList(checkedNames)
+		this.onChange(checkedNames)
+		this.handleMaxChange()
 	}
 	// 当最大数量变化时
 	@Monitor("max")

@@ -1,12 +1,10 @@
-import {
-	// IBestDialogUtil,
-	IBestNavBar, IBestSwitch } from '@ibestservices/ibest-ui-v2';
+import { IBestDialogUtil, IBestSwitch } from '@ibestservices/ibest-ui-v2';
 import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
-import RouterUtil from '../../utils/routerUtil';
+import CustomNavBar from '../../components/CustomNavBar';
 
 @Builder
-export function SwitchBuilder(name: string, title: string){
+export function SwitchBuilder(_: string, title: string){
 	SwitchPage({title})
 }
 
@@ -38,13 +36,7 @@ struct SwitchPage {
 	}
 	build() {
 		NavDestination() {
-			IBestNavBar({
-				title: this.title,
-				isShowStatusBar: true,
-				onLeftClick: () => {
-					RouterUtil.pop()
-				}
-			})
+			CustomNavBar({title: this.title})
 			List() {
 				ListItem() {
 					ComponentShowContainer({ title: '基础用法' }) {
@@ -106,21 +98,21 @@ struct SwitchPage {
 					ComponentShowContainer({ title: '异步控制' }) {
 						IBestSwitch({
 							value: this.value7!!,
-							// onBeforeChange: () => {
-								// return new Promise((resolve, reject) => {
-								// 	IBestDialogUtil.open({
-								// 		title: "提示",
-								// 		message: "确定更改状态?",
-								// 		showCancelButton: true,
-								// 		onConfirm: () => {
-								// 			resolve(true)
-								// 		},
-								// 		onCancel: () => {
-								// 			reject(false)
-								// 		}
-								// 	})
-								// })
-							// }
+							beforeChange: () => {
+								return new Promise((resolve, reject) => {
+									IBestDialogUtil.open({
+										title: "提示",
+										message: "确定更改状态?",
+										showCancelButton: true,
+										onConfirm: () => {
+											resolve(true)
+										},
+										onCancel: () => {
+											reject(false)
+										}
+									})
+								})
+							}
 						})
 					}
 				}

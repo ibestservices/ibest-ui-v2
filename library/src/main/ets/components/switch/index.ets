@@ -54,7 +54,7 @@ export struct IBestSwitch {
 	/**
 	 * 改变前的回调
 	 */
-	@Event onBeforeChange: (value: boolean) => Promise<boolean> = () => Promise.resolve(true)
+	@Event beforeChange?: (value: boolean) => Promise<boolean> | boolean = undefined
 	/**
 	 * 点击的回调
 	 */
@@ -71,10 +71,25 @@ export struct IBestSwitch {
 			this.switchBarSize = getComponentsInfo(this.uiContext, `ibest_switch_${this.uniId}`).width
 		}, 10)
 	}
+	// 结束前的动画
+	async handleBeforeClose(value: boolean) {
+		let status = true
+		try {
+			if (this.beforeChange) {
+				status = await this.beforeChange(value)
+			}
+		} catch (e) {
+			status = false
+		}
+		return status
+	}
 	// 改变的回调
 	async handleChange() {
 		const nextValue = !this.value
-		await this.onBeforeChange(nextValue)
+		let status = await this.handleBeforeClose(nextValue)
+		if(!status){
+			return
+		}
 		this.$value(nextValue)
 		this.onChange(nextValue)
 	}

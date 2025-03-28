@@ -5,7 +5,7 @@ import { IBestPopupColor } from './color'
 import { IBestIcon } from '../icon'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
-import { AppStorageV2, ImmersiveMode } from '@kit.ArkUI'
+import { AppStorageV2, ImmersiveMode, LengthMetrics, LevelMode } from '@kit.ArkUI'
 import GlobalStore from '../../utils/GlobalStore'
 
 const popupDuration = 200
@@ -325,7 +325,6 @@ export struct IBestPopup{
 	 * 是否允许返回键关闭
 	 */
 	@Param closeOnBackPress: boolean = false
-	
 	/**
 	 * 是否开启顶部安全区适配
 	 */
@@ -334,6 +333,21 @@ export struct IBestPopup{
 	 * 是否开启底部安全区适配
 	 */
 	@Param safeAreaInsetBottom: boolean = false
+	/**
+	 * 弹窗避让键盘后，和键盘之间的距离
+	 * @since 2.0.8
+	 */
+	@Param keyboardAvoidDistance: LengthMetrics = LengthMetrics.vp(16)
+	/**
+	 * 弹窗显示层级
+	 * @since 2.0.8
+	 */
+	@Param levelMode: LevelMode = 0
+	/**
+	 * 页面级弹窗需要显示的层级下的节点 uniqueId, 仅当levelMode属性设置为LevelMode.EMBEDDED时生效
+	 * @since 2.0.8
+	 */
+	@Param levelUniqueId: number = 0
 	/**
 	 * 自定义头部 优先级大于title
 	 */
@@ -418,7 +432,10 @@ export struct IBestPopup{
 			offset: { dx: 0, dy: -(this.topAvoidHeight.value as number) },
 			isModal: this.isModal,
 			maskColor: this.maskColor,
-			// immersiveMode: ImmersiveMode.EXTEND,
+			keyboardAvoidDistance: this.keyboardAvoidDistance,
+			levelMode: this.levelMode,
+			levelUniqueId: this.levelUniqueId,
+			immersiveMode: ImmersiveMode.EXTEND,
 			onDidAppear: () => {
 				this.onOpen()
 			},

@@ -23,5 +23,5 @@ export function setIBestUIBaseStyle(styleData?: Partial<IBestUIBaseStyleType>) {
  * 获取全局样式
  */
 export function getDefaultBaseStyle(): IBestUIBaseStyleObjType {
-	return AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE) as IBestUIBaseStyleObjType
+	return AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 }

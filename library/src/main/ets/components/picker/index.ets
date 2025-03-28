@@ -46,7 +46,7 @@ export struct IBestPicker{
 	/**
 	 * 分组id
 	 */
-	@Param groupId: string = ""
+	@Param groupId: IBestStringNumber = ""
 	/**
 	 * 当前选中的值, 支持双向绑定
 	 */

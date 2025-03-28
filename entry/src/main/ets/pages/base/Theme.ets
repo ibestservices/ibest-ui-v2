@@ -2,21 +2,19 @@ import {
 	IBestButton,
 	IBestCheckbox,
 	// IBestCircleProgress,
-	IBestNavBar,
 	// IBestProgress,
 	IBestRadio,
 	IBestRadioGroup,
 	IBestSwitch,
 	IBestTabs,
-	// IBestTag,
-	IBestSetUIBaseStyle,
-	IBestUIBaseStyle
-} from '@ibestservices/ibest-ui-v2';
-import { CONTAINER_SIZE, FONT_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
-import ComponentShowContainer from '../../components/ComponentShowContainer';
-import RouterUtil from '../../utils/routerUtil';
-import { getRandomColor } from '../../utils/utils';
-import { AppStorageV2 } from '@kit.ArkUI';
+	IBestTag,
+	IBestSetUIBaseStyle
+} from '@ibestservices/ibest-ui-v2'
+import { FONT_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle'
+import ComponentShowContainer from '../../components/ComponentShowContainer'
+import CustomNavBar from '../../components/CustomNavBar'
+import { getRandomColor } from '../../utils/utils'
+
 @Builder
 export function ThemeBuilder(name: string, title: string){
 	ThemePage({title})
@@ -27,7 +25,7 @@ export function ThemeBuilder(name: string, title: string){
 struct ThemePage {
 	@Param title: string = ''
 	@Local curTabName: string = "1"
-	@Local colorText: string = '#07c160';
+	@Local colorText: string = '#07c160'
 	@Local group: string = "themeGroup"
 	@Local active: string = "1"
 	@Local switchValue: boolean = true
@@ -37,13 +35,7 @@ struct ThemePage {
 	}
 	build() {
 		NavDestination() {
-			IBestNavBar({
-				title: this.title,
-				isShowStatusBar: true,
-				onLeftClick: () => {
-					RouterUtil.pop()
-				}
-			})
+			CustomNavBar({title: this.title})
 			List() {
 				ListItem() {
 					ComponentShowContainer({ title: $r("app.string.custom_switch", $r("app.string.color")) }) {
@@ -145,14 +137,14 @@ struct ThemePage {
 						})
 					}
 				}
-				// ListItem() {
-				// 	ComponentShowContainer({ title: $r("app.string.component_tag") }) {
-				// 		IBestTag({
-				// 			type: 'primary',
-				// 			text: $r("app.string.tag")
-				// 		})
-				// 	}
-				// }
+				ListItem() {
+					ComponentShowContainer({ title: $r("app.string.component_tag") }) {
+						IBestTag({
+							type: 'primary',
+							text: $r("app.string.tag")
+						})
+					}
+				}
 				ListItem().height(50)
 			}
 			.layoutWeight(1)
