@@ -58,7 +58,7 @@ export struct IBestSwitch {
 	/**
 	 * 点击的回调
 	 */
-	@Event onClickSwitch: (event: ClickEvent) => void = () => {}
+	@Event onSwitchClick: (event: ClickEvent) => void = () => {}
 	@Event $value: (value: boolean) => void = () => {}
 
 	@Local uniId: number = 0

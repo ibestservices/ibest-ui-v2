@@ -4,7 +4,7 @@ import ComponentShowContainer from '../../components/ComponentShowContainer';
 import { LengthMetrics } from '@ohos.arkui.node';
 import CustomNavBar from '../../components/CustomNavBar';
 @Builder
-export function ButtonBuilder(name: string, title: string){
+export function ButtonBuilder(_: string, title: string){
 	ButtonPage({title})
 }
 @Entry

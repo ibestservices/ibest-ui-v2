@@ -5,7 +5,7 @@ import IBestImagePreview from './src/main/ets/apis/IBestImagePreview'
 import IBestDialogUtil from './src/main/ets/apis/IBestDialog'
 import IBestNotify from './src/main/ets/apis/IBestNotify'
 import GlobalStore from './src/main/ets/utils/GlobalStore'
-import { IBestGlobalConfigType } from './src/main/ets/model/Global.type'
+import { IBestGlobalConfigType, IBestBaseDataType } from './src/main/ets/model/Global.type'
 const init = GlobalStore.init
 const setGlobalConfig = GlobalStore.setGlobalConfig
 
@@ -19,7 +19,8 @@ export {
 	IBestActionSheet,
 	IBestImagePreview,
 	IBestDialogUtil,
-	IBestNotify
+	IBestNotify,
+	IBestBaseDataType
 }
 
 export type {
@@ -63,8 +64,6 @@ export { IBestFormController, IBestFormRule } from './src/main/ets/components/fo
 export { IBestNumberKeyboard } from './src/main/ets/components/numberKeyboard/index'
 
 export { IBestPasswordInput } from './src/main/ets/components/passwordInput/index'
-
-// export { IBestWatermark } from './src/main/ets/components/waterMark/index'
 
 export { IBestPicker } from './src/main/ets/components/picker/index'
 export { IBestPickerOption } from './src/main/ets/components/picker/index.type'
@@ -121,21 +120,20 @@ export { IBestHighlight } from './src/main/ets/components/highlight/index'
 
 export { IBestNoticeBar } from './src/main/ets/components/noticeBar/index'
 
-// export { IBestProgress } from './src/main/ets/components/progress/index'
-//
-// export { IBestTable, IBestTableColumn } from './src/main/ets/components/table/index'
-// export { IBestTableColumnData } from './src/main/ets/components/table/index.type'
-//
+export { IBestPopover } from './src/main/ets/components/popover/index'
+export { IBestPopoverAction, IBestPopoverController } from './src/main/ets/components/popover/index.type'
 
-//
-// export { IBestPopover } from './src/main/ets/components/popover/index'
-// export { IBestPopoverAction, IBestPopoverController } from './src/main/ets/components/popover/index.type'
-//
-// export { IBestTextEllipsis } from './src/main/ets/components/textEllipsis/index'
-//
-// export { IBestSideBar } from './src/main/ets/components/sideBar/index'
-// export { IBestSideBarItem } from './src/main/ets/components/sideBarItem/index'
+export { IBestProgress } from './src/main/ets/components/progress/index'
 
+export { IBestTable, IBestTableColumn } from './src/main/ets/components/table/index'
+export { IBestTableColumnData } from './src/main/ets/components/table/index.type'
+
+export { IBestTextEllipsis } from './src/main/ets/components/textEllipsis/index'
+
+export { IBestWatermark } from './src/main/ets/components/waterMark/index'
+
+export { IBestSideBar } from './src/main/ets/components/sideBar/index'
+export { IBestSideBarItem } from './src/main/ets/components/sideBarItem/index'
 
 export { IBestTag } from './src/main/ets/components/tag/index'
 
@@ -143,9 +141,9 @@ export { IBestNavBar } from './src/main/ets/components/navBar/index'
 
 export { IBestTabs } from './src/main/ets/components/tab/index'
 export { IBestTabItem, IBestTabItemType } from './src/main/ets/components/tab/index.type'
-//
-// export { IBestCanvasDrawer } from './src/main/ets/components/canvasDrawer/index'
-// export { IBestCanvasContent } from './src/main/ets/components/canvasDrawer/index.type'
-//
-// export { IBestImageCropper } from './src/main/ets/components/imageCropper/index'
-// export { IBestImageCropperController } from './src/main/ets/components/imageCropper/index.type'
+
+export { IBestCanvasDrawer } from './src/main/ets/components/canvasDrawer/index'
+export { IBestCanvasContent } from './src/main/ets/components/canvasDrawer/index.type'
+
+export { IBestImageCropper } from './src/main/ets/components/imageCropper/index'
+export { IBestImageCropperController } from './src/main/ets/components/imageCropper/index.type'

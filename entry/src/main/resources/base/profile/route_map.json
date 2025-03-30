@@ -6,6 +6,11 @@
 			"buildFunction": "DocBuilder"
 		},
 		{
+			"name": "MakePoster",
+			"pageSourceFile": "src/main/ets/pages/MakePoster.ets",
+			"buildFunction": "MakePosterBuilder"
+		},
+		{
 			"name": "Button",
 			"pageSourceFile": "src/main/ets/pages/base/Button.ets",
 			"buildFunction": "ButtonBuilder"
@@ -206,9 +211,34 @@
 			"buildFunction": "NoticeBarBuilder"
 		},
 		{
+			"name": "Popover",
+			"pageSourceFile": "src/main/ets/pages/base/Popover.ets",
+			"buildFunction": "PopoverBuilder"
+		},
+		{
+			"name": "Progress",
+			"pageSourceFile": "src/main/ets/pages/base/Progress.ets",
+			"buildFunction": "ProgressBuilder"
+		},
+		{
+			"name": "Table",
+			"pageSourceFile": "src/main/ets/pages/base/Table.ets",
+			"buildFunction": "TableBuilder"
+		},
+		{
 			"name": "Tag",
 			"pageSourceFile": "src/main/ets/pages/base/Tag.ets",
 			"buildFunction": "TagBuilder"
+		},
+		{
+			"name": "TextEllipsis",
+			"pageSourceFile": "src/main/ets/pages/base/TextEllipsis.ets",
+			"buildFunction": "TextEllipsisBuilder"
+		},
+		{
+			"name": "Watermark",
+			"pageSourceFile": "src/main/ets/pages/base/Watermark.ets",
+			"buildFunction": "WatermarkBuilder"
 		},
 		{
 			"name": "NavBar",
@@ -216,9 +246,24 @@
 			"buildFunction": "NavBarBuilder"
 		},
 		{
+			"name": "SideBar",
+			"pageSourceFile": "src/main/ets/pages/base/SideBar.ets",
+			"buildFunction": "SideBarBuilder"
+		},
+		{
 			"name": "Tab",
 			"pageSourceFile": "src/main/ets/pages/base/Tab.ets",
 			"buildFunction": "TabBuilder"
+		},
+		{
+			"name": "CanvasDrawer",
+			"pageSourceFile": "src/main/ets/pages/extend/CanvasDrawer.ets",
+			"buildFunction": "CanvasDrawerBuilder"
+		},
+		{
+			"name": "ImageCropper",
+			"pageSourceFile": "src/main/ets/pages/extend/ImageCropper.ets",
+			"buildFunction": "ImageCropperBuilder"
 		}
 	]
 }

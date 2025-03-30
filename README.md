@@ -3,7 +3,7 @@
 width="100">
 </p>
 
-<p align="center" style="font-size: 40px;font-weight: bold;">IBest-UI-v2</p>
+<p align="center" style="font-size: 40px;font-weight: bold;">IBest-UI-V2</p>
 
 <p align="center">轻量、可定制的 HarmonyOS 组件库</p>
 
@@ -28,6 +28,7 @@ IBest-UI是一个**轻量、简单易用、可定制主题、支持深色模式�
 - 💪 单元测试覆盖率超过 90%，提供稳定性保障
 - 📖 提供丰富的中文文档和组件示例
 - 🍭 支持主题定制，内置 100+ 个主题变量
+-  支持元服务
 - 🍭 支持深色模式
 - 🌍 支持国际化
 
@@ -38,7 +39,7 @@ IBest-UI是一个**轻量、简单易用、可定制主题、支持深色模式�
 ## 下载安装
 
 ```ts
-ohpm install @ibestservices/ibest-ui
+ohpm install @ibestservices/ibest-ui-v2
 ```
 
 OpenHarmony ohpm 环境配置等更多内容，请参考[如何安装 OpenHarmony ohpm 包](https://gitee.com/openharmony-tpc/docs/blob/master/OpenHarmony_har_usage.md)
@@ -144,7 +145,7 @@ ohos.permission.INTERNET
 ## 约束与限制
 在下述版本验证通过：
 ```text
-DevEco Studio 5.0.2 Release
+DevEco Studio 5.0.3 Release
 Build #DS-233.14475.28.36.507210
 构建版本：5.0.7.210, built on February 11, 2025
 Runtime version: 17.0.12+1-b1087.25 x86_64

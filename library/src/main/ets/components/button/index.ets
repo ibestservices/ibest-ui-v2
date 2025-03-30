@@ -126,8 +126,8 @@ export struct IBestButton {
 			} else {
 				// 默认的loading
 				IBestLoading({
-					loadingSize: this.computedLoadingSize,
-					loadingColor: this.computedTextColor
+					loadingSize: this.getLoadingSize(),
+					loadingColor: this.getTextColor()
 				}).margin({
 					left: this.iconPosition == "right" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0,
 					right: this.iconPosition == "left" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0,
@@ -140,8 +140,8 @@ export struct IBestButton {
 		} else if (this.icon) {
 			IBestIcon({
 				name: this.icon,
-				iconSize: this.computedBtnSize.fontSize,
-				color: this.computedTextColor
+				iconSize: this.getBtnSize().fontSize,
+				color: this.getTextColor()
 			}).margin({
 				left: this.iconPosition == "right" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0,
 				right: this.iconPosition == "left" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0,
@@ -153,8 +153,7 @@ export struct IBestButton {
 	/**
 	 * 根据buttonSize换对应的按钮尺寸
 	 */
-	@Computed
-	get computedBtnSize(): BtnSizeType {
+	getBtnSize(): BtnSizeType {
 		if (this.btnWidth || this.btnHeight) {
 			return {
 				width: this.btnWidth || "auto",
@@ -198,29 +197,25 @@ export struct IBestButton {
 	/**
 	 * 根据颜色type获取背景色
 	 */
-	@Computed
-	get computedBgColor() {
+	getBgColor() {
 		return this.plain ? "transparent" : this.color ? this.color : this.type == "default" ? IBestButtonColor.defaultBg : this.baseStyle[this.type]
 	}
 	/**
 	 * 获取按钮的borderRadius
 	 */
-	@Computed
-	get computedBorderRadius() {
+	getBorderRadius() {
 		return this.btnBorderRadius || (this.square ? 0 : this.round ? this.baseStyle.borderRadiusMax as string : this.baseStyle.borderRadiusMd as string)
 	}
 	/**
 	 * 获取按钮边框的颜色
 	 */
-	@Computed
-	get computedBorderColor() {
+	getBorderColor() {
 		return this.btnBorderColor || (this.color ? this.color : this.type === COLOR_TYPE.DEFAULT ? GRAY_COLOR.GRAY_4 : this.baseStyle[this.type])
 	}
 	/**
 	 * 获取按钮文字的颜色
 	 */
-	@Computed
-	get computedTextColor() {
+	getTextColor() {
 		if (this.fontColor) {
 			return this.fontColor
 		}
@@ -232,9 +227,8 @@ export struct IBestButton {
 	/**
 	 * 获取loading的大小
 	 */
-	@Computed
-	get computedLoadingSize() {
-		return this.loadingSize != -1 ? getSizeByUnit(this.loadingSize) : this.computedBtnSize.fontSize
+	getLoadingSize() {
+		return this.loadingSize != -1 ? getSizeByUnit(this.loadingSize) : this.getBtnSize().fontSize
 	}
 	build() {
 		Button({ type: ButtonType.Normal }) {
@@ -247,8 +241,8 @@ export struct IBestButton {
 							this.iconContent()
 						}
 						Text(this.loading ? this.loadingText ?? this.text : this.text)
-							.fontSize(getSizeByUnit(this.computedBtnSize.fontSize, true))
-							.fontColor(this.computedTextColor)
+							.fontSize(getSizeByUnit(this.getBtnSize().fontSize, true))
+							.fontColor(this.getTextColor())
 						if(this.iconPosition == "right"){
 							this.iconContent()
 						}
@@ -259,8 +253,8 @@ export struct IBestButton {
 							this.iconContent()
 						}
 						Text(this.loading ? this.loadingText ?? this.text : this.text)
-							.fontSize(getSizeByUnit(this.computedBtnSize.fontSize, true))
-							.fontColor(this.computedTextColor)
+							.fontSize(getSizeByUnit(this.getBtnSize().fontSize, true))
+							.fontColor(this.getTextColor())
 						if(this.iconPosition == "bottom"){
 							this.iconContent()
 						}
@@ -268,14 +262,14 @@ export struct IBestButton {
 				}
 			}
 		}
-		.width(getSizeByUnit(this.computedBtnSize.width))
-		.height(getSizeByUnit(this.computedBtnSize.height))
-		.padding({ left: getSizeByUnit(this.computedBtnSize.padding), right: getSizeByUnit(this.computedBtnSize.padding), top: 0, bottom: 0 })
+		.width(getSizeByUnit(this.getBtnSize().width))
+		.height(getSizeByUnit(this.getBtnSize().height))
+		.padding({ left: getSizeByUnit(this.getBtnSize().padding), right: getSizeByUnit(this.getBtnSize().padding), top: 0, bottom: 0 })
 		.borderWidth(convertDimensionsWidthUnit(this.hairline ? 0.5 : 1))
-		.borderRadius(getSizeByUnit(this.computedBorderRadius))
-		.fontColor(this.computedTextColor)
-		.backgroundColor(this.computedBgColor)
-		.borderColor(this.computedBorderColor)
+		.borderRadius(getSizeByUnit(this.getBorderRadius()))
+		.fontColor(this.getTextColor())
+		.backgroundColor(this.getBgColor())
+		.borderColor(this.getBorderColor())
 		.hitTestBehavior(this.loading ? HitTestMode.None : HitTestMode.Default)
 		.enabled(!this.disabled)
 		.opacity(this.disabled && this.plain ? 0.5 : 1)

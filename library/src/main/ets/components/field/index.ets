@@ -559,7 +559,6 @@ export struct IBestField{
     }
     initValue(){
         if(this.value === undefined || this.value === null){
-			console.log("value is undefined")
             this.$value("")
         }
     }
@@ -653,6 +652,7 @@ export struct IBestField{
     // value  change变化 执行验证
 	@Monitor("value")
     valueChange(){
+		console.log("valueChange")
         this.sendValidate("change")
     }
 	// 格式化值

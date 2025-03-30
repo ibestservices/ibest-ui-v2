@@ -421,7 +421,9 @@ struct Index {
 							isLink: true,
 							hasBorder: false,
 							onCellClick: () => {
-								RouterUtil.push("PrivacyPolicy")
+								router.pushUrl({
+									url: "pages/PrivacyPolicy"
+								})
 							}
 						})
 					}
@@ -478,7 +480,7 @@ struct Index {
 		this.checkUpdate()
 		this.getUiVersion()
 		setTimeout(() => {
-			// RouterUtil.push("PrivacyPolicy")
+            // RouterUtil.push("MakePoster")
 		}, 300)
 	}
 	getTitleOpacity(){

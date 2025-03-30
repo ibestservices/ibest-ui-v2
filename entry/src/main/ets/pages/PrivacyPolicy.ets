@@ -1,7 +1,7 @@
 import { IBestNavBar } from '@ibestservices/ibest-ui-v2'
 import { webview } from '@kit.ArkWeb'
 import { CONTAINER_SIZE } from '../assets/styles/BaseStyle'
-import RouterUtil from '../utils/routerUtil'
+import { router } from '@kit.ArkUI'
 
 @Entry
 @ComponentV2
@@ -13,7 +13,7 @@ struct PrivacyPolicy {
 				title: "隐私政策",
 				isShowStatusBar: true,
 				onLeftClick: () => {
-					RouterUtil.pop()
+					router.back()
 				}
 			})
 			Web({

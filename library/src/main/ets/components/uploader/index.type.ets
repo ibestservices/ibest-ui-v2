@@ -8,19 +8,19 @@ export type IBestUploaderSelectType = "image" | "file"
 @ObservedV2
 class IBestUploaderFileType{
 	// 文件在线地址
-	url?: string
+	@Trace url?: string = ""
 	// internal协议地址
 	internalUri?: string
 	// 预览文件地址
-	previewUri?: string
+	@Trace previewUri?: string = ""
 	// 缓存地址
 	cacheUri?: string
 	// 文件名称
-	name?: string
+	@Trace name?: string = ""
 	// 文件大小 单位Byte
 	size?: number
 	// 是否是图片
-	isImage?: boolean
+	@Trace isImage?: boolean
 	// 上传状态
 	@Trace status?: 'uploading' | 'failed' | 'done'
 }

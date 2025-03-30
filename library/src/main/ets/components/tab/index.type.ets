@@ -29,11 +29,11 @@ export class IBestTabItemType{
     /**
      * 选项图标
      */
-    icon?: ResourceStr
+    icon?: ResourceStr = ""
     /**
      * 是否禁用
      */
-    @Trace isDisable?: boolean
+    @Trace isDisable?: boolean = false
 }
 export class IBestTabItem extends IBestTabItemType{
     constructor(value: IBestTabItemType) {

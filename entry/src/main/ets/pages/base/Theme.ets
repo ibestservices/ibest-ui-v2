@@ -1,8 +1,8 @@
 import {
 	IBestButton,
 	IBestCheckbox,
-	// IBestCircleProgress,
-	// IBestProgress,
+	IBestCircleProgress,
+	IBestProgress,
 	IBestRadio,
 	IBestRadioGroup,
 	IBestSwitch,
@@ -93,21 +93,21 @@ struct ThemePage {
 						}
 					}
 				}
-				// ListItem() {
-				// 	ComponentShowContainer({ title: $r("app.string.component_circleprogress") }) {
-				// 		IBestCircleProgress({
-				// 			value: $progressValue,
-				// 			text: `50%`
-				// 		})
-				// 	}
-				// }
-				// ListItem() {
-				// 	ComponentShowContainer({ title: $r("app.string.component_progress") }) {
-				// 		IBestProgress({
-				// 			value: 50
-				// 		})
-				// 	}
-				// }
+				ListItem() {
+					ComponentShowContainer({ title: $r("app.string.component_circleprogress") }) {
+						IBestCircleProgress({
+							value: this.progressValue!!,
+							text: `50%`
+						})
+					}
+				}
+				ListItem() {
+					ComponentShowContainer({ title: $r("app.string.component_progress") }) {
+						IBestProgress({
+							value: 50
+						})
+					}
+				}
 				ListItem() {
 					ComponentShowContainer({ title: $r("app.string.component_tab") }) {
 						IBestTabs({

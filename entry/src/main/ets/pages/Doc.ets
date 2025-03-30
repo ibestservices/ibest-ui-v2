@@ -1,11 +1,8 @@
-import { IBestNavBar } from '@ibestservices/ibest-ui-v2'
 import { webview } from '@kit.ArkWeb'
-import { CONTAINER_SIZE } from '../assets/styles/BaseStyle'
-import GlobalStore from '../utils/global'
-import RouterUtil from '../utils/routerUtil'
+import CustomNavBar from '../components/CustomNavBar'
 
 @Builder
-export function DocBuilder(name: string){
+export function DocBuilder(){
 	Doc()
 }
 
@@ -15,13 +12,7 @@ struct Doc {
 	private controller: webview.WebviewController = new webview.WebviewController()
 	build() {
 		NavDestination(){
-			IBestNavBar({
-				title: "文档",
-				isShowStatusBar: true,
-				onLeftClick: () => {
-					RouterUtil.pop()
-				}
-			})
+			CustomNavBar({title: "文档"})
 			Web({
 				src: $r("app.string.app_doc_url"),
 				controller: this.controller
