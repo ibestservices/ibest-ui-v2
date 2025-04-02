@@ -16,7 +16,7 @@ import CustomNavBar from '../../components/CustomNavBar'
 import { getRandomColor } from '../../utils/utils'
 
 @Builder
-export function ThemeBuilder(name: string, title: string){
+export function ThemeBuilder(_: string, title: string){
 	ThemePage({title})
 }
 

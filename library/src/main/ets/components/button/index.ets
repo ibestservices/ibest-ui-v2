@@ -54,6 +54,10 @@ export struct IBestButton {
 	 */
 	@Param text: ResourceStr = ""
 	/**
+	 * 字重
+     */
+	@Param fontWeight: IBestStringNumber | FontWeight = FontWeight.Normal
+	/**
 	 * 是否禁用
 	 */
 	@Param disabled: boolean = false
@@ -243,6 +247,7 @@ export struct IBestButton {
 						Text(this.loading ? this.loadingText ?? this.text : this.text)
 							.fontSize(getSizeByUnit(this.getBtnSize().fontSize, true))
 							.fontColor(this.getTextColor())
+							.fontWeight(this.fontWeight)
 						if(this.iconPosition == "right"){
 							this.iconContent()
 						}
@@ -255,6 +260,7 @@ export struct IBestButton {
 						Text(this.loading ? this.loadingText ?? this.text : this.text)
 							.fontSize(getSizeByUnit(this.getBtnSize().fontSize, true))
 							.fontColor(this.getTextColor())
+							.fontWeight(this.fontWeight)
 						if(this.iconPosition == "bottom"){
 							this.iconContent()
 						}

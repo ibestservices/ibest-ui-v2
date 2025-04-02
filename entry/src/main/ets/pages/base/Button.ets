@@ -144,7 +144,7 @@ struct ButtonPage {
 								type: 'primary',
 								text: $r("app.string.button"),
 								iconPosition: 'bottom',
-								iconBuilder: this.Arrow
+								iconBuilder: (): void => this.Arrow()
 							})
 						}
 					}

@@ -14,6 +14,10 @@ class IBestDialogOption {
 	 */
 	dialogBorderRadius?: IBestStringNumber
 	/**
+	 * 背景色
+	 */
+	bgColor?: ResourceColor
+	/**
 	 * 背景图片
 	 */
 	bgImage?: ResourceStr
@@ -219,6 +223,7 @@ class IBestDialogParams extends IBestDialogOption {
 		super()
 		this.dialogWidth = option.dialogWidth
 		this.dialogBorderRadius = option.dialogBorderRadius
+		this.bgColor = option.bgColor
 		this.bgImage = option.bgImage
 		this.title = option.title
 		this.titleColor = option.titleColor
@@ -401,7 +406,7 @@ class Dialog{
 			keyboardAvoidDistance: option.keyboardAvoidDistance,
 			levelMode: option.levelMode,
 			levelUniqueId: option.levelUniqueId,
-			immersiveMode: ImmersiveMode.EXTEND,
+			// immersiveMode: ImmersiveMode.EXTEND,
 			onDidAppear: () => {
 				option.onOpen?.()
 			},

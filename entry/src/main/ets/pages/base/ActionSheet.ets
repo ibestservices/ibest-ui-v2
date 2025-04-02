@@ -168,7 +168,7 @@ struct ActionSheetPage {
 								]
 							],
 							cancelText: '取消',
-							onSelect: (index1: number, index2?: number | string, value?: string) => {
+							onSelect: (index1: number, index2?: number | string, value?: number | string) => {
 								IBestToast.show(`点击了第${index1}行第${index2}个选项，标识为${value}`)
 							}
 						})

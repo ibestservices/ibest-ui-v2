@@ -208,11 +208,11 @@ struct CellPage {
 							title: $r("app.string.title"),
 							value: $r("app.string.long_text"),
 							iconBuilder: (): void => this.StarIcon(),
-							rightIconBuilder: this.Arrow,
+							rightIconBuilder: (): void => this.Arrow(),
 							clickable: true
 						})
 						IBestCell({
-							titleBuilder: this.Title,
+							titleBuilder: (): void => this.Title(),
 							value: $r("app.string.content"),
 							rightIconBuilder: (): void => this.Arrow(),
 							clickable: true
@@ -221,7 +221,7 @@ struct CellPage {
 							title: $r("app.string.title"),
 							iconBuilder: (): void => this.StarIcon(),
 							hasBorder: false,
-							rightIconBuilder: this.Arrow,
+							rightIconBuilder: (): void => this.Arrow(),
 							clickable: true
 						})
 					}

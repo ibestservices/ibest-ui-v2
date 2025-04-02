@@ -4,7 +4,7 @@ import ComponentShowContainer from '../../components/ComponentShowContainer';
 import CustomNavBar from '../../components/CustomNavBar';
 
 @Builder
-export function TagBuilder(name: string, title: string){
+export function TagBuilder(_: string, title: string){
 	TagPage({title})
 }
 

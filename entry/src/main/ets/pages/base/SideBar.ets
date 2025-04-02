@@ -1,5 +1,5 @@
 import { IBestSideBar, IBestSideBarItem, IBestToast } from '@ibestservices/ibest-ui-v2';
-import { CONTAINER_SIZE, modeColor } from '../../assets/styles/BaseStyle';
+import { modeColor } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
 import CustomNavBar from '../../components/CustomNavBar';
 

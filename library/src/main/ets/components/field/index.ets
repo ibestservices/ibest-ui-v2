@@ -2,7 +2,7 @@ import { GRAY_COLOR } from '../../theme-chalk/src/color'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { COMPONENT_NAME, FieldValidateResult, FORM_EVENT_NAME, IBestFormRuleItem, IBestFormSendFieldCallResult } from '../form/index.type'
-import type { ClearTriggerType, FieldTextAlign, FormatTriggerType, IBestFieldType, IBestFieldValue, LabelPositionType, RequireAsteriskPositionType } from './index.type'
+import type { ClearTriggerType, FieldTextAlign, FormatTriggerType, IBestFieldType, IBestFieldValueType, LabelPositionType, RequireAsteriskPositionType } from './index.type'
 import { emitter } from '../../utils/EventEmitter'
 import { runRuleValidator, runSyncRule } from './utils'
 import { clamp, convertDimensionsWidthUnit, getEventName, getResourceStr, getSizeByUnit } from '../../utils/utils'
@@ -32,7 +32,7 @@ export struct IBestField{
     /**
      * 组件绑定的值
      */
-    @Param @Require value: IBestFieldValue = ''
+    @Param @Require value: IBestFieldValueType = ''
 	/**
 	 * 是否显示label
 	 */
@@ -236,7 +236,7 @@ export struct IBestField{
     /**
      * value变化回调函数
      */
-	@Event onChange: (value: IBestFieldValue) => void = () => {}
+	@Event onChange: (value: IBestFieldValueType) => void = () => {}
     /**
      * 点击清除按钮时触发
      */
@@ -261,7 +261,7 @@ export struct IBestField{
      * 右侧图标点击时触发
      */
 	@Event onRightIconClick: () => void = () => {}
-	@Event $value: (value: IBestFieldValue) => void = () => {}
+	@Event $value: (value: IBestFieldValueType) => void = () => {}
 	@Event $required: (required: boolean) => void = () => {}
 	@Event $rules: (rules: IBestFormRuleItem[]) => void = () => {}
 	@Event $disabled: (disabled: boolean) => void = () => {}
@@ -568,7 +568,7 @@ export struct IBestField{
             uniId: this.uniId,
             prop: this.prop,
             validate: (rules: IBestFormRuleItem[]):Promise<void | FieldValidateResult> => this.validate(rules),
-            getValue: (): IBestFieldValue => this.value,
+            getValue: (): IBestFieldValueType => this.value,
             resetValidation: (): void => this.resetValidation()
         }, (result: IBestFormSendFieldCallResult): void => this.init(result))
     }
@@ -620,7 +620,7 @@ export struct IBestField{
         })
     }
     // 执行规则
-    async runRules(value: IBestFieldValue, rules: IBestFormRuleItem[]){
+    async runRules(value: IBestFieldValueType, rules: IBestFormRuleItem[]){
         for (let rule of rules) {
             if (!runSyncRule(value, rule)) {
                 this.status = 'failed'

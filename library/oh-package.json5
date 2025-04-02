@@ -22,6 +22,6 @@
 		"ui",
 	],
 	"type": "module",
-	"repository": "https://github.com/ibestservices/ibest-ui",
-	"homepage": "https://ibestui.ibestservices.com/"
+	"repository": "https://github.com/ibestservices/ibest-ui-v2",
+	"homepage": "https://ibestui-v2.ibestservices.com"
 }

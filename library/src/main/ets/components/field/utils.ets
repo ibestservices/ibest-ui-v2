@@ -1,14 +1,14 @@
 import { IBestFormRuleItem } from '../form/index.type'
-import { IBestFieldValue } from './index.type'
+import { IBestFieldValueType } from './index.type'
 
-export function isEmptyValue(value: IBestFieldValue) {
+export function isEmptyValue(value: IBestFieldValueType) {
 	if (Array.isArray(value)) {
 		return !value.length
 	}
 	return !value
 }
 
-export function runSyncRule(value: IBestFieldValue, rule: IBestFormRuleItem) {
+export function runSyncRule(value: IBestFieldValueType, rule: IBestFormRuleItem) {
 	if (isEmptyValue(value)) {
 		return !rule.required
 	}

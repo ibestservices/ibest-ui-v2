@@ -8,7 +8,6 @@ import {
 	IBestForm,
 	IBestFormController,
 	IBestFormRule,
-	IBestNavBar,
 	IBestRadio,
 	IBestRadioGroup,
 	IBestToast,
@@ -16,9 +15,9 @@ import {
 	IBestUploaderFile
 } from '@ibestservices/ibest-ui-v2'
 
-import { CONTAINER_SIZE, FONT_SIZE, modeColor, SPACE } from '../assets/styles/BaseStyle'
+import { FONT_SIZE, modeColor, SPACE } from '../assets/styles/BaseStyle'
 import CustomNavBar from '../components/CustomNavBar'
-import { generateId, savePixelMap } from '../utils/utils'
+import { savePixelMap } from '../utils/utils'
 
 @Builder
 export function MakePosterBuilder(){

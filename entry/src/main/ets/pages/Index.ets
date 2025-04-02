@@ -7,7 +7,7 @@ import { getAppVersion, getResourceStr } from '../utils/utils'
 import { rcp } from '@kit.RemoteCommunicationKit'
 import fs from '@ohos.file.fs'
 import { updateManager } from '@kit.StoreKit'
-import { AppStorageV2, router } from '@kit.ArkUI'
+import { router } from '@kit.ArkUI'
 import RouterUtil from '../utils/routerUtil'
 
 interface ComponentPart {
@@ -246,6 +246,10 @@ struct Index {
 					path: "NavBar"
 				},
 				{
+					name: $r("app.string.component_pagination"),
+					path: "Pagination"
+				},
+				{
 					name: $r("app.string.component_sideBar"),
 					path: "SideBar"
 				},
@@ -286,7 +290,7 @@ struct Index {
 	private scrollerForList1: Scroller = new Scroller()
 	private scrollerForList2: Scroller = new Scroller()
 	private context = getContext(this) as common.UIAbilityContext
-	navPathStack: NavPathStack = new NavPathStack()
+	private navPathStack: NavPathStack = new NavPathStack()
 
 	@Builder titleBuilder(){
 		IBestNavBar({

@@ -56,10 +56,10 @@ export { IBestDatePicker } from './src/main/ets/components/datePicker/index'
 export { IBestDatePickerResult } from './src/main/ets/components/datePicker/index.type'
 
 export { IBestField } from './src/main/ets/components/field/index'
-export { IBestFieldValue } from './src/main/ets/components/field/index.type'
+export { IBestFieldValueType } from './src/main/ets/components/field/index.type'
 
 export { IBestForm } from './src/main/ets/components/form/index'
-export { IBestFormController, IBestFormRule } from './src/main/ets/components/form/index.type'
+export { IBestFormController, IBestFormRule, IBestFormRuleItem } from './src/main/ets/components/form/index.type'
 
 export { IBestNumberKeyboard } from './src/main/ets/components/numberKeyboard/index'
 
@@ -128,16 +128,18 @@ export { IBestProgress } from './src/main/ets/components/progress/index'
 export { IBestTable, IBestTableColumn } from './src/main/ets/components/table/index'
 export { IBestTableColumnData } from './src/main/ets/components/table/index.type'
 
+export { IBestTag } from './src/main/ets/components/tag/index'
+
 export { IBestTextEllipsis } from './src/main/ets/components/textEllipsis/index'
 
 export { IBestWatermark } from './src/main/ets/components/waterMark/index'
 
+export { IBestNavBar } from './src/main/ets/components/navBar/index'
+
+export { IBestPagination } from './src/main/ets/components/pagination/index'
+
 export { IBestSideBar } from './src/main/ets/components/sideBar/index'
 export { IBestSideBarItem } from './src/main/ets/components/sideBarItem/index'
-
-export { IBestTag } from './src/main/ets/components/tag/index'
-
-export { IBestNavBar } from './src/main/ets/components/navBar/index'
 
 export { IBestTabs } from './src/main/ets/components/tab/index'
 export { IBestTabItem, IBestTabItemType } from './src/main/ets/components/tab/index.type'

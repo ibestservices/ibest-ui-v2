@@ -34,18 +34,6 @@ export struct IBestLoading {
 	 */
 	@Param loadingMaskColor: ResourceColor = 'transparent'
 	/**
-	 * loading的图标距离顶部的margin 因为默认loading是垂直居中布局的 可通过该属性调整loading图标的上下位置 只有在vertical为true 即垂直布局时有效
-	 */
-	@Param loadingIconMarginTop: IBestStringNumber = 0
-	/**
-	 * loadingText的marginLeft值 只有在vertical为false 即横向布局时有效
-	 */
-	@Param loadingTextMarginLeft: IBestStringNumber = this.baseStyle.spaceXs as string
-	/**
-	 * loadingText的marginTop值 只有在vertical为true 即垂直布局时有效
-	 */
-	@Param loadingTextMarginTop: IBestStringNumber = this.baseStyle.spaceXs as string
-	/**
 	 * 加载的文案
 	 */
 	@Param loadingText: ResourceStr = ""
@@ -65,6 +53,10 @@ export struct IBestLoading {
 	 * 是否垂直排列图标和文字内容
 	 */
 	@Param vertical: boolean = true
+	/**
+	 * 图标与文字间距
+     */
+	@Param space: IBestStringNumber = this.baseStyle.spaceXs as string
 	/**
 	 * 默认插槽 loading覆盖的插槽
 	 */
@@ -98,8 +90,6 @@ export struct IBestLoading {
 					circularSize: this.loadingSize,
 					color: this.loadingColor,
 					strokeWidth: this.loadingStrokeWidth
-				}).margin({
-					top: this.vertical ? getSizeByUnit(this.loadingIconMarginTop) : 0
 				})
 			}
 		}
@@ -108,10 +98,6 @@ export struct IBestLoading {
 		} else {
 			if (this.loadingText) {
 				Text(this.loadingText)
-					.margin({
-						top: this.vertical ? getSizeByUnit(this.loadingTextMarginTop) : 0,
-						left: this.vertical ? 0 : getSizeByUnit(this.loadingTextMarginLeft)
-					})
 					.fontSize(getSizeByUnit(this.loadingTextFontSize, true))
 					.fontColor(this.loadingTextColor)
 			}
@@ -123,7 +109,7 @@ export struct IBestLoading {
 				this.defaultBuilder()
 			}
 			if (this.vertical) {
-				Column() {
+				Column({space: getSizeByUnit(this.space)}) {
 					this.LoadingContent()
 				}
 				.justifyContent(FlexAlign.Center)
@@ -131,7 +117,7 @@ export struct IBestLoading {
 				.height(this.sizeValue.height || 'auto')
 				.backgroundColor(this.loadingMaskColor)
 			} else {
-				Row() {
+				Row({space: getSizeByUnit(this.space)}) {
 					this.LoadingContent()
 				}
 				.justifyContent(FlexAlign.Center)
@@ -139,7 +125,7 @@ export struct IBestLoading {
 				.height(this.sizeValue.height || 'auto')
 				.backgroundColor(this.loadingMaskColor)
 			}
-		}.onSizeChange((oldValue: SizeOptions, newValue: SizeOptions) => {
+		}.onSizeChange((_: SizeOptions, newValue: SizeOptions) => {
 			this.sizeValue = newValue
 		})
 	}

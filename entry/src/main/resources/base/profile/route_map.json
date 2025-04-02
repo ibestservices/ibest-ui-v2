@@ -246,6 +246,11 @@
 			"buildFunction": "NavBarBuilder"
 		},
 		{
+			"name": "Pagination",
+			"pageSourceFile": "src/main/ets/pages/base/Pagination.ets",
+			"buildFunction": "PaginationBuilder"
+		},
+		{
 			"name": "SideBar",
 			"pageSourceFile": "src/main/ets/pages/base/SideBar.ets",
 			"buildFunction": "SideBarBuilder"

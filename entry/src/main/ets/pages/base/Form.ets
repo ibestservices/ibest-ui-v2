@@ -206,8 +206,8 @@ struct FormPage {
 		}
 	]
 
-	private formId3: string = 'form3'
 	@Local form3: Form3 = new Form3()
+	private formId3: string = 'form3'
 	private rules3: IBestFormRule = {
 		"sex": [
 			{ required: true, message: "请选择性别" }
@@ -446,14 +446,14 @@ struct FormPage {
 								IBestField({
 									formId: this.formId2,
 									prop: 'value1',
-									value: this.form2.value1!!,
+									value: this.form2.value1,
 									label: "开关",
 									customRightContent: (): void => this.switchContent()
 								})
 								IBestField({
 									formId: this.formId2,
 									prop: 'value2',
-									value: this.form2.value2!!,
+									value: this.form2.value2,
 									label: "复选框",
 									rules: this.form2.value1 ? [{required: true, message: '请选择'}] : [],
 									customRightContent: (): void => this.checkboxContent()

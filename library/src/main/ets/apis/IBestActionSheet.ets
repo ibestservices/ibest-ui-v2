@@ -11,7 +11,7 @@ import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../model/
 // 选项类型
 class IBestActionType {
 	name: ResourceStr = ""
-	value?: string
+	value?: IBestStringNumber
 	subName?: ResourceStr
 	color?: ResourceColor
 	icon?: ResourceStr
@@ -114,7 +114,7 @@ class IBestActionSheetOption {
 	/**
 	 * 选择后回调
 	 */
-	onSelect?: (index1: number, index2?: IBestStringNumber, value?: string) => void
+	onSelect?: (index1: number, index2?: IBestStringNumber, value?: IBestStringNumber) => void
 	/**
 	 * 点击取消回调
 	 */

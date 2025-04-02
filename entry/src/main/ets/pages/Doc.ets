@@ -3,12 +3,12 @@ import CustomNavBar from '../components/CustomNavBar'
 
 @Builder
 export function DocBuilder(){
-	Doc()
+	DocPage()
 }
 
 @Entry
 @Component
-struct Doc {
+struct DocPage {
 	private controller: webview.WebviewController = new webview.WebviewController()
 	build() {
 		NavDestination(){

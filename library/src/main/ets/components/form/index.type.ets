@@ -1,5 +1,5 @@
 import { IBestStringNumber } from '../../model/Global.type'
-import { FieldTextAlign, IBestFieldValue, LabelPositionType, RequireAsteriskPositionType } from '../field/index.type'
+import { FieldTextAlign, IBestFieldValueType, LabelPositionType, RequireAsteriskPositionType } from '../field/index.type'
 /**
  * 验证规则
  */
@@ -78,7 +78,7 @@ export interface IBestFieldItem{
 	prop: string
 	validate: (rules: IBestFormRuleItem[]) => Promise<FieldValidateResult>
 	resetValidation: () => void
-	getValue: () => IBestFieldValue
+	getValue: () => IBestFieldValueType
 }
 export interface IBestFormValidateResult{
 	valid: boolean
@@ -127,8 +127,8 @@ export class IBestFormController {
 	/**
 	 * 获取表单所有值
 	 */
-	public getFormValues: () => Record<string, IBestFieldValue> = () => {
-		let res: Record<string, IBestFieldValue> = {}
+	public getFormValues: () => Record<string, IBestFieldValueType> = () => {
+		let res: Record<string, IBestFieldValueType> = {}
 		return res
 	}
 }

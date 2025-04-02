@@ -1,6 +1,6 @@
 import { convertDimensionsWidthUnit, getSizeByUnit } from '../../utils/utils'
 import { PopupAlign, PopupBaseController } from './index.type'
-import { IBestUIBaseStyle } from '../../theme-chalk/src/index.type'
+import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { IBestPopupColor } from './color'
 import { IBestIcon } from '../icon'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
@@ -18,6 +18,7 @@ interface PopupSize{
 
 @ComponentV2
 export struct IBestPopupBaseContent{
+	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	@Local isLandscape: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.IS_LANDSCAPE)!
 	@Local topAvoidHeight: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.TOP_AVOID_HEIGHT)!
 	@Local bottomBarHeight: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.BOTTOM_BAR_HEIGHT)!
@@ -36,6 +37,10 @@ export struct IBestPopupBaseContent{
 	 */
 	@Param popupHeight: IBestStringNumber = ""
 	/**
+	 * 背景色
+	 */
+	@Param bgColor: ResourceColor = ""
+	/**
 	 * 背景图片
 	 */
 	@Param bgImage: ResourceStr = ""
@@ -50,7 +55,7 @@ export struct IBestPopupBaseContent{
 	/**
 	 * 标题字体颜色
 	 */
-	@Param titleColor: ResourceColor = IBestPopupColor.titleColor
+	@Param titleColor: ResourceColor = ""
 	/**
 	 * 是否显示关闭图标
 	 */
@@ -62,7 +67,7 @@ export struct IBestPopupBaseContent{
 	/**
 	 * 关闭图标颜色
 	 */
-	@Param closeIconColor: ResourceColor = IBestPopupColor.closeIconColor
+	@Param closeIconColor: ResourceColor = ""
 	/**
 	 * 背板的圆角半径
 	 */
@@ -98,6 +103,27 @@ export struct IBestPopupBaseContent{
 			.onClick(() => {
 				this.onClickOverlay()
 			})
+	}
+	@Builder popupTitle(){
+		Row(){
+			Text(this.title)
+				.fontSize(this.baseStyle.fontSizeLg)
+				.fontColor(this.titleColor ?? IBestPopupColor.titleColor)
+			IBestIcon({
+				name: this.closeIcon,
+				iconSize: convertDimensionsWidthUnit(20),
+				color: this.closeIconColor ?? IBestPopupColor.closeIconColor
+			})
+				.onClick(() => {
+					this.close()
+				})
+				.visibility(this.isShowClose ? Visibility.Visible : Visibility.None)
+		}
+		.width(CONTAINER_SIZE.FULL)
+		.height(convertDimensionsWidthUnit(40))
+		.padding({ left: this.baseStyle.spaceMd, right: this.baseStyle.spaceMd })
+		.justifyContent(FlexAlign.SpaceBetween)
+		.alignItems(VerticalAlign.Center)
 	}
 	@Computed
 	get popupSize(): PopupSize{
@@ -170,14 +196,7 @@ export struct IBestPopupBaseContent{
 						if(this.headerBuilder){
 							this.headerBuilder()
 						}else{
-							PopupTitle({
-								title: this.title,
-								titleColor: this.titleColor,
-								isShowClose: this.isShowClose,
-								closeIcon: this.closeIcon,
-								closeIconColor: this.closeIconColor,
-								close: (): void => this.close()
-							})
+							this.popupTitle()
 						}
 					}
 					if(this.contentBuilder){
@@ -186,7 +205,7 @@ export struct IBestPopupBaseContent{
 				}
 				.width(getSizeByUnit(this.popupSize.width))
 				.height(getSizeByUnit(this.popupSize.height))
-				.backgroundColor(IBestPopupColor.bgColor)
+				.backgroundColor(this.bgColor || IBestPopupColor.bgColor)
 				.backgroundImage(this.bgImage)
 				.backgroundImageSize(ImageSize.FILL)
 				.padding({
@@ -223,38 +242,6 @@ export struct IBestPopupBaseContent{
 }
 
 @ComponentV2
-struct PopupTitle {
-	@Local baseStyle: IBestUIBaseStyle = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE, () => new IBestUIBaseStyle({})) as IBestUIBaseStyle
-	@Param title: ResourceStr = ''
-	@Param titleColor: ResourceColor = ''
-	@Param isShowClose: boolean = true
-	@Param closeIcon: ResourceStr = "cross"
-	@Param closeIconColor: ResourceColor = IBestPopupColor.closeIconColor
-	@Event close: () => void = () => {}
-	build() {
-		Row(){
-			Text(this.title)
-				.fontSize(this.baseStyle.fontSizeLg)
-				.fontColor(this.titleColor)
-			IBestIcon({
-				name: this.closeIcon,
-				iconSize: convertDimensionsWidthUnit(20),
-				color: this.closeIconColor
-			})
-				.onClick(() => {
-					this.close()
-				})
-				.visibility(this.isShowClose ? Visibility.Visible : Visibility.None)
-		}
-		.width(CONTAINER_SIZE.FULL)
-		.height(convertDimensionsWidthUnit(40))
-		.padding({ left: this.baseStyle.spaceMd, right: this.baseStyle.spaceMd })
-		.justifyContent(FlexAlign.SpaceBetween)
-		.alignItems(VerticalAlign.Center)
-	}
-}
-
-@ComponentV2
 export struct IBestPopup{
 	@Local topAvoidHeight: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.TOP_AVOID_HEIGHT)!
 	/**
@@ -276,6 +263,10 @@ export struct IBestPopup{
 	/**
 	 * 背景图片
 	 */
+	@Param bgColor: ResourceColor = ""
+	/**
+	 * 背景图片
+	 */
 	@Param bgImage: ResourceStr = ""
 	/**
 	 * 是否显示头部标题栏
@@ -288,7 +279,7 @@ export struct IBestPopup{
 	/**
 	 * 标题字体颜色
 	 */
-	@Param titleColor: ResourceColor = IBestPopupColor.titleColor
+	@Param titleColor: ResourceColor = ""
 	/**
 	 * 是否显示关闭图标
 	 */
@@ -300,7 +291,7 @@ export struct IBestPopup{
 	/**
 	 * 关闭图标颜色
 	 */
-	@Param closeIconColor: ResourceColor = IBestPopupColor.closeIconColor
+	@Param closeIconColor: ResourceColor = ""
 	/**
 	 * 底部偏移
 	 */
@@ -335,17 +326,14 @@ export struct IBestPopup{
 	@Param safeAreaInsetBottom: boolean = false
 	/**
 	 * 弹窗避让键盘后，和键盘之间的距离
-	 * @since 2.0.8
 	 */
 	@Param keyboardAvoidDistance: LengthMetrics = LengthMetrics.vp(16)
 	/**
 	 * 弹窗显示层级
-	 * @since 2.0.8
 	 */
 	@Param levelMode: LevelMode = 0
 	/**
 	 * 页面级弹窗需要显示的层级下的节点 uniqueId, 仅当levelMode属性设置为LevelMode.EMBEDDED时生效
-	 * @since 2.0.8
 	 */
 	@Param levelUniqueId: number = 0
 	/**
@@ -383,6 +371,7 @@ export struct IBestPopup{
 			popupAlign: this.popupAlign,
 			popupWidth: this.popupWidth,
 			popupHeight: this.popupHeight,
+			bgColor: this.bgColor,
 			bgImage: this.bgImage,
 			isShowHeader: this.isShowHeader,
 			title: this.title,
@@ -435,7 +424,7 @@ export struct IBestPopup{
 			keyboardAvoidDistance: this.keyboardAvoidDistance,
 			levelMode: this.levelMode,
 			levelUniqueId: this.levelUniqueId,
-			immersiveMode: ImmersiveMode.EXTEND,
+			// immersiveMode: ImmersiveMode.EXTEND,
 			onDidAppear: () => {
 				this.onOpen()
 			},

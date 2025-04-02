@@ -36,7 +36,7 @@ struct CheckboxPage {
 			group
 		})
 	}
-	handleClickCell(name: string) {
+	handleCellClick(name: string) {
 		const index = this.activeList5.indexOf(name)
 		if (index > -1) {
 			this.activeList5.splice(index, 1)
@@ -128,7 +128,7 @@ struct CheckboxPage {
 				ListItem() {
 					ComponentShowContainer({ title: '异步切换' }) {
 						IBestCheckbox({
-							value: this.isChecked,
+							value: this.isChecked!!,
 							label: '复选框',
 							beforeChange: () => {
 								return new Promise((resolve, reject) => {
@@ -144,9 +144,6 @@ struct CheckboxPage {
 										}
 									})
 								})
-							},
-							onChange: checked => {
-								this.isChecked = checked
 							}
 						})
 					}
@@ -321,14 +318,14 @@ struct CheckboxPage {
 								title: '复选框1',
 								disabled: this.activeList5.length >= this.cellCheckedMaxNum && !this.activeList5.includes('1'),
 								rightIconBuilder: (): void => this.CellCheckbox('1', this.group5),
-								onCellClick: (): void => this.handleClickCell('1')
+								onCellClick: (): void => this.handleCellClick('1')
 							})
 							IBestCell({
 								clickable: true,
 								title: '复选框2',
 								disabled: this.activeList5.length >= this.cellCheckedMaxNum && !this.activeList5.includes('2'),
 								rightIconBuilder: (): void => this.CellCheckbox('2', this.group5),
-								onCellClick: (): void => this.handleClickCell('2')
+								onCellClick: (): void => this.handleCellClick('2')
 							})
 							IBestCell({
 								clickable: true,
@@ -336,7 +333,7 @@ struct CheckboxPage {
 								disabled: this.activeList5.length >= this.cellCheckedMaxNum && !this.activeList5.includes('3'),
 								hasBorder: false,
 								rightIconBuilder: (): void => this.CellCheckbox('3', this.group5),
-								onCellClick: (): void => this.handleClickCell('3')
+								onCellClick: (): void => this.handleCellClick('3')
 							})
 						}
 					}

@@ -1,7 +1,8 @@
 import { IBestButton, IBestSignature, IBestSignatureController } from '@ibestservices/ibest-ui-v2';
-import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
+import { modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
 import CustomNavBar from '../../components/CustomNavBar';
+
 @Builder
 export function SignatureBuilder(_: string, title: string){
 	SignaturePage({title})

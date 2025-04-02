@@ -18,7 +18,7 @@ const textData: TextData = {
 }
 
 @Builder
-export function DialogBuilder(name: string, title: string){
+export function DialogBuilder(_: string, title: string){
 	DialogPage({title})
 }
 
@@ -71,13 +71,10 @@ struct DialogPage {
 		.padding(20)
 	}
 	@Builder imageBgBuilder() {
-		Column() {
-			Text(textData.life)
-				.fontColor(modeColor.white)
-		}
-		.height(200)
-		.padding(20)
-		.justifyContent(FlexAlign.Center)
+		Column()
+			.height(200)
+			.padding(20)
+			.justifyContent(FlexAlign.Center)
 	}
 
 	onDidBuild(): void {
@@ -199,8 +196,7 @@ struct DialogPage {
 										bgImage: "https://img0.baidu.com/it/u=3217812679,2585737758&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
 										showConfirmButton: false,
 										defaultBuilder: () => this.imageBgBuilder(),
-										closeOnClickOverlay: true,
-										closeOnBackPress: true
+										closeOnClickOverlay: true
 									})
 								}
 							})

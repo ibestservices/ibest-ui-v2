@@ -320,7 +320,7 @@ struct FieldPage {
                 ListItem() {
                     ComponentShowContainer({ title: '自定义右侧区域内容' }) {
                         IBestField({
-                            value: this.value22!!,
+                            value: this.value22,
                             label: "文本",
                             hasBorder: false,
                             customRightContent: (): void => this.radioContent()

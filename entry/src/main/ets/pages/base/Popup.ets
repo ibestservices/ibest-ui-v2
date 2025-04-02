@@ -1,11 +1,4 @@
-import {
-	IBestButton,
-	IBestCell,
-	IBestCellGroup,
-	IBestIcon,
-	IBestPopup,
-	IBestToast
-} from '@ibestservices/ibest-ui-v2'
+import { IBestButton, IBestCell, IBestCellGroup, IBestIcon, IBestPopup, IBestToast } from '@ibestservices/ibest-ui-v2'
 import ComponentShowContainer from '../../components/ComponentShowContainer'
 import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle'
 import CustomNavBar from '../../components/CustomNavBar'
@@ -53,7 +46,6 @@ struct PopupPage {
 		Column()
 			.width(CONTAINER_SIZE.FULL)
 			.aspectRatio(1)
-			.justifyContent(FlexAlign.Center)
 	}
 	@Builder cusHeightBuilder() {
 		Column({space: SPACE.MD}) {
@@ -75,6 +67,7 @@ struct PopupPage {
 		.width(CONTAINER_SIZE.FULL)
 		.padding(20)
 		.justifyContent(FlexAlign.Center)
+		.alignItems(HorizontalAlign.Center)
 	}
 	@Builder safeBuilder() {
 		Column(){

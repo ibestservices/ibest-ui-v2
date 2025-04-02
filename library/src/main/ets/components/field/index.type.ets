@@ -3,7 +3,7 @@ import { IBestUploaderFile } from '../uploader/index.type'
 /**
  * field 值类型
  */
-export type IBestFieldValue = IBestStringNumber | boolean | IBestStringNumber[] | IBestUploaderFile[]
+export type IBestFieldValueType = IBestStringNumber | boolean | IBestStringNumber[] | IBestUploaderFile[]
 /**
  * 文本对齐方式
  */

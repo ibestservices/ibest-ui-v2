@@ -20,11 +20,15 @@ export struct IBestDialogView {
 	/**
 	 * 弹窗宽度
 	 */
-	@Param dialogWidth: IBestStringNumber = convertDimensionsWidthUnit(320)
+	@Param dialogWidth: IBestStringNumber = ""
 	/**
 	 * 弹窗圆角
 	 */
-	@Param dialogBorderRadius: IBestStringNumber = this.baseStyle.spaceMd as string
+	@Param dialogBorderRadius: IBestStringNumber = ""
+	/**
+	 * 背景色
+     */
+	@Param bgColor: ResourceColor = ""
 	/**
 	 * 背景图片
 	 */
@@ -40,19 +44,19 @@ export struct IBestDialogView {
 	/**
 	 * 标题的fontSize
 	 */
-	@Param titleFontSize: IBestStringNumber = this.baseStyle.fontSizeLg as string
+	@Param titleFontSize: IBestStringNumber = ""
 	/**
 	 * 标题的padding-top值
 	 */
-	@Param titlePaddingTop: IBestStringNumber = convertDimensionsWidthUnit(26)
+	@Param titlePaddingTop: IBestStringNumber = ""
 	/**
 	 * 标题的padding-left与padding-right值
 	 */
-	@Param titlePaddingX: IBestStringNumber = convertDimensionsWidthUnit(24)
+	@Param titlePaddingX: IBestStringNumber = ""
 	/**
 	 * 标题的padding-top值
 	 */
-	@Param titleLineHeight: IBestStringNumber = convertDimensionsWidthUnit(24)
+	@Param titleLineHeight: IBestStringNumber = ""
 	/**
 	 * 标题的对齐方式
 	 */
@@ -68,23 +72,23 @@ export struct IBestDialogView {
 	/**
 	 * 内容区域的fontSize
 	 */
-	@Param messageFontSize: IBestStringNumber = this.baseStyle.fontSizeMd as string
+	@Param messageFontSize: IBestStringNumber = ""
 	/**
 	 * 内容区域的行高 lineHeight
 	 */
-	@Param messageLineHeight: IBestStringNumber = this.baseStyle.lineHeightMd as string
+	@Param messageLineHeight: IBestStringNumber = ""
 	/**
 	 * 内容区域的padding-top值
 	 */
-	@Param messagePaddingTop: IBestStringNumber = convertDimensionsWidthUnit(8)
+	@Param messagePaddingTop: IBestStringNumber = ""
 	/**
 	 * 内容区域的padding-left与padding-right值
 	 */
-	@Param messagePaddingX: IBestStringNumber = convertDimensionsWidthUnit(24)
+	@Param messagePaddingX: IBestStringNumber = ""
 	/**
 	 * 内容区域的padding-bottom值
 	 */
-	@Param messagePaddingBottom: IBestStringNumber = convertDimensionsWidthUnit(26)
+	@Param messagePaddingBottom: IBestStringNumber = ""
 	/**
 	 * 内容区域的文字对齐方式
 	 */
@@ -92,7 +96,7 @@ export struct IBestDialogView {
 	/**
 	 * 内容区域最大高度
 	 */
-	@Param messageMaxHeight: IBestStringNumber = 'auto'
+	@Param messageMaxHeight: IBestStringNumber = ''
 	/**
 	 * 样式风格
 	 */
@@ -120,7 +124,7 @@ export struct IBestDialogView {
 	/**
 	 * 按钮的文字大小
 	 */
-	@Param buttonFontSize: IBestStringNumber = this.baseStyle.fontSizeLg as string
+	@Param buttonFontSize: IBestStringNumber = ""
 	/**
 	 * 确认按钮的字体颜色
 	 */
@@ -179,12 +183,11 @@ export struct IBestDialogView {
 	@Event onClickOverlay: () => void = () => {}
 
 	@Local whiteColor: ResourceColor = IBestDialogColor.white
-	@Local contentBg: ResourceColor = IBestDialogColor.contentBg
+	@Local contentBg: ResourceColor = this.bgColor || IBestDialogColor.contentBg
 	@Local titleDefaultColor: ResourceColor = IBestDialogColor.titleColor
 	@Local messageColor: ResourceColor = IBestDialogColor.messageColor
 	@Local cancelTextColor: ResourceColor = IBestDialogColor.cancelTextColor
 	@Local bdColor: ResourceColor = IBestDialogColor.borderColor
-	@Local activeBg: ResourceColor = IBestDialogColor.activeBg
 
 	@Builder placeRow(){
 		Blank()
@@ -195,19 +198,19 @@ export struct IBestDialogView {
 	// 颜色模式切换
 	@Monitor("colorMode.value")
 	colorModeChange() {
-		this.contentBg = ""
-		this.titleDefaultColor = ""
 		this.whiteColor = ""
 		this.contentBg = ""
+		this.titleDefaultColor = ""
+		this.messageColor = ""
+		this.cancelTextColor = ""
 		this.bdColor = ""
-		this.activeBg = ""
 		setTimeout(() => {
-			this.contentBg = IBestDialogColor.contentBg
-			this.titleDefaultColor = IBestDialogColor.titleColor
 			this.whiteColor = IBestDialogColor.white
-			this.contentBg = IBestDialogColor.contentBg
+			this.contentBg = this.bgColor || IBestDialogColor.contentBg
+			this.titleDefaultColor = IBestDialogColor.titleColor
+			this.messageColor = IBestDialogColor.messageColor
+			this.cancelTextColor = IBestDialogColor.cancelTextColor
 			this.bdColor = IBestDialogColor.borderColor
-			this.activeBg = IBestDialogColor.activeBg
 		})
 	}
 	// 标题对齐
@@ -417,11 +420,15 @@ export struct IBestDialog {
 	/**
 	 * 弹窗宽度
 	 */
-	@Param dialogWidth: IBestStringNumber = convertDimensionsWidthUnit(320)
+	@Param dialogWidth: IBestStringNumber = ""
 	/**
 	 * 弹窗圆角
 	 */
-	@Param dialogBorderRadius: IBestStringNumber = this.baseStyle.spaceMd as string
+	@Param dialogBorderRadius: IBestStringNumber = ""
+	/**
+	 * 背景色
+	 */
+	@Param bgColor: ResourceColor = ''
 	/**
 	 * 背景图片
 	 */
@@ -437,19 +444,19 @@ export struct IBestDialog {
 	/**
 	 * 标题的fontSize
 	 */
-	@Param titleFontSize: IBestStringNumber = this.baseStyle.fontSizeLg as string
+	@Param titleFontSize: IBestStringNumber = ""
 	/**
 	 * 标题的padding-top值
 	 */
-	@Param titlePaddingTop: IBestStringNumber = convertDimensionsWidthUnit(26)
+	@Param titlePaddingTop: IBestStringNumber = ""
 	/**
 	 * 标题的padding-left与padding-right值
 	 */
-	@Param titlePaddingX: IBestStringNumber = convertDimensionsWidthUnit(24)
+	@Param titlePaddingX: IBestStringNumber = ""
 	/**
 	 * 标题的padding-top值
 	 */
-	@Param titleLineHeight: IBestStringNumber = convertDimensionsWidthUnit(24)
+	@Param titleLineHeight: IBestStringNumber = ""
 	/**
 	 * 标题的对齐方式
 	 */
@@ -465,23 +472,23 @@ export struct IBestDialog {
 	/**
 	 * 内容区域的fontSize
 	 */
-	@Param messageFontSize: IBestStringNumber = this.baseStyle.fontSizeMd as string
+	@Param messageFontSize: IBestStringNumber = ""
 	/**
 	 * 内容区域的行高 lineHeight
 	 */
-	@Param messageLineHeight: IBestStringNumber = this.baseStyle.lineHeightMd as string
+	@Param messageLineHeight: IBestStringNumber = ""
 	/**
 	 * 内容区域的padding-top值
 	 */
-	@Param messagePaddingTop: IBestStringNumber = convertDimensionsWidthUnit(8)
+	@Param messagePaddingTop: IBestStringNumber = ""
 	/**
 	 * 内容区域的padding-left与padding-right值
 	 */
-	@Param messagePaddingX: IBestStringNumber = convertDimensionsWidthUnit(24)
+	@Param messagePaddingX: IBestStringNumber = ""
 	/**
 	 * 内容区域的padding-bottom值
 	 */
-	@Param messagePaddingBottom: IBestStringNumber = convertDimensionsWidthUnit(26)
+	@Param messagePaddingBottom: IBestStringNumber = ""
 	/**
 	 * 内容区域的文字对齐方式
 	 */
@@ -489,7 +496,7 @@ export struct IBestDialog {
 	/**
 	 * 内容区域最大高度
 	 */
-	@Param messageMaxHeight: IBestStringNumber = 'auto'
+	@Param messageMaxHeight: IBestStringNumber = ''
 	/**
 	 * 样式风格
 	 */
@@ -509,15 +516,15 @@ export struct IBestDialog {
 	/**
 	 * 确认按钮文案
 	 */
-	@Param confirmButtonText: ResourceStr = $r("app.string.ibest_text_confirm")
+	@Param confirmButtonText: ResourceStr = ""
 	/**
 	 * 取消按钮的文案
 	 */
-	@Param cancelButtonText: ResourceStr = $r("app.string.ibest_text_cancel")
+	@Param cancelButtonText: ResourceStr = ""
 	/**
 	 * 按钮的文字大小
 	 */
-	@Param buttonFontSize: IBestStringNumber = this.baseStyle.fontSizeLg as string
+	@Param buttonFontSize: IBestStringNumber = ""
 	/**
 	 * 确认按钮的字体颜色
 	 */
@@ -636,6 +643,7 @@ export struct IBestDialog {
 		IBestDialogView({
 			dialogWidth: this.dialogWidth,
 			dialogBorderRadius: this.dialogBorderRadius,
+			bgColor: this.bgColor,
 			bgImage: this.bgImage,
 			title: this.title,
 			titleColor: this.titleColor,
@@ -723,7 +731,7 @@ export struct IBestDialog {
 			keyboardAvoidDistance: this.keyboardAvoidDistance,
 			levelMode: this.levelMode,
 			levelUniqueId: this.levelUniqueId,
-			immersiveMode: ImmersiveMode.EXTEND,
+			// immersiveMode: ImmersiveMode.EXTEND,
 			onDidAppear: () => {
 				this.onOpen()
 			},

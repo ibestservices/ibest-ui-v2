@@ -1,6 +1,6 @@
 import { emitter } from '../../utils/EventEmitter'
 import { convertDimensionsWidthUnit, getEventName, getSizeByUnit } from '../../utils/utils'
-import { FieldTextAlign, IBestFieldValue, LabelPositionType, RequireAsteriskPositionType } from '../field/index.type'
+import { FieldTextAlign, IBestFieldValueType, LabelPositionType, RequireAsteriskPositionType } from '../field/index.type'
 import {
     COMPONENT_NAME,
     FieldValidateResult,
@@ -75,7 +75,7 @@ export struct IBestForm {
 		this.controller.validate = (callBack?: (valid: boolean, field: FieldValidateResult[]) => void): Promise<IBestFormValidateResult> => this.validateForm(callBack)
 		this.controller.validateField = (name: string, callBack?: (valid: boolean, field?: FieldValidateResult) => void): Promise<IBestFieldValidateResult> => this.validateField(name, callBack)
 		this.controller.resetValidation = (name?: string | string[]): void => this.resetValidation(name)
-		this.controller.getFormValues = (): Record<string, IBestFieldValue> => this.getFormValues()
+		this.controller.getFormValues = (): Record<string, IBestFieldValueType> => this.getFormValues()
 		// 初始化收集表单项信息
 		emitter.on(getEventName(COMPONENT_NAME, FORM_EVENT_NAME.SEND_FIELD, this.formId), this.uniId, (data: IBestFieldItem, callBack: (result: IBestFormSendFieldCallResult) => void): void => this.init(data, callBack))
 		// 验证单个表单
@@ -157,7 +157,7 @@ export struct IBestForm {
 	}
 	// 获取表单值
 	getFormValues(){
-		let result: Record<string, IBestFieldValue> = {}
+		let result: Record<string, IBestFieldValueType> = {}
 		this.formItems.forEach((item: IBestFieldItem) => {
 			result[item.prop] = item.getValue()
 		})
