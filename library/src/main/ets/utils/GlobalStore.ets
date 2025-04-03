@@ -1,10 +1,10 @@
-import window from '@ohos.window';
-import font from '@ohos.font';
-import { getWindowAvoidSize } from './utils';
-import { bundleManager, common } from '@kit.AbilityKit';
-import { IBestGlobalConfig, IBestGlobalConfigType } from '../model/Global.type';
-import { setIBestUIBaseStyle } from '../theme-chalk/src';
-import { display } from '@kit.ArkUI';
+import window from '@ohos.window'
+import font from '@ohos.font'
+import { getWindowAvoidSize, saveAppStorage } from './utils'
+import { bundleManager, common } from '@kit.AbilityKit'
+import { IBestBaseDataType, IBestGlobalConfig, IBestGlobalConfigType, IBestStorageKey } from '../model/Global.type'
+import { setIBestUIBaseStyle } from '../theme-chalk/src'
+import { AppStorageV2, display } from '@kit.ArkUI'
 
 // 全局存储中心
 export default class GlobalStore {
@@ -12,10 +12,6 @@ export default class GlobalStore {
 	public static windowStage: window.WindowStage
 	// context
 	public static context: common.UIAbilityContext
-	// 顶部规避尺寸
-	public static topAvoidHeight: number = 0
-	// 底部导航条高度
-	public static bottomBarHeight: number = 0
 	// 屏幕信息
 	public static screenWidth: number = 0
 	public static screenHeight: number = 0
@@ -47,10 +43,8 @@ export default class GlobalStore {
      */
 	private static getAvoidSize(){
 		let res = getWindowAvoidSize()
-		GlobalStore.topAvoidHeight = res.topSize
-		GlobalStore.bottomBarHeight = res.navigationSize
-		AppStorage.setOrCreate("IBestTopAvoidHeight", GlobalStore.topAvoidHeight)
-		AppStorage.setOrCreate("IBestBottomBarHeight", GlobalStore.bottomBarHeight)
+		saveAppStorage(IBestStorageKey.TOP_AVOID_HEIGHT, res.topSize)
+		saveAppStorage(IBestStorageKey.BOTTOM_BAR_HEIGHT, res.navigationSize)
 	}
 	/**
 	 * 获取屏幕尺寸
@@ -59,12 +53,14 @@ export default class GlobalStore {
 		let mainWindow = GlobalStore.windowStage.getMainWindowSync()
 		let screenInfo: window.WindowProperties = mainWindow.getWindowProperties()
 		let o = display.getDefaultDisplaySync().orientation
-		GlobalStore.screenWidth = o == 1 || o == 3 ? screenInfo.windowRect.height : screenInfo.windowRect.width
-		GlobalStore.screenHeight = o == 1 || o == 3 ? screenInfo.windowRect.width : screenInfo.windowRect.height
-		AppStorage.setOrCreate("IBestIsLandscape", o == 1 || o == 3)
+		let screenWidth = o == 1 || o == 3 ? screenInfo.windowRect.height : screenInfo.windowRect.width
+		let screenHeight = o == 1 || o == 3 ? screenInfo.windowRect.width : screenInfo.windowRect.height
+		GlobalStore.screenWidth = screenWidth
+		GlobalStore.screenHeight = screenHeight
+		saveAppStorage(IBestStorageKey.IS_LANDSCAPE, o == 1 || o == 3)
 		mainWindow.on("avoidAreaChange", data => {
 			if (data.type == window.AvoidAreaType.TYPE_KEYBOARD) {
-				AppStorage.setOrCreate("IBestKeyBoardHeight", px2vp(data.area.bottomRect.height))
+				saveAppStorage(IBestStorageKey.KEYBOARD_HEIGHT, px2vp(data.area.bottomRect.height))
 			}
 		})
 	}
@@ -80,15 +76,15 @@ export default class GlobalStore {
 		})
 	}
 	/**
-	 * 监听颜色模式变化
+	 * 监听配置变化
      */
 	private static setColorModeListener(){
 		let appContext = GlobalStore.context.getApplicationContext()
-		AppStorage.setOrCreate("IBestColorMode", GlobalStore.context.config.colorMode)
+		saveAppStorage(IBestStorageKey.COLOR_MODE, GlobalStore.context.config.colorMode as number)
 		appContext.on('environment', {
 			onConfigurationUpdated(config) {
-				AppStorage.setOrCreate("IBestColorMode", config.colorMode)
-				AppStorage.setOrCreate("IBestLanguage", config.language)
+				saveAppStorage(IBestStorageKey.COLOR_MODE, config.colorMode)
+				saveAppStorage(IBestStorageKey.LANGUAGE, config.language)
 			},
 			onMemoryLevel() {}
 		})
@@ -103,7 +99,7 @@ export default class GlobalStore {
 	 * 设置全局配置
 	 */
 	public static setGlobalConfig(option?: IBestGlobalConfigType){
-		AppStorage.setOrCreate("IBestGlobalConfig", new IBestGlobalConfig(option))
+		AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG, () => new IBestGlobalConfig(option))
 		setIBestUIBaseStyle()
 	}
 }

@@ -1,14 +1,18 @@
-import router from '@ohos.router';
-import { IBestNavBar } from '@ibestservices/ibest-ui';
+import { IBestNavBar } from '@ibestservices/ibest-ui-v2';
 import { COLOR_BLUE, CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
-import { ComponentRouterParams } from '../../assets/global.type';
+import CustomNavBar from '../../components/CustomNavBar';
 import { getRandomColor } from '../../utils/utils';
+
+@Builder
+export function NavBarBuilder(_: string, title: string){
+	NavBarPage({title})
+}
 
 @Entry
 @ComponentV2
 struct NavBarPage {
-	@Local title: string = (router.getParams() as ComponentRouterParams).title || ''
+	@Param title: string = ''
 	@Local searchVal: string = ''
 	@Local navBarBgColor: string = "#3D8AF2"
 
@@ -31,19 +35,13 @@ struct NavBarPage {
 	}
 
 	build() {
-		Column() {
-			IBestNavBar({
-				title: this.title,
-				isShowStatusBar: true,
-				onLeftClick: () => {
-					router.back()
-				}
-			})
+		NavDestination() {
+			CustomNavBar({title: this.title})
 			List() {
 				ListItem() {
 					ComponentShowContainer({ title: '基础用法', titlePaddingLeft: SPACE.MD }){
 						IBestNavBar({
-							title: "IBest-UI"
+							title: $r("app.string.app_name")
 						})
 					}
 				}
@@ -51,7 +49,7 @@ struct NavBarPage {
 					ComponentShowContainer({ title: '自定义样式', titlePaddingLeft: SPACE.MD }){
 						Column({space: SPACE.XS}){
 							IBestNavBar({
-								title: "IBest-UI",
+								title: $r("app.string.app_name"),
 								titleColor: COLOR_BLUE.DEFAULT,
 								titleFontSize: 14,
 								titleFontWeight: FontWeight.Bold,
@@ -59,7 +57,7 @@ struct NavBarPage {
 								leftIconColor: COLOR_BLUE.DEFAULT
 							})
 							IBestNavBar({
-								title: "IBest-UI",
+								title: $r("app.string.app_name"),
 								titleColor: COLOR_BLUE.DEFAULT,
 								leftIconColor: COLOR_BLUE.DEFAULT,
 								bgLinearGradient: {
@@ -73,7 +71,7 @@ struct NavBarPage {
 				ListItem() {
 					ComponentShowContainer({ title: '标题居左', titlePaddingLeft: SPACE.MD }){
 						IBestNavBar({
-							title: "IBest-UI",
+							title: $r("app.string.app_name"),
 							titleTextAlign: "left"
 						})
 					}
@@ -83,19 +81,19 @@ struct NavBarPage {
 						Column({space: SPACE.XS}){
 							IBestNavBar({
 								leftIcon: "https://img1.baidu.com/it/u=498751481,2849377151&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800",
-								leftLabel: "IBest-UI",
+								leftLabel: $r("app.string.app_name"),
 								leftIconRadius: 999
 							})
 							IBestNavBar({
 								isShowLeft: false,
-								title: "IBest-UI",
+								title: $r("app.string.app_name"),
 								titleIcon: $r("app.media.app_icon"),
 							})
 							IBestNavBar({
 								isShowLeft: false,
 								isShowRight: true,
 								rightIcon: "https://img1.baidu.com/it/u=498751481,2849377151&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800",
-								rightLabel: "IBest-UI"
+								rightLabel: $r("app.string.app_name")
 							})
 						}
 					}
@@ -113,14 +111,14 @@ struct NavBarPage {
 					ComponentShowContainer({ title: '自定义左右内容', titlePaddingLeft: SPACE.MD }){
 						Column({space: SPACE.XS}){
 							IBestNavBar({
-								title: "IBest-UI",
+								title: $r("app.string.app_name"),
 								leftLabel: "返回",
 								isShowRight: true,
-								rightIconName: "wap-nav",
+								rightIcon: "wap-nav",
 								rightLabel: "更多"
 							})
 							IBestNavBar({
-								title: "IBest-UI",
+								title: $r("app.string.app_name"),
 								leftBuilder: (): void => this.leftBuilder(),
 								isShowRight: true,
 								rightBuilder: (): void => this.rightBuilder()
@@ -131,7 +129,7 @@ struct NavBarPage {
 				ListItem() {
 					ComponentShowContainer({ title: '二级标题', titlePaddingLeft: SPACE.MD }){
 						IBestNavBar({
-							title: "IBest-UI",
+							title: $r("app.string.app_name"),
 							subTitle: "一套轻量、可定制化主题的鸿蒙UI组件库"
 						})
 					}
@@ -150,11 +148,12 @@ struct NavBarPage {
 						})
 					}
 				}
+				ListItem().height(50)
 			}
 			.width(CONTAINER_SIZE.FULL)
 			.layoutWeight(1)
 		}
-		.height(CONTAINER_SIZE.FULL)
+		.hideTitleBar(true)
 		.backgroundColor(modeColor.bg)
 	}
 }

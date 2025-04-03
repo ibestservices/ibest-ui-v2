@@ -1,33 +1,36 @@
-import router from '@ohos.router';
-import { IBestIcon, IBestIconClassify,
-	// IBestNavBar, IBestTabItemType, IBestTabs
-} from '@ibestservices/ibest-ui';
+import { IBestIcon, IBestIconClassify, IBestTabItemType, IBestTabs } from '@ibestservices/ibest-ui-v2';
 import { CONTAINER_SIZE, FONT_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
-import { ComponentRouterParams } from '../../assets/global.type';
+import CustomNavBar from '../../components/CustomNavBar'
+
+@Builder
+export function IconBuilder(_: string, title: string){
+	IconsPage({title})
+}
+
 @Entry
 @ComponentV2
 struct IconsPage {
-	@Local title: string = (router.getParams() as ComponentRouterParams).title || ''
+	@Param title: string = ''
 	@Local curTabName: string = "1"
-	// @State tabsList: IBestTabItemType[] = [
-	// 	{
-	// 		label: $r("app.string.demo"),
-	// 		name: "1"
-	// 	},
-	// 	{
-	// 		label: $r("app.string.basic_icon"),
-	// 		name: "2"
-	// 	},
-	// 	{
-	// 		label: $r("app.string.outline_style"),
-	// 		name: "3"
-	// 	},
-	// 	{
-	// 		label: $r("app.string.filled_style"),
-	// 		name: "4"
-	// 	}
-	// ]
+	@Local tabsList: IBestTabItemType[] = [
+		{
+			label: $r("app.string.demo"),
+			name: "1"
+		},
+		{
+			label: $r("app.string.basic_icon"),
+			name: "2"
+		},
+		{
+			label: $r("app.string.outline_style"),
+			name: "3"
+		},
+		{
+			label: $r("app.string.filled_style"),
+			name: "4"
+		}
+	]
 	@Builder example() {
 		List() {
 			ListItem() {
@@ -113,18 +116,12 @@ struct IconsPage {
 		.borderRadius(SPACE.SM)
 	}
 	build() {
-		Column() {
-			// IBestNavBar({
-			// 	title: this.title,
-			// 	isShowStatusBar: true,
-			// 	onLeftClick: () => {
-			// 		router.back()
-			// 	}
-			// })
-			// IBestTabs({
-			// 	tabsList: this.tabsList,
-			// 	currentName: $curTabName
-			// })
+		NavDestination() {
+			CustomNavBar({title: this.title})
+			IBestTabs({
+				tabsList: this.tabsList,
+				currentName: this.curTabName!!
+			})
 			Column() {
 				if (this.curTabName === '1') {
 					this.example()
@@ -137,15 +134,11 @@ struct IconsPage {
 				}
 			}
 			.layoutWeight(1)
-			.padding({
-				left: SPACE.SM,
-				right: SPACE.SM,
-				bottom: SPACE.SM
-			})
+			.padding({ left: SPACE.SM, right: SPACE.SM, bottom: SPACE.SM })
 			.margin({ top: SPACE.SM })
 		}
-		.width(CONTAINER_SIZE.FULL)
 		.height(CONTAINER_SIZE.FULL)
+		.hideTitleBar(true)
 		.backgroundColor(modeColor.bg)
 	}
 }

@@ -1,28 +1,23 @@
-import router from '@ohos.router';
-import { IBestButton,
-	// IBestNavBar
-} from '@ibestservices/ibest-ui';
+import { IBestButton } from '@ibestservices/ibest-ui-v2';
 import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
-import { ComponentRouterParams } from '../../assets/global.type';
 import { LengthMetrics } from '@ohos.arkui.node';
+import CustomNavBar from '../../components/CustomNavBar';
+@Builder
+export function ButtonBuilder(_: string, title: string){
+	ButtonPage({title})
+}
 @Entry
-@Component
+@ComponentV2
 struct ButtonPage {
-	@State title: string = (router.getParams() as ComponentRouterParams).title || ''
+	@Param title: string = ''
 	@Builder Arrow() {
 		Image($r('app.media.title_back'))
 			.width(CONTAINER_SIZE.SIXTEEN)
 	}
 	build() {
-		Column() {
-			// IBestNavBar({
-			// 	title: this.title,
-			// 	isShowStatusBar: true,
-			// 	onLeftClick: () => {
-			// 		router.back()
-			// 	}
-			// })
+		NavDestination() {
+			CustomNavBar({title: this.title})
 			List() {
 				ListItem() {
 					ComponentShowContainer({ title: $r("app.string.custom_type", $r("app.string.button")) }) {
@@ -149,7 +144,7 @@ struct ButtonPage {
 								type: 'primary',
 								text: $r("app.string.button"),
 								iconPosition: 'bottom',
-								iconBuilder: this.Arrow
+								iconBuilder: (): void => this.Arrow()
 							})
 						}
 					}
@@ -217,16 +212,12 @@ struct ButtonPage {
 						})
 					}
 				}
+				ListItem().height(50)
 			}
 			.layoutWeight(1)
-			.padding({
-				left: SPACE.SM,
-				right: SPACE.SM,
-				bottom: SPACE.SM
-			})
+			.padding({ left: SPACE.SM, right: SPACE.SM })
 		}
-		.width(CONTAINER_SIZE.FULL)
-		.height(CONTAINER_SIZE.FULL)
+		.hideTitleBar(true)
 		.backgroundColor(modeColor.bg)
 	}
 }

@@ -7,28 +7,28 @@ class EventEmitter {
 	//用于存储事件及其处理函数
 	events = {};
 	// 订阅事件
-	on(event, id, listener) {
-		if (!this.events[event]) {
-			this.events[event] = []
+	on(eventName, id, listener) {
+		if (!this.events[eventName]) {
+			this.events[eventName] = []
 		}
-		this.events[event].push({
+		this.events[eventName].push({
 			id,
 			listener
 		})
 	}
 	// 取消订阅事件
-	off(event, id) {
-		if (!this.events[event]) {
+	off(eventName, id) {
+		if (!this.events[eventName]) {
 			return
 		}
-		this.events[event] = this.events[event].filter(e => e.id != id)
+		this.events[eventName] = this.events[eventName].filter(e => e.id != id)
 	}
 	// 发布事件
-	emit(event, ...args) {
-		if (!this.events[event]) {
+	emit(eventName, ...args) {
+		if (!this.events[eventName]) {
 			return
 		}
-		this.events[event].forEach(e => e.listener.apply(this, args))
+		this.events[eventName].forEach(e => e.listener.apply(this, args))
 	}
 }
 export const emitter = new EventEmitter()

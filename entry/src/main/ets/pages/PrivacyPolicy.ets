@@ -1,20 +1,21 @@
-// import { IBestNavBar } from '@ibestservices/ibest-ui'
+import { IBestNavBar } from '@ibestservices/ibest-ui-v2'
 import { webview } from '@kit.ArkWeb'
 import { CONTAINER_SIZE } from '../assets/styles/BaseStyle'
 import { router } from '@kit.ArkUI'
+
 @Entry
-@Component
+@ComponentV2
 struct PrivacyPolicy {
 	private webController: webview.WebviewController = new webview.WebviewController()
 	build() {
 		Column() {
-			// IBestNavBar({
-			// 	title: "隐私政策",
-			// 	isShowStatusBar: true,
-			// 	onLeftClick: () => {
-			// 		router.back()
-			// 	}
-			// })
+			IBestNavBar({
+				title: "隐私政策",
+				isShowStatusBar: true,
+				onLeftClick: () => {
+					router.back()
+				}
+			})
 			Web({
 				src: "https://ibestservices.github.io/ibest-ui/PrivacyPolicy.html",
 				controller: this.webController

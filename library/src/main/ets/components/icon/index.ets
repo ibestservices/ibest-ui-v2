@@ -20,13 +20,12 @@ export struct IBestIcon {
 	@Param iconSize: IBestStringNumber = convertDimensionsWidthUnit(16)
 	/**
 	 * 图标圆角
-	 * @since 1.19.0
 	 */
 	@Param iconRadius: IBestStringNumber = 0
 	/**
 	 * 点击回调
 	 */
-	onIconClick: (event: TouchEvent) => void = () => {}
+	@Event onIconClick: (event: TouchEvent) => void = () => {}
 	isOnlineImage(): boolean {
 		return (this.name as string).startsWith("http")
 	}

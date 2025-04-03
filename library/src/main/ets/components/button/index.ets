@@ -1,27 +1,22 @@
 import { COLOR_TYPE, ColorType } from '../../theme-chalk/src/color.type'
 import { GRAY_COLOR } from '../../theme-chalk/src/color'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
-import { IBestUIBaseStyle } from '../../theme-chalk/src/index.type'
+import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { SIZE, SizeType } from '../../theme-chalk/src/size.type'
-import { ButtonSizeData } from './index.type'
-// import { IBestLoading } from '../loading/index'
-import { convertDimensionsWidthUnit, getColorByType, getSizeByUnit } from '../../utils/utils'
+import { BtnSizeType } from './index.type'
+import { IBestLoading } from '../loading/index'
+import { convertDimensionsWidthUnit, getSizeByUnit } from '../../utils/utils'
 import { IBestButtonColor } from './color'
 import { IBestIcon } from '../icon'
-import { IBestStringNumber } from '../../model/Global.type'
+import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { AppStorageV2 } from '@kit.ArkUI'
-@Extend(Button) function btnSizeStyle(data: ButtonSizeData) {
-	.padding({ left: data.padding, right: data.padding, top: 0, bottom: 0 })
-	.height(data.height)
-	.width(data.width || 'auto')
-}
 
 @ComponentV2
 export struct IBestButton {
 	/**
 	 * 全局公共样式
 	 */
-	@Local baseStyle: IBestUIBaseStyle = AppStorageV2.connect(IBestUIBaseStyle, () => new IBestUIBaseStyle({}))!
+	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	/**
 	 * 类型，可选值为 primary success warning danger 默认值为default
 	 */
@@ -58,6 +53,10 @@ export struct IBestButton {
 	 * 按钮展示的文字
 	 */
 	@Param text: ResourceStr = ""
+	/**
+	 * 字重
+     */
+	@Param fontWeight: IBestStringNumber | FontWeight = FontWeight.Normal
 	/**
 	 * 是否禁用
 	 */
@@ -121,7 +120,7 @@ export struct IBestButton {
 	/**
 	 * 点击按钮，且按钮状态不为加载或禁用时触发
 	 */
-	onBtnClick: (event: TouchEvent) => void = () => {}
+	@Event onBtnClick: () => void = () => {}
 
 	@Builder iconContent() {
 		if (this.loading) {
@@ -130,23 +129,23 @@ export struct IBestButton {
 				this.loadingIconBuilder()
 			} else {
 				// 默认的loading
-				// IBestLoading({
-				// 	loadingSize: this.getLoadingSize(),
-				// 	loadingColor: this.getBtnTextColor()
-				// }).margin({
-				// 	left: this.iconPosition == "right" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0,
-				// 	right: this.iconPosition == "left" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0,
-				// 	bottom: this.iconPosition == "top" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0,
-				// 	top: this.iconPosition == "bottom" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0
-				// })
+				IBestLoading({
+					loadingSize: this.getLoadingSize(),
+					loadingColor: this.getTextColor()
+				}).margin({
+					left: this.iconPosition == "right" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0,
+					right: this.iconPosition == "left" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0,
+					bottom: this.iconPosition == "top" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0,
+					top: this.iconPosition == "bottom" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0
+				})
 			}
 		} else if (this.iconBuilder) {
 			this.iconBuilder()
 		} else if (this.icon) {
 			IBestIcon({
 				name: this.icon,
-				iconSize: this.getBtnSize()?.fontSize,
-				color: this.getBtnTextColor()
+				iconSize: this.getBtnSize().fontSize,
+				color: this.getTextColor()
 			}).margin({
 				left: this.iconPosition == "right" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0,
 				right: this.iconPosition == "left" && (this.text || this.loadingText) ? getSizeByUnit(this.space) : 0,
@@ -155,72 +154,85 @@ export struct IBestButton {
 			})
 		}
 	}
-
 	/**
 	 * 根据buttonSize换对应的按钮尺寸
 	 */
-	getBtnSize() {
+	getBtnSize(): BtnSizeType {
 		if (this.btnWidth || this.btnHeight) {
-			return new ButtonSizeData(this.btnWidth ? 0 : convertDimensionsWidthUnit(15),
-				this.btnHeight != undefined ? getSizeByUnit(this.btnHeight) : convertDimensionsWidthUnit(44),
-				this.getBtnFontSize() || this.baseStyle.fontSizeMd as string,
-				this.btnWidth != undefined ? getSizeByUnit(this.btnWidth) : "")
+			return {
+				width: this.btnWidth || "auto",
+				height: this.btnHeight || convertDimensionsWidthUnit(44),
+				padding: convertDimensionsWidthUnit(15),
+				fontSize: this.btnFontSize || this.baseStyle.fontSizeMd as string
+			}
 		}
 		const buttonSize = this.buttonSize
 		switch (buttonSize) {
-			case SIZE.SMALL:
-				return new ButtonSizeData(this.baseStyle.spaceXs as string, convertDimensionsWidthUnit(32),
-					this.getBtnFontSize() || this.baseStyle.fontSizeSm as string)
 			case SIZE.MINI:
-				return new ButtonSizeData(this.baseStyle.spaceBase as string, convertDimensionsWidthUnit(32),
-					this.getBtnFontSize() || this.baseStyle.fontSizeXs as string)
+				return {
+					width: "auto",
+					height: convertDimensionsWidthUnit(24),
+					padding: this.baseStyle.spaceBase as string,
+					fontSize: this.btnFontSize || this.baseStyle.fontSizeXs as string
+				}
+			case SIZE.SMALL:
+				return {
+					width: "auto",
+					height: convertDimensionsWidthUnit(32),
+					padding: this.baseStyle.spaceXs as string,
+					fontSize: this.btnFontSize || this.baseStyle.fontSizeSm as string
+				}
 			case SIZE.LARGE:
-				return new ButtonSizeData(this.baseStyle.spaceXs as string, convertDimensionsWidthUnit(50),
-					this.getBtnFontSize() || this.baseStyle.fontSizeLg as string, CONTAINER_SIZE.FULL)
+				return {
+					width: CONTAINER_SIZE.FULL,
+					height: convertDimensionsWidthUnit(50),
+					padding: this.baseStyle.spaceXs as string,
+					fontSize: this.btnFontSize || this.baseStyle.fontSizeLg as string
+				}
 			default:
-				return new ButtonSizeData(convertDimensionsWidthUnit(15), convertDimensionsWidthUnit(44),
-					this.getBtnFontSize() || this.baseStyle.fontSizeMd as string)
+				return {
+					width: "auto",
+					height: convertDimensionsWidthUnit(44),
+					padding: convertDimensionsWidthUnit(15),
+					fontSize: this.btnFontSize || this.baseStyle.fontSizeMd as string
+				}
 		}
 	}
-	getBtnFontSize() {
-		return this.btnFontSize != undefined ? getSizeByUnit(this.btnFontSize, true) : ""
+	/**
+	 * 根据颜色type获取背景色
+	 */
+	getBgColor() {
+		return this.plain ? "transparent" : this.color ? this.color : this.type == "default" ? IBestButtonColor.defaultBg : this.baseStyle[this.type]
 	}
 	/**
 	 * 获取按钮的borderRadius
 	 */
-	getBtnBorderRadius() {
-		return getSizeByUnit(this.btnBorderRadius) || (this.square ? 0 : this.round ? this.baseStyle.borderRadiusMax : this.baseStyle.borderRadiusMd)
+	getBorderRadius() {
+		return this.btnBorderRadius || (this.square ? 0 : this.round ? this.baseStyle.borderRadiusMax as string : this.baseStyle.borderRadiusMd as string)
 	}
 	/**
 	 * 获取按钮边框的颜色
 	 */
 	getBorderColor() {
-		return this.btnBorderColor || (this.color ? this.color : this.type === COLOR_TYPE.DEFAULT ? GRAY_COLOR.GRAY_4 : getColorByType(this.type))
+		return this.btnBorderColor || (this.color ? this.color : this.type === COLOR_TYPE.DEFAULT ? GRAY_COLOR.GRAY_4 : this.baseStyle[this.type])
 	}
 	/**
 	 * 获取按钮文字的颜色
 	 */
-	getBtnTextColor() {
+	getTextColor() {
 		if (this.fontColor) {
 			return this.fontColor
 		}
 		if (this.plain) {
-			return this.color ? this.color :
-				this.type === COLOR_TYPE.DEFAULT ? IBestButtonColor.textColor : getColorByType(this.type)
+			return this.color ? this.color : this.type === COLOR_TYPE.DEFAULT ? IBestButtonColor.textColor : this.baseStyle[this.type]
 		}
 		return this.type === COLOR_TYPE.DEFAULT ? IBestButtonColor.textColor : IBestButtonColor.whiteColor
-	}
-	/**
-	 * 根据颜色type获取背景色
-	 */
-	getBackgroundColor() {
-		return this.plain ? "transparent" : this.color ? this.color : this.type == "default" ? IBestButtonColor.defaultBg : getColorByType(this.type)
 	}
 	/**
 	 * 获取loading的大小
 	 */
 	getLoadingSize() {
-		return this.loadingSize != -1 ? getSizeByUnit(this.loadingSize) : this.getBtnSize()?.fontSize as string
+		return this.loadingSize != -1 ? getSizeByUnit(this.loadingSize) : this.getBtnSize().fontSize
 	}
 	build() {
 		Button({ type: ButtonType.Normal }) {
@@ -233,8 +245,9 @@ export struct IBestButton {
 							this.iconContent()
 						}
 						Text(this.loading ? this.loadingText ?? this.text : this.text)
-							.fontSize(this.getBtnSize()?.fontSize)
-							.fontColor(this.getBtnTextColor())
+							.fontSize(getSizeByUnit(this.getBtnSize().fontSize, true))
+							.fontColor(this.getTextColor())
+							.fontWeight(this.fontWeight)
 						if(this.iconPosition == "right"){
 							this.iconContent()
 						}
@@ -245,8 +258,9 @@ export struct IBestButton {
 							this.iconContent()
 						}
 						Text(this.loading ? this.loadingText ?? this.text : this.text)
-							.fontSize(this.getBtnSize()?.fontSize)
-							.fontColor(this.getBtnTextColor())
+							.fontSize(getSizeByUnit(this.getBtnSize().fontSize, true))
+							.fontColor(this.getTextColor())
+							.fontWeight(this.fontWeight)
 						if(this.iconPosition == "bottom"){
 							this.iconContent()
 						}
@@ -254,17 +268,19 @@ export struct IBestButton {
 				}
 			}
 		}
-		.btnSizeStyle(this.getBtnSize())
+		.width(getSizeByUnit(this.getBtnSize().width))
+		.height(getSizeByUnit(this.getBtnSize().height))
+		.padding({ left: getSizeByUnit(this.getBtnSize().padding), right: getSizeByUnit(this.getBtnSize().padding), top: 0, bottom: 0 })
 		.borderWidth(convertDimensionsWidthUnit(this.hairline ? 0.5 : 1))
-		.borderRadius(this.getBtnBorderRadius())
-		.fontColor(this.getBtnTextColor())
-		.backgroundColor(this.getBackgroundColor())
+		.borderRadius(getSizeByUnit(this.getBorderRadius()))
+		.fontColor(this.getTextColor())
+		.backgroundColor(this.getBgColor())
 		.borderColor(this.getBorderColor())
 		.hitTestBehavior(this.loading ? HitTestMode.None : HitTestMode.Default)
 		.enabled(!this.disabled)
 		.opacity(this.disabled && this.plain ? 0.5 : 1)
 		.onTouch(event => {
-			event.type == TouchType.Up && this.onBtnClick(event)
+			event.type == TouchType.Up && this.onBtnClick()
 		})
 		.animation({ duration: this.baseStyle.animationDuration as number })
 	}

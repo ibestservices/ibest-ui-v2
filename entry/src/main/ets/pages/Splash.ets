@@ -1,14 +1,15 @@
 import { CONTAINER_SIZE, modeColor } from '../assets/styles/BaseStyle'
 import { PersistenceV2, router } from '@kit.ArkUI'
 import { process } from '@kit.ArkTS'
-import DataCenter from '../model/DataCenter'
+import { IBestBaseDataType } from '@ibestservices/ibest-ui-v2'
+
 @Entry
 @ComponentV2
 struct Splash {
-	@Local dataCenter: DataCenter = PersistenceV2.connect(DataCenter, () => new DataCenter())!
+	@Local isAgree: IBestBaseDataType = PersistenceV2.connect(IBestBaseDataType, () => new IBestBaseDataType(false))!
 
 	aboutToAppear(): void {
-		if(this.dataCenter.isAgree) {
+		if(this.isAgree.value) {
 			this.enterIndex()
 		}
 	}
@@ -16,7 +17,7 @@ struct Splash {
 		new process.ProcessManager().exit(0)
 	}
 	agree(){
-		this.dataCenter.isAgree = true
+		this.isAgree.value = true
 		this.enterIndex()
 	}
 	enterIndex(){
@@ -32,7 +33,7 @@ struct Splash {
 
 	build() {
 		Stack() {
-			if(!this.dataCenter.isAgree){
+			if(!this.isAgree.value){
 				Column(){
 					Text("隐私政策").fontSize(22).fontColor(modeColor.textColor)
 					Text("欢迎使用本软件!")

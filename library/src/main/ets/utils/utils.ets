@@ -1,11 +1,15 @@
 import { AppStorageV2, componentUtils, ComponentUtils, LengthUnit, MeasureOptions, window } from '@kit.ArkUI'
-import { ComAvoidAreaSize, ComInfoType, IBestGlobalConfig, IBestStringNumber } from '../model/Global.type'
+import { ComAvoidAreaSize, ComInfoType,
+	IBestBaseDataType,
+	IBestGlobalConfig,
+	IBestStorageKey,
+	IBestStringNumber } from '../model/Global.type'
 import { AnyType } from '../model/AnyType'
 import GlobalStore from './GlobalStore'
 import { util } from '@kit.ArkTS'
 import { image } from '@kit.ImageKit'
-import { ColorType, COLOR_TYPE } from '../theme-chalk/src/color.type'
-import { IBestUIBaseStyle } from '../theme-chalk/src/index.type'
+import { ColorOpacityType, ColorType, COLOR_TYPE } from '../theme-chalk/src/color.type'
+import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../theme-chalk/src/index.type'
 /**
  * 休眠
  * @param {number} time 休眠时间
@@ -195,7 +199,7 @@ export function addNumber(num1: number, num2: number) {
 /**
  * 生成事件名称
  */
-export function getEventName(componentName: string, eventName: string, groupId?: string) {
+export function getEventName(componentName: string, eventName: string, groupId?: IBestStringNumber) {
 	let arr = ['IBest', componentName, eventName, groupId]
 	return arr.filter(e => e).join("_")
 }
@@ -206,7 +210,7 @@ export function getSizeByUnit(val: IBestStringNumber, isFont?: boolean): string 
 	if (typeof val == "string") {
 		return val
 	}
-	let config: IBestGlobalConfig = AppStorage.get("IBestGlobalConfig") as IBestGlobalConfig
+	let config: IBestGlobalConfig = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG)!
 	let unit = isFont ? config.fontUnit : config.unit
 	return `${val}${unit}`
 }
@@ -214,14 +218,14 @@ export function getSizeByUnit(val: IBestStringNumber, isFont?: boolean): string 
  * 根据配置获取LengthUnit
  */
 export function getLengthUnit(): LengthUnit {
-	let config: IBestGlobalConfig = AppStorage.get("IBestGlobalConfig") as IBestGlobalConfig
+	let config: IBestGlobalConfig = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG)!
 	return config.unit == "lpx" ? LengthUnit.LPX : config.unit == "vp" ? LengthUnit.VP : LengthUnit.PX
 }
 /**
  * 根据单位转换尺寸 用于框架固定尺寸格式化 带单位
  */
 export function convertDimensionsWidthUnit(val: number, isFont?: boolean): string {
-	let config: IBestGlobalConfig = AppStorage.get("IBestGlobalConfig") as IBestGlobalConfig
+	let config = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG)
 	let unit = "vp"
 	if (config) {
 		unit = (isFont ? config.fontUnit : config.unit) as string
@@ -232,7 +236,7 @@ export function convertDimensionsWidthUnit(val: number, isFont?: boolean): strin
  * 根据单位转换尺寸
  */
 export function convertDimensions(val: number, isFont?: boolean): number {
-	let config: IBestGlobalConfig = AppStorage.get("IBestGlobalConfig") as IBestGlobalConfig
+	let config = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG)
 	if (config) {
 		let unit = isFont ? config.fontUnit : config.unit
 		switch (unit) {
@@ -267,20 +271,13 @@ export function getResourceStr(res: ResourceStr): string {
 	return GlobalStore.context.resourceManager.getStringSync(res)
 }
 /**
- * 根据类型获取颜色
+ * 保存AppStorageV2
  */
-export function getColorByType(type: ColorType): ResourceColor {
-	let style = AppStorageV2.connect(IBestUIBaseStyle)!
-	switch (type) {
-		case COLOR_TYPE.PRIMARY:
-			return style.primary
-		case COLOR_TYPE.SUCCESS:
-			return style.success
-		case COLOR_TYPE.WARNING:
-			return style.warning
-		case COLOR_TYPE.DANGER:
-			return style.danger
-		default:
-			return style.default
+export function saveAppStorage(key: string, value: boolean | IBestStringNumber) {
+	let val = AppStorageV2.connect(IBestBaseDataType, key, () => new IBestBaseDataType(0))
+	if(val){
+		val.value = value
+	}else{
+		AppStorageV2.connect(IBestBaseDataType, key, () => new IBestBaseDataType(value))
 	}
 }
