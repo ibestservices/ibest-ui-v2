@@ -569,6 +569,9 @@ struct Index {
 			.barHeight(70)
 			.barBackgroundColor(modeColor.bg2)
 			.divider({strokeWidth: 1, color: modeColor.borderColor})
+			.onChange(() => {
+				this.getScrollTop()
+			})
 		}
 		.hideTitleBar(true)
 		.backgroundColor(modeColor.bg)

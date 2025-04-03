@@ -57,10 +57,12 @@ struct PickerGroupPage {
 							}
 						}){
 							IBestPicker({
+								groupId: this.groupId,
 								options: this.options1,
 								value: this.selectValue1!!
 							})
 							IBestPicker({
+								groupId: this.groupId,
 								options: this.options2,
 								value: this.selectValue2!!
 							})
@@ -80,10 +82,12 @@ struct PickerGroupPage {
 							}
 						}){
 							IBestPicker({
+								groupId: this.groupId,
 								options: this.options1,
 								value: this.selectValue3!!
 							})
 							IBestPicker({
+								groupId: this.groupId,
 								options: this.options2,
 								value: this.selectValue4!!
 							})
@@ -139,10 +143,12 @@ struct PickerGroupPage {
 								}
 							}) {
 								IBestPicker({
+									groupId: this.groupId,
 									options: this.options1,
 									value: this.selectValue1!!
 								})
 								IBestPicker({
+									groupId: this.groupId,
 									options: this.options2,
 									value: this.selectValue2!!
 								})

@@ -420,11 +420,11 @@ export struct IBestDialog {
 	/**
 	 * 弹窗宽度
 	 */
-	@Param dialogWidth: IBestStringNumber = ""
+	@Param dialogWidth: IBestStringNumber = convertDimensionsWidthUnit(320)
 	/**
 	 * 弹窗圆角
 	 */
-	@Param dialogBorderRadius: IBestStringNumber = ""
+	@Param dialogBorderRadius: IBestStringNumber = this.baseStyle.spaceMd as string
 	/**
 	 * 背景色
 	 */
@@ -444,19 +444,19 @@ export struct IBestDialog {
 	/**
 	 * 标题的fontSize
 	 */
-	@Param titleFontSize: IBestStringNumber = ""
+	@Param titleFontSize: IBestStringNumber = this.baseStyle.fontSizeLg as string
 	/**
 	 * 标题的padding-top值
 	 */
-	@Param titlePaddingTop: IBestStringNumber = ""
+	@Param titlePaddingTop: IBestStringNumber = convertDimensionsWidthUnit(26)
 	/**
 	 * 标题的padding-left与padding-right值
 	 */
-	@Param titlePaddingX: IBestStringNumber = ""
+	@Param titlePaddingX: IBestStringNumber = convertDimensionsWidthUnit(24)
 	/**
 	 * 标题的padding-top值
 	 */
-	@Param titleLineHeight: IBestStringNumber = ""
+	@Param titleLineHeight: IBestStringNumber = convertDimensionsWidthUnit(24)
 	/**
 	 * 标题的对齐方式
 	 */
@@ -472,23 +472,23 @@ export struct IBestDialog {
 	/**
 	 * 内容区域的fontSize
 	 */
-	@Param messageFontSize: IBestStringNumber = ""
+	@Param messageFontSize: IBestStringNumber = this.baseStyle.fontSizeMd as string
 	/**
 	 * 内容区域的行高 lineHeight
 	 */
-	@Param messageLineHeight: IBestStringNumber = ""
+	@Param messageLineHeight: IBestStringNumber = this.baseStyle.lineHeightMd as string
 	/**
 	 * 内容区域的padding-top值
 	 */
-	@Param messagePaddingTop: IBestStringNumber = ""
+	@Param messagePaddingTop: IBestStringNumber = convertDimensionsWidthUnit(8)
 	/**
 	 * 内容区域的padding-left与padding-right值
 	 */
-	@Param messagePaddingX: IBestStringNumber = ""
+	@Param messagePaddingX: IBestStringNumber = convertDimensionsWidthUnit(24)
 	/**
 	 * 内容区域的padding-bottom值
 	 */
-	@Param messagePaddingBottom: IBestStringNumber = ""
+	@Param messagePaddingBottom: IBestStringNumber = convertDimensionsWidthUnit(26)
 	/**
 	 * 内容区域的文字对齐方式
 	 */
@@ -496,7 +496,7 @@ export struct IBestDialog {
 	/**
 	 * 内容区域最大高度
 	 */
-	@Param messageMaxHeight: IBestStringNumber = ''
+	@Param messageMaxHeight: IBestStringNumber = 'auto'
 	/**
 	 * 样式风格
 	 */
@@ -516,15 +516,15 @@ export struct IBestDialog {
 	/**
 	 * 确认按钮文案
 	 */
-	@Param confirmButtonText: ResourceStr = ""
+	@Param confirmButtonText: ResourceStr = $r("app.string.ibest_text_confirm")
 	/**
 	 * 取消按钮的文案
 	 */
-	@Param cancelButtonText: ResourceStr = ""
+	@Param cancelButtonText: ResourceStr = $r("app.string.ibest_text_cancel")
 	/**
 	 * 按钮的文字大小
 	 */
-	@Param buttonFontSize: IBestStringNumber = ""
+	@Param buttonFontSize: IBestStringNumber = this.baseStyle.fontSizeLg as string
 	/**
 	 * 确认按钮的字体颜色
 	 */

@@ -17,8 +17,8 @@ import {
 
 import { FONT_SIZE, modeColor, SPACE } from '../assets/styles/BaseStyle'
 import CustomNavBar from '../components/CustomNavBar'
-import { savePixelMap } from '../utils/utils'
-
+import { savePixelMap, shareImage } from '../utils/utils'
+import { common } from '@kit.AbilityKit'
 @Builder
 export function MakePosterBuilder(){
 	MakePosterPage()
@@ -79,7 +79,7 @@ struct MakePosterPage {
 		    { required: true, message: '请输入高度'}
 		]
 	}
-	private context = getContext(this)
+	private context = getContext(this) as common.UIAbilityContext
 
 	@Builder bgTypeBuilder(){
 		IBestRadioGroup({group: "radioGroup", active: this.form.canvasBgType!!, placeDirection: Axis.Horizontal}){
@@ -116,12 +116,23 @@ struct MakePosterPage {
 			Image(this.pixelMap)
 				.width(this.form.canvasWidth)
 				.height(this.form.canvasHeight)
-			SaveButton({ text: SaveDescription.SAVE_IMAGE })
-				.onClick((event: ClickEvent, result: SaveButtonOnClickResult) => {
-					if (result == SaveButtonOnClickResult.SUCCESS) {
-						this.saveImg(this.pixelMap)
+			Row({space: SPACE.MD}){
+				SaveButton({ text: SaveDescription.SAVE_IMAGE })
+					.onClick((event: ClickEvent, result: SaveButtonOnClickResult) => {
+						if (result == SaveButtonOnClickResult.SUCCESS) {
+							this.saveImg(this.pixelMap)
+						}
+					})
+				IBestButton({
+					text: "分享",
+					btnWidth: 100,
+					btnHeight: 40,
+					round: true,
+					onBtnClick: () => {
+						shareImage(this.context, this.pixelMap!)
 					}
 				})
+			}
 		}
 		.padding(SPACE.MD)
 	}

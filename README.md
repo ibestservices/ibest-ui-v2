@@ -170,6 +170,6 @@ Non-Bundled Plugins:
 ## 贡献者
 感谢以下同学对IBest-UI-V2做的贡献:
 
-<a href="https://github.com/ibestservices/ibest-ui-v2/graphs/contributors">
+<a href="https://github.com/ibestservices/ibest-ui/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=ibestservices/ibest-ui" />
 </a>

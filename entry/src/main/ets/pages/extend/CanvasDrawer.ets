@@ -3,8 +3,8 @@ import { modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
 import CustomNavBar from '../../components/CustomNavBar';
 import RouterUtil from '../../utils/routerUtil';
-import { savePixelMap } from '../../utils/utils';
-
+import { savePixelMap, shareImage } from '../../utils/utils';
+import { common } from '@kit.AbilityKit';
 @Builder
 export function CanvasDrawerBuilder(_: string, title: string){
 	CanvasDrawerPage({title})
@@ -50,7 +50,7 @@ struct CanvasDrawerPage {
 	@Local canvasShow6: boolean = false
 	@Local pixelMap6: PixelMap | null = null
 
-	private context = getContext(this)
+	private context = getContext(this) as common.UIAbilityContext;
 
 	aboutToAppear() {
 		this.canvasShow = true
@@ -79,14 +79,25 @@ struct CanvasDrawerPage {
 								.width(this.canvasWidth)
 								.height(160)
 							if(this.pixelMap){
-								SaveButton({
-									text: SaveDescription.SAVE_IMAGE,
-									buttonType: ButtonType.Capsule
-								}).onClick((event: ClickEvent, result: SaveButtonOnClickResult) => {
-									if (result == SaveButtonOnClickResult.SUCCESS) {
-										this.saveImg(this.pixelMap)
-									}
-								})
+								Row({space: SPACE.XS}){
+									SaveButton({
+										text: SaveDescription.SAVE_IMAGE,
+										buttonType: ButtonType.Capsule
+									}).onClick((event: ClickEvent, result: SaveButtonOnClickResult) => {
+										if (result == SaveButtonOnClickResult.SUCCESS) {
+											this.saveImg(this.pixelMap)
+										}
+									})
+									IBestButton({
+										text: "分享",
+										btnWidth: 100,
+										btnHeight: 40,
+										round: true,
+										onBtnClick: () => {
+											shareImage(this.context, this.pixelMap!)
+										}
+									})
+								}
 							}
 						}
 					}

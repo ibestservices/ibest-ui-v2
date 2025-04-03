@@ -83,7 +83,7 @@ struct DialogPage {
 			if(uniId){
 				this.uniId = uniId
 			}
-		}, 0)
+		}, 50)
 	}
 
 	build() {
