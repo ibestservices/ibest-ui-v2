@@ -1,11 +1,11 @@
 import { setIBestUIBaseStyle } from './src/main/ets/theme-chalk/src'
 import IBestToast from './src/main/ets/apis/IBestToast'
-import IBestActionSheet from './src/main/ets/apis/IBestActionSheet'
+import IBestActionSheet, { IBestActionType, IBestActionMultiLine } from './src/main/ets/apis/IBestActionSheet'
 import IBestImagePreview from './src/main/ets/apis/IBestImagePreview'
 import IBestDialogUtil from './src/main/ets/apis/IBestDialog'
 import IBestNotify from './src/main/ets/apis/IBestNotify'
 import GlobalStore from './src/main/ets/utils/GlobalStore'
-import { IBestGlobalConfigType, IBestBaseDataType } from './src/main/ets/model/Global.type'
+import { IBestGlobalConfigType, IBestBaseDataType, IBestStringNumber } from './src/main/ets/model/Global.type'
 const init = GlobalStore.init
 const setGlobalConfig = GlobalStore.setGlobalConfig
 
@@ -17,14 +17,14 @@ export {
 	setGlobalConfig as IBestSetGlobalConfig,
 	IBestToast,
 	IBestActionSheet,
+	IBestActionType,
+	IBestActionMultiLine,
 	IBestImagePreview,
 	IBestDialogUtil,
 	IBestNotify,
-	IBestBaseDataType
-}
-
-export type {
-	IBestGlobalConfigType
+	IBestGlobalConfigType,
+	IBestBaseDataType,
+	IBestStringNumber
 }
 
 export { debounce, throttle } from './src/main/ets/utils/DebounceThrottle'
