@@ -43,7 +43,7 @@ export { IBestPopup } from './src/main/ets/components/popup/index'
 
 export { IBestCalendar } from './src/main/ets/components/calendar/index'
 export { IBestCalendarDialog } from './src/main/ets/components/calendar/calendarDialog'
-export { IBestCalendarConfirmResult } from './src/main/ets/components/calendar/index.type'
+export { IBestCalendarDayItem, IBestCalendarConfirmResult } from './src/main/ets/components/calendar/index.type'
 
 export { IBestCascader, IBestCascaderContent } from './src/main/ets/components/cascader/index'
 export { IBestCascaderOption } from './src/main/ets/components/cascader/index.type'
@@ -54,6 +54,9 @@ export { IBestCheckboxGroupController } from './src/main/ets/components/checkbox
 
 export { IBestDatePicker } from './src/main/ets/components/datePicker/index'
 export { IBestDatePickerResult } from './src/main/ets/components/datePicker/index.type'
+
+export { IBestDateTimePicker } from './src/main/ets/components/dateTimePicker/index'
+export { IBestDateTimePickerResult } from './src/main/ets/components/dateTimePicker/index.type'
 
 export { IBestField } from './src/main/ets/components/field/index'
 export { IBestFieldValueType } from './src/main/ets/components/field/index.type'
@@ -146,6 +149,8 @@ export { IBestTabItem, IBestTabItemType } from './src/main/ets/components/tab/in
 
 export { IBestCanvasDrawer } from './src/main/ets/components/canvasDrawer/index'
 export { IBestCanvasContent } from './src/main/ets/components/canvasDrawer/index.type'
+
+export { IBestColorPicker } from './src/main/ets/components/colorPicker/index'
 
 export { IBestImageCropper } from './src/main/ets/components/imageCropper/index'
 export { IBestImageCropperController } from './src/main/ets/components/imageCropper/index.type'

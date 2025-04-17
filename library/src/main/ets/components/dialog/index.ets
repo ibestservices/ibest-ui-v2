@@ -130,6 +130,10 @@ export struct IBestDialogView {
 	 */
 	@Param confirmButtonColor: ResourceColor = ''
 	/**
+	 * 确认按钮字重
+	 */
+	@Param confirmButtonFontWeight: FontWeight = FontWeight.Normal
+	/**
 	 * 确认按钮的背景颜色
 	 */
 	@Param confirmButtonBgColor: ResourceColor = ''
@@ -366,6 +370,7 @@ export struct IBestDialogView {
 										Text(this.confirmButtonText ?? $r("app.string.ibest_text_confirm"))
 											.fontColor(this.getConfirmBtnFontColor())
 											.fontSize(getSizeByUnit(this.buttonFontSize ?? this.baseStyle.fontSizeLg as string, true))
+											.fontWeight(this.confirmButtonFontWeight ?? FontWeight.Normal)
 											.transition({ type: TransitionType.Insert, opacity: 1 })
 											.transition({ type: TransitionType.Delete, opacity: 0 })
 									}
@@ -394,16 +399,16 @@ export struct IBestDialogView {
 					} : "")
 				}
 			}
-			.width(CONTAINER_SIZE.FULL)
+			.width(getSizeByUnit(this.dialogWidth ?? convertDimensionsWidthUnit(320)))
 			.backgroundColor(this.contentBg)
 			.backgroundImage(this.bgImage)
 			.backgroundImageSize(ImageSize.FILL)
 			.borderRadius(getSizeByUnit(this.dialogBorderRadius ?? this.baseStyle.spaceMd as string))
+			.animation({ duration: 200, curve: Curve.EaseInOut })
 			.clip(true)
 			this.placeRow()
 		}
-		.width(getSizeByUnit(this.dialogWidth ?? convertDimensionsWidthUnit(320)))
-		.animation({ duration: 200, curve: Curve.EaseInOut })
+		.width(CONTAINER_SIZE.FULL)
 	}
 }
 
@@ -529,6 +534,11 @@ export struct IBestDialog {
 	 * 确认按钮的字体颜色
 	 */
 	@Param confirmButtonColor: ResourceColor = ''
+	/**
+	 * 确认按钮字重
+	 * @since 0.0.2
+	 */
+	@Param confirmButtonFontWeight: FontWeight = FontWeight.Normal
 	/**
 	 * 确认按钮的背景颜色
 	 */
@@ -668,6 +678,7 @@ export struct IBestDialog {
 			cancelButtonText: this.cancelButtonText,
 			buttonFontSize: this.buttonFontSize,
 			confirmButtonColor: this.confirmButtonColor,
+			confirmButtonFontWeight: this.confirmButtonFontWeight,
 			confirmButtonBgColor: this.confirmButtonBgColor,
 			cancelButtonColor: this.cancelButtonColor,
 			cancelButtonBgColor: this.cancelButtonBgColor,
@@ -718,6 +729,7 @@ export struct IBestDialog {
 			builder: () => {
 				this.dialogBuilder()
 			},
+			width: CONTAINER_SIZE.FULL,
 			backgroundBlurStyle: BlurStyle.NONE,
 			cornerRadius: 0,
 			alignment: this.getAlignment(),
@@ -742,7 +754,7 @@ export struct IBestDialog {
 				// 1 点击遮罩返回  0 物理返回(左滑右滑、返回键)
 				let reason = dismissDialogAction.reason
 				if (reason == DismissReason.PRESS_BACK && this.closeOnBackPress || reason == DismissReason.TOUCH_OUTSIDE && this.closeOnClickOverlay) {
-					this.close()
+					this.handleCancel()
 				}
 			}
 		})

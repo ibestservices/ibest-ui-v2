@@ -16,7 +16,7 @@ export interface IBestCalendarConfirmResult{
     lunarDay?: string
 }
 @ObservedV2
-class DayItemObj{
+export class IBestCalendarDayItem{
     date: Dayjs = dayjs()
     dateStr: string = ""
     year: string = ""
@@ -25,13 +25,13 @@ class DayItemObj{
     weekNum: number = 0
     lunarMonth: string = ""
     lunarDay: string = ""
-    isCurMonthDay: boolean = false
+	@Trace isCurMonthDay: boolean = false
     @Trace isSelected: boolean = false
-    isDisabled?: boolean = false
+	@Trace isDisabled?: boolean = false
     @Trace isClock?: boolean = false
 }
-export class DayItemType extends DayItemObj{
-    constructor(value?: DayItemObj){
+export class IBestCalendarDay extends IBestCalendarDayItem{
+    constructor(value?: IBestCalendarDayItem){
         super()
         if(value){
             this.date = value.date

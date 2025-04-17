@@ -2,11 +2,9 @@
 
 ## 简介
 
-IBest-UI-V2是一个**轻量、简单易用、可定制主题、支持深色模式和浅色模式**的鸿蒙开源UI组件库, 包含
-Button、Calendar、Form、Field、Picker、Popup、Toast、Dialog、ImageCropper
-等50+个优质组件。
+IBest-UI-V2是一个**轻量、简单易用、可定制主题、支持深色模式和浅色模式**的鸿蒙开源UI组件库, 包含 Button、Calendar、Form、Field、Picker、Popup、Toast、Dialog、ImageCropper 等50+个优质组件。
 
-目前 ibestservices 官方提供了 <a href="https://ohpm.openharmony.cn/#/cn/detail/@ibestservices%2Fibest-ui" target="_blank">V1</a> 和 <a href="https://ohpm.openharmony.cn/#/cn/detail/@ibestservices%2Fibest-ui-v2" target="_blank">V2</a> 版本, 当前为状态管理 **V2** 版本，请根据自己项目使用的**状态管理版本**选择对应的版本使用。
+目前 <a style="color:#0366d6;" onclick="openPage('https://www.ibestservices.com)" title="安徽百得思维信息科技有限公司">ibestservices 官方</a> 提供了 <a style="color:#0366d6;" onclick="openPage('https://ohpm.openharmony.cn/#/cn/detail/@ibestservices%2Fibest-ui')">V1</a> 和 <a style="color:#0366d6;" onclick="openPage('https://ohpm.openharmony.cn/#/cn/detail/@ibestservices%2Fibest-ui-v2')">V2</a> 版本, 当前为状态管理 **V2** 版本，请根据自己项目使用的**状态管理版本**选择对应的版本使用。
 
 ![IBest-UI-Light](https://ibestservices.github.io/ibest-ui/screenshot/IBest-UI-Light.png)
 
@@ -49,27 +47,28 @@ OpenHarmony ohpm 环境配置等更多内容，请参考[如何安装 OpenHarmon
 | Toast 轻提示 | 在页面中间弹出黑色半透明提示，用于消息通知、加载提示、操作结果提示等场景。 | <a href="https://ibestui-v2.ibestservices.com/components/toast/" target="__blank">文档</a>  |
 
 ### 表单组件
-| 组件                  | 介绍                                                                             |                                                                                                   |
-|:--------------------|:-------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
-| Calendar 日历         | 日历用于选择单个、多个日期或日期范围。                                                            | <a href="https://ibestui-v2.ibestservices.com/components/calendar/" target="__blank">文档</a>       |
-| Cascader 级联选择器      | 级联选择框，用于多层级数据的选择，典型场景为省市区选择。                                                   | <a href="https://ibestui-v2.ibestservices.com/components/cascader/" target="__blank">文档</a>       |
-| Checkbox 复选框        | 在一组备选项中进行多选。                                                                   | <a href="https://ibestui-v2.ibestservices.com/components/checkbox/" target="__blank">文档</a>       |
-| DatePicker 日期选择     | 日期选择器，用于选择年、月、日，通常与弹出层组件配合使用。                                                  | <a href="https://ibestui-v2.ibestservices.com/components/datepicker/" target="__blank">文档</a>     |
-| Field 输入框           | 用户可以在文本框内输入或编辑文字。                                                              | <a href="https://ibestui-v2.ibestservices.com/components/field/" target="__blank">文档</a>          |
-| Form 表单             | 用于数据录入、校验，支持输入框、单选框、复选框、文件上传等类型，需要与 Field 输入框 组件搭配使用。                          | <a href="https://ibestui-v2.ibestservices.com/components/form/" target="__blank">文档</a>           |
-| NumberKeyboard 数字键盘 | 虚拟数字键盘，可以配合密码输入框组件或自定义的输入框组件使用。                                                | <a href="https://ibestui-v2.ibestservices.com/components/numberkeyboard/" target="__blank">文档</a> |
-| PasswordInput 密码输入框 | 带网格的输入框组件，可以用于输入密码、短信验证码等场景，通常与数字键盘组件配合使用。                                     | <a href="https://ibestui-v2.ibestservices.com/components/passwordInput/" target="__blank">文档</a>  |
-| Picker 选择器          | 提供多个选项集合供用户选择，支持单列选择、多列选择和级联选择，通常与弹出层组件配合使用。                                   | <a href="https://ibestui-v2.ibestservices.com/components/picker/" target="__blank">文档</a>         |
-| PickerGroup 选择器组    | 用于结合多个 Picker 选择器组件，在一次交互中完成多个值的选择。                                            | <a href="https://ibestui-v2.ibestservices.com/components/pickergroup/" target="__blank">文档</a>    |
-| Radio 单选框           | 在一组备选项中进行单选。                                                                   | <a href="https://ibestui-v2.ibestservices.com/components/radio/" target="__blank">文档</a>          |
-| Rate 评分             | 用于对事物进行评级操作。                                                                   | <a href="https://ibestui-v2.ibestservices.com/components/rate/" target="__blank">文档</a>           |
-| Search 搜索           | 用于搜索场景的输入框组件。                                                                  | <a href="https://ibestui-v2.ibestservices.com/components/search/" target="__blank">文档</a>         |
-| Slider 滑块           | 滑动输入条，用于在给定的范围内选择一个值。                                                          | <a href="https://ibestui-v2.ibestservices.com/components/slider/" target="__blank">文档</a>         |
-| Signature 签名        | 用于签名场景的组件，基于 Canvas 实现。                                                        | <a href="https://ibestui-v2.ibestservices.com/components/signature/" target="__blank">文档</a>      |
-| Stepper 步进器         | 步进器由增加按钮、减少按钮和输入框组成，用于在一定范围内输入、调整数字。                                           | <a href="https://ibestui-v2.ibestservices.com/components/stepper/" target="__blank">文档</a>        |
-| Switch 开关           | 用于在打开和关闭状态之间进行切换。                                                              | <a href="https://ibestui-v2.ibestservices.com/components/switch/" target="__blank">文档</a>         |
-| TimePicker 时间选择     | 日期选择器，用于选择年、月、日，通常与弹出层组件配合使用。                                                  | <a href="https://ibestui-v2.ibestservices.com/components/timepicker/" target="__blank">文档</a>     |
-| Uploader 文件上传       | 用于将本地的图片或文件上传至服务器，并在上传过程中展示预览图和上传状态。目前 Uploader 组件不包含将文件上传至服务器的接口逻辑，该步骤需要自行实现。 | <a href="https://ibestui-v2.ibestservices.com/components/uploader/" target="__blank">文档</a>       |
+| 组件                    | 介绍                                                                             |                                                                                                   |
+|:----------------------|:-------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| Calendar 日历           | 日历用于选择单个、多个日期或日期范围。                                                            | <a href="https://ibestui-v2.ibestservices.com/components/calendar/" target="__blank">文档</a>       |
+| Cascader 级联选择器        | 级联选择框，用于多层级数据的选择，典型场景为省市区选择。                                                   | <a href="https://ibestui-v2.ibestservices.com/components/cascader/" target="__blank">文档</a>       |
+| Checkbox 复选框          | 在一组备选项中进行多选。                                                                   | <a href="https://ibestui-v2.ibestservices.com/components/checkbox/" target="__blank">文档</a>       |
+| DatePicker 日期选择       | 日期选择器，用于选择年、月、日，通常与弹出层组件配合使用。                                                  | <a href="https://ibestui-v2.ibestservices.com/components/datepicker/" target="__blank">文档</a>     |
+| DateTimePicker 日期时间选择 | 日期时间选择器，用于选择年、月、日、时、分、秒，通常与弹出层组件配合使用。                                          | <a href="https://ibestui-v2.ibestservices.com/components/datetimepicker/" target="_blank">文档</a>  |
+| Field 输入框             | 用户可以在文本框内输入或编辑文字。                                                              | <a href="https://ibestui-v2.ibestservices.com/components/field/" target="__blank">文档</a>          |
+| Form 表单               | 用于数据录入、校验，支持输入框、单选框、复选框、文件上传等类型，需要与 Field 输入框 组件搭配使用。                          | <a href="https://ibestui-v2.ibestservices.com/components/form/" target="__blank">文档</a>           |
+| NumberKeyboard 数字键盘   | 虚拟数字键盘，可以配合密码输入框组件或自定义的输入框组件使用。                                                | <a href="https://ibestui-v2.ibestservices.com/components/numberkeyboard/" target="__blank">文档</a> |
+| PasswordInput 密码输入框   | 带网格的输入框组件，可以用于输入密码、短信验证码等场景，通常与数字键盘组件配合使用。                                     | <a href="https://ibestui-v2.ibestservices.com/components/passwordInput/" target="__blank">文档</a>  |
+| Picker 选择器            | 提供多个选项集合供用户选择，支持单列选择、多列选择和级联选择，通常与弹出层组件配合使用。                                   | <a href="https://ibestui-v2.ibestservices.com/components/picker/" target="__blank">文档</a>         |
+| PickerGroup 选择器组      | 用于结合多个 Picker 选择器组件，在一次交互中完成多个值的选择。                                            | <a href="https://ibestui-v2.ibestservices.com/components/pickergroup/" target="__blank">文档</a>    |
+| Radio 单选框             | 在一组备选项中进行单选。                                                                   | <a href="https://ibestui-v2.ibestservices.com/components/radio/" target="__blank">文档</a>          |
+| Rate 评分               | 用于对事物进行评级操作。                                                                   | <a href="https://ibestui-v2.ibestservices.com/components/rate/" target="__blank">文档</a>           |
+| Search 搜索             | 用于搜索场景的输入框组件。                                                                  | <a href="https://ibestui-v2.ibestservices.com/components/search/" target="__blank">文档</a>         |
+| Slider 滑块             | 滑动输入条，用于在给定的范围内选择一个值。                                                          | <a href="https://ibestui-v2.ibestservices.com/components/slider/" target="__blank">文档</a>         |
+| Signature 签名          | 用于签名场景的组件，基于 Canvas 实现。                                                        | <a href="https://ibestui-v2.ibestservices.com/components/signature/" target="__blank">文档</a>      |
+| Stepper 步进器           | 步进器由增加按钮、减少按钮和输入框组成，用于在一定范围内输入、调整数字。                                           | <a href="https://ibestui-v2.ibestservices.com/components/stepper/" target="__blank">文档</a>        |
+| Switch 开关             | 用于在打开和关闭状态之间进行切换。                                                              | <a href="https://ibestui-v2.ibestservices.com/components/switch/" target="__blank">文档</a>         |
+| TimePicker 时间选择       | 日期选择器，用于选择年、月、日，通常与弹出层组件配合使用。                                                  | <a href="https://ibestui-v2.ibestservices.com/components/timepicker/" target="__blank">文档</a>     |
+| Uploader 文件上传         | 用于将本地的图片或文件上传至服务器，并在上传过程中展示预览图和上传状态。目前 Uploader 组件不包含将文件上传至服务器的接口逻辑，该步骤需要自行实现。 | <a href="https://ibestui-v2.ibestservices.com/components/uploader/" target="__blank">文档</a>       |
 
 ### 反馈组件
 | 组件               | 介绍                                                   |                                                                                                |
@@ -112,6 +111,7 @@ OpenHarmony ohpm 环境配置等更多内容，请参考[如何安装 OpenHarmon
 | 组件                | 介绍               |                                                                                                 |
 |:------------------|:-----------------|:------------------------------------------------------------------------------------------------|
 | CanvasDrawer 画布绘制 | 用于绘制海报、图片加水印等场景。 | <a href="https://ibestui-v2.ibestservices.com/components/canvasDrawer/" target="__blank">文档</a> |
+| ColorPicker 颜色选择  | 用于选择颜色。          | <a href="https://ibestui-v2.ibestservices.com/components/colorPicker/" target="_blank">文档</a>   |
 | ImageCropper 图片裁剪 | 用于裁剪图片。          | <a href="https://ibestui-v2.ibestservices.com/components/imageCropper/" target="__blank">文档</a> |
 
 ## 需要权限
@@ -119,9 +119,9 @@ ohos.permission.INTERNET
 
 ## 官方生态
 
-| 项目                       | 描述                                                              |                                                                                     |
-|:-------------------------|:----------------------------------------------------------------|:------------------------------------------------------------------------------------|
-| @ibestservices/area-data | 中国省市区数据，适用于鸿蒙 arkui的 TextPicker 和 IBest-ui 的 IBestCascader 等组件。 | <a href="https://ohpm.openharmony.cn/#/cn/detail/@ibestservices%2Farea-data">地址</a> |
+| 项目                       | 描述                                                               |                                                                                                                           |
+|:-------------------------|:-----------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------|
+| @ibestservices/area-data | 中国省市区数据，适用于鸿蒙 ArkUI 的 TextPicker 和 IBest-UI 的 IBestCascader 等组件。 | <a style="color:#0366d6;" onclick="openPage('https://ohpm.openharmony.cn/#/cn/detail/@ibestservices%2Farea-data')">地址</a> |
 
 ## 链接
 - [Github](https://github.com/ibestservices/ibest-ui-v2)

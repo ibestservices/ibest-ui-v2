@@ -165,6 +165,11 @@ export struct IBestField{
      * 是否显示验证信息
      */
     @Param @Once showMessage?: boolean = undefined
+	/**
+	 * 验证信息对齐方式, 默认同输入框文字对齐方式一致
+	 * @since 0.0.2
+	 */
+	@Param messageTextAlign: FieldTextAlign = this.inputAlign
     /**
      * 执行格式化函数触发时机
      */
@@ -381,7 +386,7 @@ export struct IBestField{
 							.showPasswordIcon(this.showPasswordIcon)
 							.height(this.baseStyle.lineHeightMd)
 							.lineHeight(this.baseStyle.lineHeightMd)
-							.textAlign(this.inputAlign == 'center' ? TextAlign.Center : this.inputAlign == 'right' ? TextAlign.End : TextAlign.Start)
+							.textAlign(this.getInputAlign())
 							.maxLength(this.maxlength)
 							// .showCounter(this.showWordLimit, {
 							//     thresholdPercentage: 1,
@@ -465,9 +470,11 @@ export struct IBestField{
 			// 验证信息
 			if(this.showMessage && this.validateMessage){
 				Text(this.validateMessage)
+					.width(CONTAINER_SIZE.FULL)
 					.fontSize(this.baseStyle.fontSizeSm)
 					.fontColor(this.baseStyle.danger)
 					.margin({top: this.baseStyle.spaceBase})
+					.textAlign(this.getMessageAlign())
 			}
 		}
 		.width(this.labelPosition == "top" ? CONTAINER_SIZE.FULL : "auto")
@@ -701,6 +708,12 @@ export struct IBestField{
             return (this.showWordLimit || this.autosize || this.validateMessage) ? VerticalAlign.Top : VerticalAlign.Center
         }
     }
+	getInputAlign(){
+		return this.inputAlign == 'center' ? TextAlign.Center : this.inputAlign == 'right' ? TextAlign.End : TextAlign.Start
+	}
+	getMessageAlign(){
+		return this.messageTextAlign == 'center' ? TextAlign.Center : this.messageTextAlign == 'right' ? TextAlign.End : TextAlign.Start
+	}
 	// 获取输入框类型
 	getInputType(): InputType{
 		switch(this.type){

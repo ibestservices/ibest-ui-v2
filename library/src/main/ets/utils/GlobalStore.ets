@@ -53,8 +53,8 @@ export default class GlobalStore {
 		let mainWindow = GlobalStore.windowStage.getMainWindowSync()
 		let screenInfo: window.WindowProperties = mainWindow.getWindowProperties()
 		let o = display.getDefaultDisplaySync().orientation
-		let screenWidth = o == 1 || o == 3 ? screenInfo.windowRect.height : screenInfo.windowRect.width
-		let screenHeight = o == 1 || o == 3 ? screenInfo.windowRect.width : screenInfo.windowRect.height
+		let screenWidth = screenInfo.windowRect.width
+		let screenHeight = screenInfo.windowRect.height
 		GlobalStore.screenWidth = screenWidth
 		GlobalStore.screenHeight = screenHeight
 		saveAppStorage(IBestStorageKey.IS_LANDSCAPE, o == 1 || o == 3)
@@ -81,6 +81,7 @@ export default class GlobalStore {
 	private static setColorModeListener(){
 		let appContext = GlobalStore.context.getApplicationContext()
 		saveAppStorage(IBestStorageKey.COLOR_MODE, GlobalStore.context.config.colorMode as number)
+		saveAppStorage(IBestStorageKey.LANGUAGE, GlobalStore.context.config.language as string)
 		appContext.on('environment', {
 			onConfigurationUpdated(config) {
 				saveAppStorage(IBestStorageKey.COLOR_MODE, config.colorMode)

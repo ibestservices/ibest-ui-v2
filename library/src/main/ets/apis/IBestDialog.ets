@@ -1,4 +1,6 @@
-import { AppStorageV2, ComponentContent, ImmersiveMode, LevelMode, PromptAction, window } from '@kit.ArkUI'
+import { AppStorageV2, ComponentContent, ImmersiveMode,
+	LengthMetrics,
+	LevelMode, PromptAction, window } from '@kit.ArkUI'
 import { convertDimensionsWidthUnit, generateId } from '../utils/utils'
 import { IBestDialogView } from '../components/dialog/index'
 import { IBestStorageKey, IBestStringNumber } from '../model/Global.type'
@@ -117,6 +119,11 @@ class IBestDialogOption {
 	 * 确认按钮的颜色
 	 */
 	confirmButtonColor?: ResourceColor
+	/**
+	 * 确认按钮字重
+	 * @since 0.0.2
+     */
+	confirmButtonFontWeight?: FontWeight
 	/**
 	 * 确认按钮的背景颜色
 	 */
@@ -249,11 +256,13 @@ class IBestDialogParams extends IBestDialogOption {
 		this.cancelButtonText = option.cancelButtonText
 		this.buttonFontSize = option.buttonFontSize
 		this.confirmButtonColor = option.confirmButtonColor
+		this.confirmButtonFontWeight = option.confirmButtonFontWeight
 		this.confirmButtonBgColor = option.confirmButtonBgColor
 		this.cancelButtonColor = option.cancelButtonColor
 		this.cancelButtonBgColor = option.cancelButtonBgColor
 		this.confirmButtonLoading = option.confirmButtonLoading
 		this.cancelButtonLoading = option.cancelButtonLoading
+		this.closeOnClickOverlay = option.closeOnClickOverlay
 		this.beforeClose = option.beforeClose
 		this.titleBuilder = option.titleBuilder
 		this.defaultBuilder = option.defaultBuilder
@@ -327,6 +336,7 @@ struct DialogContent{
 			cancelButtonText: this.option.cancelButtonText,
 			buttonFontSize: this.option.buttonFontSize,
 			confirmButtonColor: this.option.confirmButtonColor,
+			confirmButtonFontWeight: this.option.confirmButtonFontWeight,
 			confirmButtonBgColor: this.option.confirmButtonBgColor,
 			cancelButtonColor: this.option.cancelButtonColor,
 			cancelButtonBgColor: this.option.cancelButtonBgColor,
@@ -403,7 +413,7 @@ class Dialog{
 			isModal: option.showOverlay ?? true,
 			maskColor: option.overlayColor,
 			showInSubWindow: option.showInSubWindow,
-			keyboardAvoidDistance: option.keyboardAvoidDistance,
+			keyboardAvoidDistance: option.keyboardAvoidDistance ?? LengthMetrics.vp(16),
 			levelMode: option.levelMode,
 			levelUniqueId: option.levelUniqueId,
 			// immersiveMode: ImmersiveMode.EXTEND,
@@ -423,7 +433,7 @@ class Dialog{
 				if (!status) {
 					return
 				}
-				dismissDialogAction.dismiss()
+				this.close(key)
 			}
 		})
 		return key

@@ -243,6 +243,7 @@ export struct IBestPopupBaseContent{
 
 @ComponentV2
 export struct IBestPopup{
+	@Local isLandscape: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.IS_LANDSCAPE)!
 	@Local topAvoidHeight: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.TOP_AVOID_HEIGHT)!
 	/**
 	 * 弹框展示状态
@@ -364,6 +365,14 @@ export struct IBestPopup{
 			setTimeout(() => {
 				this.promptAction.closeCustomDialog(this.dialogId)
 			}, hideDuration)
+		}
+	}
+	@Monitor("isLandscape.value") landScapeChange(){
+		if(this.visible){
+			this.$visible(false)
+			setTimeout(() => {
+				this.$visible(true)
+			}, hideDuration * 2)
 		}
 	}
 	@Builder defaultContentBuilder() {

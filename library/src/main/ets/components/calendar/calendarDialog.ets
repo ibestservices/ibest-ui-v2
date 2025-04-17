@@ -3,7 +3,9 @@ import { COLOR_TYPE, ColorType } from '../../theme-chalk/src/color.type'
 import { convertDimensionsWidthUnit } from '../../utils/utils'
 import { IBestPopup } from '../popup'
 import { IBestCalendar } from './index'
-import { IBestCalendarConfirmResult, SelectedStyleType, SelectType, WeekDayType } from './index.type'
+import { IBestCalendarConfirmResult,
+	IBestCalendarDayItem,
+	SelectedStyleType, SelectType, WeekDayType } from './index.type'
 @ComponentV2
 export struct IBestCalendarDialog {
 	/**
@@ -83,6 +85,31 @@ export struct IBestCalendarDialog {
 	 */
 	@Param confirmBtnText: ResourceStr = $r("app.string.ibest_text_confirm")
 	/**
+	 * 打卡模式
+	 * @since 2.0.1
+	 */
+	@Param clock: boolean = false
+	/**
+	 * 打卡成功提示
+	 * @since 2.0.1
+	 */
+	@Param clockSuccessText: ResourceStr = $r("app.string.ibest_calendar_clocked")
+	/**
+	 * 是否显示未打卡
+	 * @since 2.0.1
+	 */
+	@Param isShowUnClock: boolean = true
+	/**
+	 * 未打卡提示
+	 * @since 2.0.1
+	 */
+	@Param unClockText: ResourceStr = $r("app.string.ibest_calendar_unclock")
+	/**
+	 * 自定义日期项插槽
+	 * @since 2.0.9
+	 */
+	@BuilderParam dayItemBuilder: ($$: IBestCalendarDayItem) => void
+	/**
 	 * 选择回调
 	 */
 	@Event onConfirm: (value: IBestCalendarConfirmResult[]) => void = () => {}
@@ -114,6 +141,11 @@ export struct IBestCalendarDialog {
 			isShowHeader: this.isShowHeader,
 			confirmBtnColor: this.confirmBtnColor,
 			confirmBtnText: this.confirmBtnText,
+			clock: this.clock,
+			clockSuccessText: this.clockSuccessText,
+			isShowUnClock: this.isShowUnClock,
+			unClockText: this.unClockText,
+			dayItemBuilder: this.dayItemBuilder,
 			onConfirm: (value): void => this.onGetCalendarResult(value)
 		})
 	}
