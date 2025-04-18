@@ -3,12 +3,13 @@ import { IBestPickerOption } from '../picker/index.type'
 import { COMPONENT_NAME, IBestTimePickerColumnType, TIME_PICKER_EVENT_NAME } from './index.type'
 import { emitter } from '../../utils/EventEmitter'
 import { clamp, convertDimensionsWidthUnit, getEventName } from '../../utils/utils'
-import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
+import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { AppStorageV2 } from '@kit.ArkUI'
 @ComponentV2
 export struct IBestTimePicker {
 	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
+	@Local language: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.LANGUAGE)!
 	/**
 	 * 分组id
 	 */
@@ -122,6 +123,7 @@ export struct IBestTimePicker {
 		}
 	}
 	// 初始化
+	@Monitor("language.value")
 	init(){
 		let reg = /^(?:([01]?[0-9]|2[0-3]):)?([0-5]?[0-9]):([0-5]?[0-9])$/
 		this.options = []

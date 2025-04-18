@@ -55,6 +55,11 @@ export struct IBestTextEllipsis{
      * 省略位置
      */
     @Param omitPosition: "start" | "middle" | "end" = "end"
+	/**
+	 * 操作点击事件
+	 * @since 0.0.2
+     */
+	@Event onActionClick: (isExpand: boolean) => void = () => {}
 
     @Local uniId: number = 0
     @Local showText: string = ""
@@ -144,12 +149,13 @@ export struct IBestTextEllipsis{
             if(this.textHeight > this.maxLineHeight && !this.isExpand && this.omitPosition == "end"){
                 this.OmitContent()
             }
-            if(this.showAction){
+            if(this.showAction && this.textHeight > this.maxLineHeight){
                 Span(this.isExpand ? this.collapseText : this.expandText)
                     .fontColor(this.actionColor)
                     .fontSize(getSizeByUnit(this.textFontSize, true))
                     .onClick(() => {
                         this.isExpand = !this.isExpand
+						this.onActionClick(this.isExpand)
                     })
             }
         }

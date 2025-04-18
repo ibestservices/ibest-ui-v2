@@ -112,7 +112,7 @@ export struct IBestRate {
 		}
 		.width(getSizeByUnit(this.iconSize))
 		.aspectRatio(1)
-		.id(`ibestRate_${this.uniId}_${index}`)
+		.id(`ibest_rate_${this.uniId}_${index}`)
 		.onClick(event => {
 			this.rateClick(event, index)
 		})
@@ -138,8 +138,8 @@ export struct IBestRate {
 	}
 	// 获取组件容器宽度
 	getContentWidth(){
-		this.containerWidth = getComponentsInfo(this.context, `ibestRate_${this.uniId}`).width
-		this.iconWidth = getComponentsInfo(this.context, `ibestRate_${this.uniId}_0`).width
+		this.containerWidth = getComponentsInfo(this.context, `ibest_rate_${this.uniId}`).width
+		this.iconWidth = getComponentsInfo(this.context, `ibest_rate_${this.uniId}_0`).width
 		this.iconSpace = (this.containerWidth - this.iconWidth*this.count)/(this.count - 1)
 	}
 	// 点击
@@ -177,7 +177,7 @@ export struct IBestRate {
 				this.rateItem(item, index)
 			}, (_: RateOption, index) => index + "")
 		}
-		.id(`ibestRate_${this.uniId}`)
+		.id(`ibest_rate_${this.uniId}`)
 		.enabled(!(this.disabled || this.readOnly))
 		.gesture(
 			PanGesture(this.panOption)

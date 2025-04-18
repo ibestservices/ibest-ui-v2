@@ -83,6 +83,10 @@ struct Index {
 					path: "DatePicker"
 				},
 				{
+					name: $r("app.string.component_dateTimePicker"),
+					path: "DateTimePicker"
+				},
+				{
 					name: $r("app.string.component_field"),
 					path: "Field"
 				},
@@ -264,6 +268,10 @@ struct Index {
 		{
 			name: $r("app.string.component_canvasDrawer"),
 			path: "CanvasDrawer"
+		},
+		{
+			name: $r("app.string.component_colorPicker"),
+			path: "ColorPicker"
 		},
 		{
 			name: $r("app.string.component_imageCropper"),
@@ -574,6 +582,7 @@ struct Index {
 			})
 		}
 		.hideTitleBar(true)
+		.mode(NavigationMode.Stack)
 		.backgroundColor(modeColor.bg)
 	}
 }

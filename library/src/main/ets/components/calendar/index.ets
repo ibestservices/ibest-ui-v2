@@ -3,7 +3,8 @@ import { Lunar } from 'lunar'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { COLOR_TYPE, ColorType } from '../../theme-chalk/src/color.type'
 import { GRAY_COLOR } from '../../theme-chalk/src/color'
-import { DayItemType,HeaderItemType,IBestCalendarConfirmResult,SelectedStyleType,SelectType,WeekDayType } from './index.type'
+import { IBestCalendarDay,HeaderItemType,IBestCalendarConfirmResult,SelectedStyleType,SelectType,WeekDayType,
+	IBestCalendarDayItem } from './index.type'
 import promptAction from '@ohos.promptAction'
 import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit } from '../../utils/utils'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
@@ -29,7 +30,7 @@ struct CalendarItem {
     @Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
     @Local fontColor: ResourceColor = IBestCalendarColor.textColor
     @Local bgColor: ResourceColor = "transparent"
-    @Param @Require dayItem: DayItemType
+    @Param @Require dayItem: IBestCalendarDay
     @Param @Require index: number
     @Param @Require itemWidth: IBestStringNumber
     @Param @Require isShowLunar: boolean
@@ -41,8 +42,9 @@ struct CalendarItem {
     @Param @Require clockSuccessText: ResourceStr
     @Param @Require isShowUnClock: boolean
     @Param @Require unClockText: ResourceStr
-    @Consumer() daysList: DayItemType[] = []
-    @Consumer() selectedList: DayItemType[] = []
+    @Consumer() daysList: IBestCalendarDay[] = []
+    @Consumer() selectedList: IBestCalendarDay[] = []
+	@BuilderParam dayItemBuilder?: ($$: IBestCalendarDayItem) => void
 
     selectedListChange(){
         this.itemChange()
@@ -147,32 +149,50 @@ struct CalendarItem {
 
     build() {
         Row() {
-            Column({ space: this.baseStyle.spaceMini as string }) {
-                Text(this.dayItem.day)
-                    .fontSize(this.baseStyle.fontSizeMd)
-                    .fontColor(this.fontColor)
-                if (this.isShowLunar) {
-                    Text(this.dayItem.lunarDay)
-                        .clockStyle(this.fontColor)
-                }else if(this.clock && this.dayItem.isCurMonthDay && isBeforeToday(this.dayItem.date)){
-                    if(this.dayItem.isClock){
-                        Text(this.clockSuccessText)
-                            .clockStyle(this.fontColor)
-                    }else if(this.isShowUnClock){
-                        Text(this.unClockText)
-                            .clockStyle(this.fontColor)
-                    }
-                }
-            }
-            .width(getSizeByUnit(this.itemWidth))
-            .aspectRatio(1)
-            .backgroundColor(this.selectType == "single" ? this.bgColor : "")
-            .borderRadius(this.selectedStyleType == "circle" ? this.baseStyle.borderRadiusMax : this.baseStyle.borderRadiusMd)
-            .justifyContent(FlexAlign.Center)
+			if(this.dayItemBuilder){
+				this.dayItemBuilder({
+					date: this.dayItem.date,
+					dateStr: this.dayItem.dateStr,
+					day: this.dayItem.day,
+					month: this.dayItem.month,
+					year: this.dayItem.year,
+					weekNum: this.dayItem.weekNum,
+					lunarMonth: this.dayItem.lunarMonth,
+					lunarDay: this.dayItem.lunarDay,
+					isSelected: this.dayItem.isSelected,
+					isCurMonthDay: this.dayItem.isCurMonthDay,
+					isDisabled: this.dayItem.isDisabled,
+					isClock: this.dayItem.isClock
+				})
+			}else {
+				Column({ space: this.baseStyle.spaceMini as string }) {
+					Text(this.dayItem.day)
+						.fontSize(this.baseStyle.fontSizeMd)
+						.fontColor(this.fontColor)
+					if (this.isShowLunar) {
+						Text(this.dayItem.lunarDay)
+							.clockStyle(this.fontColor)
+					} else if (this.clock && this.dayItem.isCurMonthDay && isBeforeToday(this.dayItem.date)) {
+						if (this.dayItem.isClock) {
+							Text(this.clockSuccessText)
+								.clockStyle(this.fontColor)
+						} else if (this.isShowUnClock) {
+							Text(this.unClockText)
+								.clockStyle(this.fontColor)
+						}
+					}
+				}
+				.width(getSizeByUnit(this.itemWidth))
+				.aspectRatio(1)
+				.backgroundColor(this.selectType == "single" ? this.bgColor : "")
+				.borderRadius(this.selectedStyleType == "circle" ? this.baseStyle.borderRadiusMax :
+				this.baseStyle.borderRadiusMd)
+				.justifyContent(FlexAlign.Center)
+			}
         }
         .width(CONTAINER_SIZE.FULL)
         .justifyContent(FlexAlign.Center)
-        .backgroundColor(this.selectType == "single" ? "" : this.bgColor)
+        .backgroundColor(this.selectType == "single" || this.dayItemBuilder ? "" : this.bgColor)
         .borderRadius(this.getOutBorderRadius())
     }
 }
@@ -270,6 +290,11 @@ export struct IBestCalendar{
      * 未打卡提示
      */
     @Param unClockText: ResourceStr = $r("app.string.ibest_calendar_unclock")
+	/**
+	 * 自定义日期项插槽
+	 * @since 0.0.2
+	 */
+	@BuilderParam dayItemBuilder: ($$: IBestCalendarDayItem) => void
     /**
      * 选择回调
      */
@@ -312,9 +337,9 @@ export struct IBestCalendar{
         }
     ]
     // 列表日期
-    @Provider() daysList: DayItemType[] = []
+    @Provider() daysList: IBestCalendarDay[] = []
     // 已选的日期列表
-    @Provider() selectedList: DayItemType[] = []
+    @Provider() selectedList: IBestCalendarDay[] = []
     // 日期区域高度
     @Local contentHeight: number = 0
     private context = this.getUIContext()
@@ -346,7 +371,7 @@ export struct IBestCalendar{
                 .fontColor(IBestCalendarColor.markTextColor)
                 .visibility(this.isShowMark ? Visibility.Visible : Visibility.Hidden)
             GridRow({ columns: 7, gutter: { x: 0, y: convertDimensionsWidthUnit(5) }}) {
-                ForEach(this.daysList, (item: DayItemType, index: number) => {
+                ForEach(this.daysList, (item: IBestCalendarDay, index: number) => {
                     GridCol() {
                         CalendarItem({
                             dayItem: item,
@@ -360,7 +385,8 @@ export struct IBestCalendar{
                             clock: this.clock,
                             clockSuccessText: this.clockSuccessText,
                             isShowUnClock: this.isShowUnClock,
-                            unClockText: this.unClockText
+                            unClockText: this.unClockText,
+							dayItemBuilder: this.dayItemBuilder
                         })
                             .enabled(!(this.clock || item.isDisabled))
                             .onClick(() => {
@@ -395,7 +421,7 @@ export struct IBestCalendar{
     }
     // 初始化selectedList
     initSelectedList(){
-        let list: DayItemType[] = []
+        let list: IBestCalendarDay[] = []
         if(this.defaultSelectedDate.length){
             if(this.defaultSelectedDate.some(e => !dayjs(e).isValid())){
                 return
@@ -403,7 +429,7 @@ export struct IBestCalendar{
             this.curSelectedDate = this.defaultSelectedDate[0]
             this.defaultSelectedDate.forEach(e => {
                 if(dayjs(e).isValid() && !this.getIsDisabled(dayjs(e))){
-                    list.push(new DayItemType({
+                    list.push(new IBestCalendarDay({
                         date: dayjs(e),
                         dateStr: e,
                         weekNum: this.getWeekNum(dayjs(e)),
@@ -428,7 +454,7 @@ export struct IBestCalendar{
      */
     initDaysList(){
         this.daysList = []
-        let list: DayItemType[] = []
+        let list: IBestCalendarDay[] = []
         // 获取当前月份1号是周几
         let firstDayWeekNum = this.getWeekNum(dayjs(this.curYearMonth).date(1))
         // console.log(`本月第一天周${firstDayWeekNum}`)
@@ -448,7 +474,7 @@ export struct IBestCalendar{
             for(let i = preMonthDaysNum - preMonthDays + 1; i <= preMonthDaysNum; i++){
                 let val = day.date(i)
                 let dateStr = val.format('YYYY-MM-DD')
-                let dayItem = new DayItemType({
+                let dayItem = new IBestCalendarDay({
                     date: val,
                     dateStr,
                     weekNum: this.getWeekNum(val),
@@ -467,7 +493,7 @@ export struct IBestCalendar{
         for (let i = 1; i <= curMonthDays; i++) {
             let val = dayjs(this.curYearMonth).date(i)
             let dateStr = val.format('YYYY-MM-DD')
-            let dayItem = new DayItemType({
+            let dayItem = new IBestCalendarDay({
                 date: val,
                 dateStr,
                 weekNum: this.getWeekNum(val),
@@ -486,7 +512,7 @@ export struct IBestCalendar{
         for (let i = 1; i <= nextMonthDays; i++) {
             let val = dayjs(this.curYearMonth).add(1, 'month').date(i)
             let dateStr = val.format('YYYY-MM-DD')
-            let dayItem = new DayItemType({
+            let dayItem = new IBestCalendarDay({
                 date: val,
                 dateStr,
                 weekNum: this.getWeekNum(val),
@@ -516,8 +542,8 @@ export struct IBestCalendar{
     /**
      * 刷新字段
      */
-    refreshListParam(list: DayItemType[]): DayItemType[]{
-        list.forEach((item: DayItemType) => {
+    refreshListParam(list: IBestCalendarDay[]): IBestCalendarDay[]{
+        list.forEach((item: IBestCalendarDay) => {
             item.isCurMonthDay = item.date.format('YYYY-MM') == this.curYearMonth
         })
         return list
@@ -557,7 +583,7 @@ export struct IBestCalendar{
     /**
      * 点击选择日期
      */
-    selectDate(item: DayItemType, index: number){
+    selectDate(item: IBestCalendarDay, index: number){
         switch(this.selectType){
             case "single":
                 if(item.isCurMonthDay){
@@ -604,7 +630,7 @@ export struct IBestCalendar{
             case "range":
                 this.curSelectedDate = item.dateStr
                 if(this.selectedList.length == 1){  // 已选起始日期 选择结束日期
-                    let days: DayItemType[] = []
+                    let days: IBestCalendarDay[] = []
                     let isOutRange = false
                     if(item.date.isBefore(this.selectedList[0].date)){
                         days = this.getDateListBetween(item.date, this.selectedList[0].date)
@@ -641,13 +667,13 @@ export struct IBestCalendar{
     /**
      * 获取两个日期之间的所有日期
      */
-    getDateListBetween(startDayjs: Dayjs, endDayjs: Dayjs): DayItemType[]{
-        let dateArray: DayItemType[] = []
+    getDateListBetween(startDayjs: Dayjs, endDayjs: Dayjs): IBestCalendarDay[]{
+        let dateArray: IBestCalendarDay[] = []
         let start = dayjs(startDayjs)
         let end = dayjs(endDayjs)
         while (!start.isAfter(end, 'day')) {
             // 将当前迭代的日期添加到数组中
-            dateArray.push(new DayItemType({
+            dateArray.push(new IBestCalendarDay({
                 date: start,
                 dateStr: start.format('YYYY-MM-DD'),
                 weekNum: this.getWeekNum(start),
