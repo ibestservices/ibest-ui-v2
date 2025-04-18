@@ -1,6 +1,6 @@
 # 版本记录
 
-## 0.0.2
+## 0.0.3
 #### 新增:
 1. IBestColorPicker 颜色选取 组件;
 2. IBestDateTimePicker 日期时间选择 组件;
