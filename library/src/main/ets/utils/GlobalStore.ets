@@ -50,19 +50,23 @@ export default class GlobalStore {
 	 * 获取屏幕尺寸
      */
 	private static getScreenSize(){
-		let mainWindow = GlobalStore.windowStage.getMainWindowSync()
-		let screenInfo: window.WindowProperties = mainWindow.getWindowProperties()
-		let o = display.getDefaultDisplaySync().orientation
-		let screenWidth = screenInfo.windowRect.width
-		let screenHeight = screenInfo.windowRect.height
-		GlobalStore.screenWidth = screenWidth
-		GlobalStore.screenHeight = screenHeight
-		saveAppStorage(IBestStorageKey.IS_LANDSCAPE, o == 1 || o == 3)
-		mainWindow.on("avoidAreaChange", data => {
-			if (data.type == window.AvoidAreaType.TYPE_KEYBOARD) {
-				saveAppStorage(IBestStorageKey.KEYBOARD_HEIGHT, px2vp(data.area.bottomRect.height))
-			}
-		})
+		try {
+			let mainWindow = GlobalStore.windowStage.getMainWindowSync()
+			let screenInfo: window.WindowProperties = mainWindow.getWindowProperties()
+			let o = display.getDefaultDisplaySync().orientation
+			let screenWidth = screenInfo.windowRect.width
+			let screenHeight = screenInfo.windowRect.height
+			GlobalStore.screenWidth = screenWidth
+			GlobalStore.screenHeight = screenHeight
+			saveAppStorage(IBestStorageKey.IS_LANDSCAPE, o == 1 || o == 3)
+			mainWindow.on("avoidAreaChange", data => {
+				if (data.type == window.AvoidAreaType.TYPE_KEYBOARD) {
+					saveAppStorage(IBestStorageKey.KEYBOARD_HEIGHT, px2vp(data.area.bottomRect.height))
+				}
+			})
+		}catch (e) {
+			throw new Error(e)
+		}
 	}
 	/**
 	 * 监听屏幕旋转
