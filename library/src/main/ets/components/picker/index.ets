@@ -50,7 +50,7 @@ export struct IBestPicker{
 	/**
 	 * 当前选中的值, 支持双向绑定
 	 */
-	@Param @Require value: IBestStringNumber[]
+	@Param value: IBestStringNumber[] = []
 	/**
 	 * 选项列表
 	 */

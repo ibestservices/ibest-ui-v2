@@ -1,32 +1,32 @@
 {
 	"app": {
 		"signingConfigs": [
+			//			{
+			//				"name": "default",
+			//				"type": "HarmonyOS",
+			//				"material": {
+			//					"certpath": "/Users/damengbuxing/.ohos/config/default_ibest-ui-v2_GbiYVTlN0qiZ9PLHtKw1HfI6AoGMxMtewdcF9rn9QDs=.cer",
+			//					"keyAlias": "debugKey",
+			//					"keyPassword": "0000001BFDA5008F56743AA4E184A76B5AD657D41B1CEBE1B8CFB7E6105F26179302E0CEAE6645868E26E8",
+			//					"profile": "/Users/damengbuxing/.ohos/config/default_ibest-ui-v2_GbiYVTlN0qiZ9PLHtKw1HfI6AoGMxMtewdcF9rn9QDs=.p7b",
+			//					"signAlg": "SHA256withECDSA",
+			//					"storeFile": "/Users/damengbuxing/.ohos/config/default_ibest-ui-v2_GbiYVTlN0qiZ9PLHtKw1HfI6AoGMxMtewdcF9rn9QDs=.p12",
+			//					"storePassword": "0000001BF86B4B8D6A033B3553A1111D1351418A946A1AD4D746BF240F6B366B23000791BF41C54960891F"
+			//				}
+			//			},
 			{
 				"name": "default",
 				"type": "HarmonyOS",
 				"material": {
-					"certpath": "/Users/damengbuxing/.ohos/config/default_ibest-ui-v2_GbiYVTlN0qiZ9PLHtKw1HfI6AoGMxMtewdcF9rn9QDs=.cer",
+					"certpath": "C:\\Users\\Administrator\\.ohos\\config\\default_ibest-ui-v2_coFEfek2KrJ0XtLR-lu892ebq3Gjo2lYIQSq3Ai_mFM=.cer",
 					"keyAlias": "debugKey",
-					"keyPassword": "0000001BFDA5008F56743AA4E184A76B5AD657D41B1CEBE1B8CFB7E6105F26179302E0CEAE6645868E26E8",
-					"profile": "/Users/damengbuxing/.ohos/config/default_ibest-ui-v2_GbiYVTlN0qiZ9PLHtKw1HfI6AoGMxMtewdcF9rn9QDs=.p7b",
+					"keyPassword": "00000019879A3750F27B9D91FF3AA089B3706444480F968D13B18B480CF7B7EC6740BF4DF0E6DDB0DC",
+					"profile": "C:\\Users\\Administrator\\.ohos\\config\\default_ibest-ui-v2_coFEfek2KrJ0XtLR-lu892ebq3Gjo2lYIQSq3Ai_mFM=.p7b",
 					"signAlg": "SHA256withECDSA",
-					"storeFile": "/Users/damengbuxing/.ohos/config/default_ibest-ui-v2_GbiYVTlN0qiZ9PLHtKw1HfI6AoGMxMtewdcF9rn9QDs=.p12",
-					"storePassword": "0000001BF86B4B8D6A033B3553A1111D1351418A946A1AD4D746BF240F6B366B23000791BF41C54960891F"
+					"storeFile": "C:\\Users\\Administrator\\.ohos\\config\\default_ibest-ui-v2_coFEfek2KrJ0XtLR-lu892ebq3Gjo2lYIQSq3Ai_mFM=.p12",
+					"storePassword": "00000019B27F53E03FDE37CDFFCBD45503E550F4B5CF9F2631EC1FF558B1F56DD8221F7CC28CE39703"
 				}
-			},
-//			{
-//				"name": "default",
-//				"type": "HarmonyOS",
-//				"material": {
-//					"certpath": "C:\\Users\\Administrator\\.ohos\\config\\default_ibest-ui-v2_coFEfek2KrJ0XtLR-lu892ebq3Gjo2lYIQSq3Ai_mFM=.cer",
-//					"keyAlias": "debugKey",
-//					"keyPassword": "0000001B477013330453ADE6AD93C59E646B4A0FF0E78D3033129F0770B617CC849E6155AC43DDEBE26C83",
-//					"profile": "C:\\Users\\Administrator\\.ohos\\config\\default_ibest-ui-v2_coFEfek2KrJ0XtLR-lu892ebq3Gjo2lYIQSq3Ai_mFM=.p7b",
-//					"signAlg": "SHA256withECDSA",
-//					"storeFile": "C:\\Users\\Administrator\\.ohos\\config\\default_ibest-ui-v2_coFEfek2KrJ0XtLR-lu892ebq3Gjo2lYIQSq3Ai_mFM=.p12",
-//					"storePassword": "0000001B2327772F3E1ADBC8DAE22659B94FDE1AD23F73F5D898736E7246D579524AE6CFA5CC9FDF252801"
-//				}
-//			}
+			}
 		],
 		"products": [
 			{
@@ -34,11 +34,11 @@
 				"signingConfig": "default",
 				"compatibleSdkVersion": "5.0.0(12)",
 				"runtimeOS": "HarmonyOS",
-				"buildOption": {
-					"strictMode": {
-						"useNormalizedOHMUrl": true
-					}
-				}
+//				"buildOption": {
+//					"strictMode": {
+//						"useNormalizedOHMUrl": true
+//					}
+//				}
 			}
 		],
 		"buildModeSet": [
