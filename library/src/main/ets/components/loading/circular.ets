@@ -2,7 +2,7 @@ import { UIContext } from '@ohos.arkui.UIContext';
 import { IBestGlobalConfig, IBestStorageKey, IBestStringNumber } from '../../model/Global.type';
 import { GRAY_COLOR } from '../../theme-chalk/src/color';
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container';
-import { convertDimensionsWidthUnit, getSizeByUnit } from '../../utils/utils';
+import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit } from '../../utils/utils';
 import { AppStorageV2 } from '@kit.ArkUI';
 
 class Point {
@@ -40,26 +40,26 @@ export struct IBestLoadingCircular {
 	/**
 	 * loading的颜色
 	 */
-	@Param color: ResourceColor = GRAY_COLOR.GRAY_5;
+	@Param color: ResourceColor = GRAY_COLOR.GRAY_5
 	/**
 	 * 圆的边框粗细
 	 */
 	@Param strokeWidth: Length = 2
-	/**
-	 * 旋转角度
-	 */
+
+	@Local uniId: number = 0
 	@Local rotateAngle: number = 0
 	@Local maxPerimeter: number = 0
 	@Local strokeDashArray: Point = new Point(0, 0)
 	@Local strokeDashOffset: number = 0
-	@Local ibestGlobalConfig: IBestGlobalConfig = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG) as IBestGlobalConfig
+	@Local ibestGlobalConfig: IBestGlobalConfig = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG)!
 	private uiContext: UIContext = this.getUIContext()
 	aboutToAppear() {
-		this.maxPerimeter = Math.floor(Math.PI * (this.getCircleSize() + (this.ibestGlobalConfig.unit == "vp" ? 20 : 0)))
-		this.strokeDashArray = new Point(0, this.maxPerimeter)
-	}
-	getCircleSize() {
-		return typeof this.circularSize == "number" ? this.circularSize : parseFloat(this.circularSize)
+		this.uniId = this.getUniqueId()
+		setTimeout(() => {
+			let width = getComponentsInfo(this.uiContext, `ibest_circle_${this.uniId}`).width
+			this.maxPerimeter = Math.floor(Math.PI * (width + (this.ibestGlobalConfig.unit == "vp" ? 20 : 0)))
+			this.strokeDashArray = new Point(0, this.maxPerimeter)
+		}, 50)
 	}
 	keyframeAnimateTo() {
 		this.uiContext?.keyframeAnimateTo({ iterations: -1 }, [
@@ -94,27 +94,30 @@ export struct IBestLoadingCircular {
 	}
 	build() {
 		Row() {
-			Circle({ width: CONTAINER_SIZE.FULL, height: CONTAINER_SIZE.FULL })
-				.fill("transparent")
-				.strokeWidth(this.strokeWidth)
-				.stroke(this.color)
-				.strokeLineCap(LineCapStyle.Round)
-				.animatableDashArray(this.strokeDashArray)
-				.animatableDashOffset(this.strokeDashOffset)
-				.rotate({ angle: this.rotateAngle })
-				.animation({
-					duration: 2000,
-					iterations: -1,
-					curve: Curve.Linear,
-					playMode: PlayMode.Normal
-				})
-				.onAppear(() => {
-					this.rotateAngle = 360
-					this.keyframeAnimateTo()
-				})
+			if(this.maxPerimeter) {
+				Circle({ width: CONTAINER_SIZE.FULL, height: CONTAINER_SIZE.FULL })
+					.fill("transparent")
+					.strokeWidth(this.strokeWidth)
+					.stroke(this.color)
+					.strokeLineCap(LineCapStyle.Round)
+					.animatableDashArray(this.strokeDashArray)
+					.animatableDashOffset(this.strokeDashOffset)
+					.rotate({ angle: this.rotateAngle })
+					.animation({
+						duration: 2000,
+						iterations: -1,
+						curve: Curve.Linear,
+						playMode: PlayMode.Normal
+					})
+					.onAppear(() => {
+						this.rotateAngle = 360
+						this.keyframeAnimateTo()
+					})
+			}
 		}
 		.width(getSizeByUnit(this.circularSize))
 		.aspectRatio(1)
 		.padding(1)
+		.id(`ibest_circle_${this.uniId}`)
 	}
 }

@@ -14,7 +14,7 @@
 		},
 		{
 			"name": "tab_bar_extend_desc",
-			"value": "The following are IBest UI extended business components, continuously updating..."
+			"value": "The following are IBest-UI-V2 extended business components, continuously updating..."
 		},
 		{
 			"name": "tab_view_doc",
@@ -217,6 +217,10 @@
 			"value": "CountDown"
 		},
 		{
+			"name": "component_countTo",
+			"value": "CountTo"
+		},
+		{
 			"name": "component_divider",
 			"value": "Divider"
 		},
@@ -243,6 +247,14 @@
 		{
 			"name": "component_progress",
 			"value": "Progress"
+		},
+		{
+			"name": "component_skeleton",
+			"value": "Skeleton"
+		},
+		{
+			"name": "component_steps",
+			"value": "Steps"
 		},
 		{
 			"name": "component_table",
@@ -623,6 +635,14 @@
 		{
 			"name": "second",
 			"value": "Second"
+		},
+		{
+			"name": "size",
+			"value": "Size"
+		},
+		{
+			"name": "inner_jump",
+			"value": "Inner Jump"
 		}
 	]
 }

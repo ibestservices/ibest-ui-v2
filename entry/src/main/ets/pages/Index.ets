@@ -197,6 +197,10 @@ struct Index {
 					path: "CountDown"
 				},
 				{
+					name: $r("app.string.component_countTo"),
+					path: "CountTo"
+				},
+				{
 					name: $r("app.string.component_divider"),
 					path: "Divider"
 				},
@@ -223,6 +227,14 @@ struct Index {
 				{
 					name: $r("app.string.component_progress"),
 					path: "Progress"
+				},
+				{
+					name: $r("app.string.component_skeleton"),
+					path: "Skeleton"
+				},
+				{
+					name: $r("app.string.component_steps"),
+					path: "Steps"
 				},
 				{
 					name: $r("app.string.component_table"),

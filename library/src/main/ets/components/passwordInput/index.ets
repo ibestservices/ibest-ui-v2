@@ -16,7 +16,7 @@ import { AppStorageV2 } from '@kit.ArkUI';
 	.selectionMenuHidden(true)
 	.enableAutoFill(false)
 	.opacity(0)
-	.id(`ibestPasswordInput_${id}`)
+	.id(`ibest_passwordInput_${id}`)
 }
 
 @ComponentV2
@@ -155,11 +155,12 @@ export struct IBestPasswordInput {
 			this.inputVal = value.replace(/\s/g, "")
 		}else if(value.length > this.inputLength){
 			this.inputVal = value.slice(0, this.inputLength)
-		}else if(value.length == this.inputLength){
-			this.onFinish()
-		}else{
+		}else {
 			this.inputList = Array(this.inputLength).fill("").map((_: string, index: number) => new IBestPasswordInputModel(value[index] || ""))
 			this.currentFocusIndex = value.length
+		}
+		if(value.length == this.inputLength){
+			this.onFinish()
 		}
 	}
 	// 输入框结束编辑
@@ -217,7 +218,7 @@ export struct IBestPasswordInput {
 				.justifyContent(FlexAlign.SpaceBetween)
 				.onClick(() => {
 					this.onFieldClick()
-					this.focusController.requestFocus(`ibestPasswordInput_${this.uniId}`)
+					this.focusController.requestFocus(`ibest_passwordInput_${this.uniId}`)
 				})
 			}
 			.width(CONTAINER_SIZE.FULL)

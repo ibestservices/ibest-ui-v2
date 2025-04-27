@@ -1,7 +1,5 @@
-import { AppStorageV2, ComponentContent, ImmersiveMode,
-	LengthMetrics,
-	LevelMode, PromptAction, window } from '@kit.ArkUI'
-import { convertDimensionsWidthUnit, generateId } from '../utils/utils'
+import { AppStorageV2, ComponentContent, LengthMetrics, LevelMode, PromptAction, window } from '@kit.ArkUI'
+import { generateId } from '../utils/utils'
 import { IBestDialogView } from '../components/dialog/index'
 import { IBestStorageKey, IBestStringNumber } from '../model/Global.type'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../theme-chalk/src/index.type'
@@ -171,11 +169,16 @@ class IBestDialogOption {
 	/**
 	 * 弹窗相对alignment所在位置的横向偏移量
 	 */
-	offsetX?: IBestStringNumber = 0
+	offsetX?: IBestStringNumber
 	/**
 	 * 弹窗相对alignment所在位置的纵向偏移量。
 	 */
-	offsetY?: IBestStringNumber = 0
+	offsetY?: IBestStringNumber
+	/**
+	 * 设置弹窗是否在拉起软键盘时进行自动避让
+	 * @since 0.0.5
+	 */
+	keyboardAvoidMode?: KeyboardAvoidMode
 	/**
 	 * 弹窗避让键盘后，和键盘之间的距离
 	 */
@@ -183,11 +186,11 @@ class IBestDialogOption {
 	/**
 	 * 弹窗显示层级
 	 */
-	levelMode?: LevelMode = LevelMode.OVERLAY
+	levelMode?: LevelMode
 	/**
 	 * 页面级弹窗需要显示的层级下的节点 uniqueId, 仅当levelMode属性设置为LevelMode.EMBEDDED时生效
 	 */
-	levelUniqueId?: number = 0
+	levelUniqueId?: number
 	/**
 	 * 标题区域的builder
 	 */
@@ -367,6 +370,7 @@ struct DialogContent{
 }
 
 interface DialogMapValue{
+	key: string
 	contentNode: ComponentContent<IBestDialogParams>
 	promptAction: PromptAction
 	params: IBestDialogParams
@@ -385,7 +389,7 @@ function getAlignment(type: string) {
  * 弹窗管理器
  */
 class Dialog{
-	private contentNodeMap: Map<string, DialogMapValue> = new Map()
+	private contentNodeArr: DialogMapValue[] = []
 	/**
 	 * 打开弹框
 	 */
@@ -399,10 +403,11 @@ class Dialog{
 		params.close = (id: string): void => this.close(id)
 		let contentNode = new ComponentContent(uiContext, wrapBuilder(defaultContentBuilder), params)
 		params.contentNode = contentNode
-		this.contentNodeMap.set(key, {
-			contentNode: contentNode,
-			promptAction: promptAction,
-			params: params
+		this.contentNodeArr.push({
+			key,
+			contentNode,
+			promptAction,
+			params
 		})
 		await promptAction.openCustomDialog(contentNode, {
 			alignment: getAlignment(option.alignment),
@@ -413,6 +418,7 @@ class Dialog{
 			isModal: option.showOverlay ?? true,
 			maskColor: option.overlayColor,
 			showInSubWindow: option.showInSubWindow,
+			keyboardAvoidMode: option.keyboardAvoidMode ?? KeyboardAvoidMode.DEFAULT,
 			keyboardAvoidDistance: option.keyboardAvoidDistance ?? LengthMetrics.vp(16),
 			levelMode: option.levelMode,
 			levelUniqueId: option.levelUniqueId,
@@ -443,22 +449,24 @@ class Dialog{
 	 */
 	public close(id?: string){
 		let key = id || this.getLastKey()
-		if(this.contentNodeMap.has(key)){
-			let dialog = this.contentNodeMap.get(key)
-			dialog?.promptAction?.closeCustomDialog(dialog?.contentNode).then(() => {
-				dialog?.contentNode?.dispose()
+		if(this.contentNodeArr.some(e => e.key == key)){
+			let index = this.contentNodeArr.findIndex(e => e.key == key)
+			let dialog = this.contentNodeArr[index]
+			dialog.promptAction.closeCustomDialog(dialog.contentNode).then(() => {
+				dialog.contentNode.dispose()
+				this.contentNodeArr.splice(index, 1)
 			})
 		}
 	}
 	private getUniKey(): string{
 		let key = generateId()
-		if(this.contentNodeMap.has(key)){
+		if(this.contentNodeArr.some(e => e.key == key)){
 			return this.getUniKey()
 		}
 		return key
 	}
 	private getLastKey(): string{
-		return Array.from(this.contentNodeMap.keys()).pop() || ""
+		return this.contentNodeArr[this.contentNodeArr.length - 1].key
 	}
 }
 

@@ -115,6 +115,9 @@ export { IBestCollapseItem } from './src/main/ets/components/collapseItem/index'
 export { IBestCountDown } from './src/main/ets/components/countDown/index'
 export { IBestCountDownController } from './src/main/ets/components/countDown/index.type'
 
+export { IBestCountTo } from './src/main/ets/components/countTo/index'
+export { IBestCountToController } from './src/main/ets/components/countTo/index.type'
+
 export { IBestDivider } from './src/main/ets/components/divider/index'
 
 export { IBestEmpty } from './src/main/ets/components/empty/index'
@@ -127,6 +130,11 @@ export { IBestPopover } from './src/main/ets/components/popover/index'
 export { IBestPopoverAction, IBestPopoverController } from './src/main/ets/components/popover/index.type'
 
 export { IBestProgress } from './src/main/ets/components/progress/index'
+
+export { IBestSkeleton, IBestSkeletonParagraph } from './src/main/ets/components/skeleton/index'
+export { IBestSkeletonType } from './src/main/ets/components/skeleton/index.type'
+
+export { IBestSteps, IBestStep } from './src/main/ets/components/steps/index'
 
 export { IBestTable, IBestTableColumn } from './src/main/ets/components/table/index'
 export { IBestTableColumnData } from './src/main/ets/components/table/index.type'

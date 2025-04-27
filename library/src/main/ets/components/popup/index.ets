@@ -22,8 +22,6 @@ export struct IBestPopupBaseContent{
 	@Local isLandscape: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.IS_LANDSCAPE)!
 	@Local topAvoidHeight: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.TOP_AVOID_HEIGHT)!
 	@Local bottomBarHeight: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.BOTTOM_BAR_HEIGHT)!
-	@Local transX: IBestStringNumber = ""
-	@Local transY: IBestStringNumber = ""
 	/**
 	 * 弹框显示位置
 	 */
@@ -92,18 +90,16 @@ export struct IBestPopupBaseContent{
 	 * 自定义内容
 	 */
 	@BuilderParam contentBuilder: CustomBuilder
-	@Param baseController: PopupBaseController = new PopupBaseController()
 	/**
 	 * 点击遮罩
 	 */
 	@Event onClickOverlay: () => void = () => {}
 	@Event close: () => void = () => {}
-	@Builder placeRow(){
-		Blank()
-			.onClick(() => {
-				this.onClickOverlay()
-			})
-	}
+
+	@Local transX: IBestStringNumber = ""
+	@Local transY: IBestStringNumber = ""
+	@Param baseController: PopupBaseController = new PopupBaseController()
+
 	@Builder popupTitle(){
 		Row(){
 			Text(this.title)
@@ -124,6 +120,12 @@ export struct IBestPopupBaseContent{
 		.padding({ left: this.baseStyle.spaceMd, right: this.baseStyle.spaceMd })
 		.justifyContent(FlexAlign.SpaceBetween)
 		.alignItems(VerticalAlign.Center)
+	}
+	@Builder placeRow(){
+		Blank()
+			.onClick(() => {
+				this.onClickOverlay()
+			})
 	}
 	@Computed
 	get popupSize(): PopupSize{
@@ -326,6 +328,11 @@ export struct IBestPopup{
 	 */
 	@Param safeAreaInsetBottom: boolean = false
 	/**
+	 * 设置弹窗是否在拉起软键盘时进行自动避让
+	 * @since 0.0.5
+	 */
+	@Param keyboardAvoidMode: KeyboardAvoidMode = KeyboardAvoidMode.DEFAULT
+	/**
 	 * 弹窗避让键盘后，和键盘之间的距离
 	 */
 	@Param keyboardAvoidDistance: LengthMetrics = LengthMetrics.vp(16)
@@ -430,6 +437,7 @@ export struct IBestPopup{
 			offset: { dx: 0, dy: -(this.topAvoidHeight.value as number) },
 			isModal: this.isModal,
 			maskColor: this.maskColor,
+			keyboardAvoidMode: this.keyboardAvoidMode,
 			keyboardAvoidDistance: this.keyboardAvoidDistance,
 			levelMode: this.levelMode,
 			levelUniqueId: this.levelUniqueId,

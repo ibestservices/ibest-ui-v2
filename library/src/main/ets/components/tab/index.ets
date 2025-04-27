@@ -108,7 +108,7 @@ export struct IBestTabs{
 	 * 激活文字大小
 	 * @since 0.0.2
 	 */
-	@Param activeFontSize: IBestStringNumber = this.baseStyle.fontSizeMd as string
+	@Param activeFontSize: IBestStringNumber = this.fontSize
 	/**
 	 * tabContent 内容列表
 	 * @since 0.0.2

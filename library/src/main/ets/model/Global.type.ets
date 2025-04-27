@@ -11,6 +11,13 @@ export type WordBreakType = 'normal' | 'break-all' | 'break-word'
  */
 export type IBestStringNumber = string | number
 /**
+ * 宽高尺寸
+ */
+export interface IBestSize{
+    width: IBestStringNumber
+    height: IBestStringNumber
+}
+/**
  * AppStorageV2 key名称枚举
  */
 export enum IBestStorageKey {

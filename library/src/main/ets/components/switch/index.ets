@@ -58,7 +58,7 @@ export struct IBestSwitch {
 	/**
 	 * 点击的回调
 	 */
-	@Event onSwitchClick: (event: ClickEvent) => void = () => {}
+	@Event onSwitchClick: () => void = () => {}
 	@Event $value: (value: boolean) => void = () => {}
 
 	@Local uniId: number = 0
@@ -69,7 +69,7 @@ export struct IBestSwitch {
 		this.uniId = this.getUniqueId()
 		setTimeout(() => {
 			this.switchBarSize = getComponentsInfo(this.uiContext, `ibest_switch_${this.uniId}`).width
-		}, 10)
+		}, 20)
 	}
 	// 结束前的动画
 	async handleBeforeClose(value: boolean) {
@@ -97,17 +97,14 @@ export struct IBestSwitch {
 	getActiveColor() {
 		return this.activeColor || this.baseStyle.primary as string
 	}
-	getSwitchSize() {
-		return typeof this.switchSize === 'number' ? this.switchSize : parseFloat(this.switchSize)
-	}
 	build() {
 		Column() {
 			Column() {
 				if (this.buttonBuilder) {
 					this.buttonBuilder()
-				} else if (this.loading) {
+				} else if (this.loading && this.switchBarSize) {
 					IBestLoading({
-						loadingSize: getSizeByUnit(this.getSwitchSize() / 1.5),
+						loadingSize: this.switchBarSize / 1.5,
 						loadingColor: this.value ? this.loadingActiveColor || this.getActiveColor() : this.loadingInactiveColor || this.activeColor
 					})
 				}
@@ -144,6 +141,7 @@ export struct IBestSwitch {
 		})
 		.onClick(() => {
 			this.handleChange()
+			this.onSwitchClick()
 		})
 	}
 }
