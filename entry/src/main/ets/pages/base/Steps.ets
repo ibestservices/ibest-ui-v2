@@ -75,12 +75,17 @@ struct StepsPage {
 					ComponentShowContainer({ title: '竖向步骤条' }){
 						IBestSteps({
 							groupId: this.groupId3,
-							type: 'dot',
+							dotSize: 8,
 							active: this.active,
 							placeDirection: Axis.Vertical
 						}){
 							ForEach([0, 1, 2], (_: number, index: number) => {
-								IBestStep({groupId: this.groupId3}){
+								IBestStep({
+									groupId: this.groupId3,
+									type: index == 1 ? "dot" : "icon",
+									inactiveIcon: index == 0 ? "like-o" : "passed",
+									activeIcon: index == 0 ? "like" : "checked",
+								}){
 									this.customStepContent(index)
 								}
 							})
