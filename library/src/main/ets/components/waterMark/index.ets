@@ -4,7 +4,7 @@ import { IBestWatermarkColor } from './color'
 import { AppStorageV2 } from '@kit.ArkUI'
 import GlobalStore from '../../utils/GlobalStore'
 import { base64ToPixelMap, getResourceStr } from '../../utils/utils'
-import { IBestWatermarkCountData, IBestDrawCanvasItemArgs } from './index.type'
+import { IBestDrawCanvasItemArgs, IBestWatermarkCountData } from './index.type'
 
 @ComponentV2
 export struct IBestWatermark {

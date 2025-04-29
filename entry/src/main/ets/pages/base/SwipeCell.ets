@@ -1,4 +1,4 @@
-import { IBestButton, IBestCell, IBestDialogUtil, IBestNavBar, IBestSwipeCell, IBestToast } from '@ibestservices/ibest-ui-v2';
+import { IBestButton, IBestCell, IBestDialogUtil, IBestSwipeCell, IBestToast } from '@ibestservices/ibest-ui-v2';
 import { modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
 import CustomNavBar from '../../components/CustomNavBar';

@@ -2,7 +2,7 @@ import window from '@ohos.window'
 import font from '@ohos.font'
 import { getWindowAvoidSize, saveAppStorage } from './utils'
 import { bundleManager, common } from '@kit.AbilityKit'
-import { IBestBaseDataType, IBestGlobalConfig, IBestGlobalConfigType, IBestStorageKey } from '../model/Global.type'
+import { IBestGlobalConfig, IBestGlobalConfigType, IBestStorageKey } from '../model/Global.type'
 import { setIBestUIBaseStyle } from '../theme-chalk/src'
 import { AppStorageV2, display } from '@kit.ArkUI'
 

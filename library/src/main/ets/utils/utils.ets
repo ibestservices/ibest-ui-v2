@@ -1,15 +1,16 @@
 import { AppStorageV2, componentUtils, ComponentUtils, LengthUnit, MeasureOptions, window } from '@kit.ArkUI'
-import { ComAvoidAreaSize, ComInfoType,
+import {
+	ComAvoidAreaSize,
+	ComInfoType,
 	IBestBaseDataType,
 	IBestGlobalConfig,
 	IBestStorageKey,
-	IBestStringNumber } from '../model/Global.type'
+	IBestStringNumber
+} from '../model/Global.type'
 import { AnyType } from '../model/AnyType'
 import GlobalStore from './GlobalStore'
 import { util } from '@kit.ArkTS'
 import { image } from '@kit.ImageKit'
-import { ColorOpacityType, ColorType, COLOR_TYPE } from '../theme-chalk/src/color.type'
-import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../theme-chalk/src/index.type'
 /**
  * 休眠
  * @param {number} time 休眠时间

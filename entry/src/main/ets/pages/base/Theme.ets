@@ -5,10 +5,10 @@ import {
 	IBestProgress,
 	IBestRadio,
 	IBestRadioGroup,
+	IBestSetUIBaseStyle,
 	IBestSwitch,
 	IBestTabs,
-	IBestTag,
-	IBestSetUIBaseStyle
+	IBestTag
 } from '@ibestservices/ibest-ui-v2'
 import { FONT_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle'
 import ComponentShowContainer from '../../components/ComponentShowContainer'

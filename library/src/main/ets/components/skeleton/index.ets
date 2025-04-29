@@ -1,10 +1,10 @@
-import { IBestBaseDataType, IBestSize, IBestStorageKey, IBestStringNumber } from "../../model/Global.type"
-import { CONTAINER_SIZE } from "../../theme-chalk/src/container"
-import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from "../../theme-chalk/src/index.type"
-import { convertDimensionsWidthUnit, getSizeByUnit } from "../../utils/utils"
-import { IBestIcon } from "../icon"
-import { IBestSkeletonType } from "./index.type"
-import { AppStorageV2 } from "@kit.ArkUI"
+import { IBestBaseDataType, IBestSize, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
+import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
+import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
+import { convertDimensionsWidthUnit, getSizeByUnit } from '../../utils/utils'
+import { IBestIcon } from '../icon'
+import { IBestSkeletonType } from './index.type'
+import { AppStorageV2 } from '@kit.ArkUI'
 
 @ComponentV2
 export struct IBestSkeleton{

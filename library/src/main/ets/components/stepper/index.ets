@@ -116,7 +116,7 @@ export struct IBestStepper {
 	// 增加按钮是否禁用
 	@Local plusBtnDisabled: boolean = false
 	// 上一次输入正确的值
-	private preValue: string = this.inputNumValue
+	private preValue: string = ""
 	// 自动纠正的时间id
 	private validateTimeId: number = 0
 
@@ -152,71 +152,62 @@ export struct IBestStepper {
 		)
 	}
 
-	@Monitor("inputNumValue")
-	inputValueChange(){
-		this.$value(parseFloat(this.inputNumValue))
-	}
-
 	aboutToAppear() {
-		this.inputNumValue = this.value.toString()
-		this.handleInputNumChange(this.inputNumValue)
+		this.preValue = this.inputNumValue = this.value.toString()
+		this.handleInputNumChange('change', this.inputNumValue, 'init')
 	}
 	aboutToDisappear() {
 		clearTimeout(this.validateTimeId)
 	}
-	// TextInput变化时赋值
-	async handleInputNumChange(val: string, validateSameValue = false) {
-		clearTimeout(this.validateTimeId)
-		// 避免inputNum变化一致情况 当不触发beforechange时说明是修正 修正时不需要判定是否一致 不然可能会导致不更新
-		if (validateSameValue && val === this.inputNumValue) {
+	// value变化
+	handleInputNumChange(trigger: string, val: string, type: string = '') {
+		if (val == '') {
+			this.validateTimeId = setTimeout(() => {
+				if (this.validateTime !== 0) {
+					this.inputNumValue = this.preValue
+					this.inputValueChange()
+					if(type != 'init'){
+						this.onChange(this.value)
+					}
+				}
+				this.handleSetStepperBtnStatus()
+				clearTimeout(this.validateTimeId)
+			}, this.validateTime)
 			return
 		}
 		// 超过范围是否自动纠正
-		if (this.autoFixed && val !== '') {
+		if (this.autoFixed) {
 			if (parseFloat(val) > this.max) {
-				// console.log('触发自动修正')
-				this.handleInputNumChange(String(this.max))
-				return
+				val = String(this.max)
 			}
 			if (parseFloat(val) < this.min) {
-				this.handleInputNumChange(String(this.min))
-				return
+				val = String(this.min)
 			}
 		}
 		// 数据限制展示多少位
-		if (this.decimalLength >= 1) {
-			// console.log('触发decimalLength限制')
-			val = Number(val).toFixed(Number(this.decimalLength))
-		}
-		// 限制整数 如果匹配不到正确的整数
-		if (this.integer && !/^-?\d+$/.test(val)) {
-			const numberArr = val.match(/^(-?\d+)/)
-			if (Array.isArray(numberArr) && numberArr[0]) {
-				val = String(Math.trunc(Number(numberArr[0])))
-			} else {
-				val = String(this.preValue || this.min)
+		if (this.decimalLength > 0) {
+			let index = val.indexOf(".")
+			if(index > -1){
+				let decimal = val.substring(index + 1)
+				if(trigger == 'change' && !decimal){
+					return
+				}
+				if(trigger == 'blur' && !decimal){
+					val = this.preValue
+				}else if(decimal.length > this.decimalLength){
+					val = Number(val).toFixed(this.decimalLength)
+				}
+			}else {
+				val = Number(this.preValue).toFixed(this.decimalLength)
 			}
 		}
+		this.preValue = val
 		this.inputNumValue = String(val)
 		this.handleSetStepperBtnStatus()
-		// 判定输入是否合法
-		if (/^-?\d+(\.\d+)?$/.test(val)) {
-			this.preValue = val
+		this.inputValueChange()
+		if(type != 'init'){
 			this.onChange(this.value)
-		} else {
-			this.handleValidateInputNum()
 		}
-	}
-	// 输入值变化时如果不合法使用上一个有效值
-	handleValidateInputNum() {
-		this.validateTimeId = setTimeout(() => {
-			// 校验延迟时间为0时不自动修复
-			if (this.validateTime !== 0) {
-				this.inputNumValue = this.preValue
-				this.onChange(this.value)
-			}
-			this.handleSetStepperBtnStatus()
-		}, this.validateTime)
 	}
 	// 监听inputNumChange改变按钮状态
 	handleSetStepperBtnStatus() {
@@ -244,7 +235,10 @@ export struct IBestStepper {
 			nextValue = String(accSub(Number(this.inputNumValue), this.step))
 			this.onMinus()
 		}
-		this.handleInputNumChange(nextValue, true)
+		this.handleInputNumChange('change', nextValue)
+	}
+	inputValueChange(){
+		this.$value(parseFloat(this.inputNumValue))
 	}
 	getBtnDisabled(type: 'plus' | 'minus'){
 		return this.disabled || (type == 'minus' ? this.reduceBtnDisabled || this.disableMinus : this.plusBtnDisabled || this.disablePlus)
@@ -256,10 +250,10 @@ export struct IBestStepper {
 			}
 			// 输入框
 			if (this.showInput) {
-				TextInput({ text: this.inputNumValue })
+				TextInput({ text: $$this.inputNumValue })
+					.type(this.decimalLength > 0 ? InputType.NUMBER_DECIMAL : InputType.Number)
 					.width(getSizeByUnit(this.inputWidth))
 					.height(getSizeByUnit(this.buttonSize))
-					.type(InputType.NUMBER_DECIMAL)
 					.padding(0)
 					.margin({
 						top: 0,
@@ -272,8 +266,8 @@ export struct IBestStepper {
 					.backgroundColor(IBestStepperColor.bg)
 					.borderRadius(0)
 					.textAlign(TextAlign.Center)
-					.inputFilter(this.integer ? '[0-9-]' : '[0-9\.-]')
-					.onChange((val) => this.handleInputNumChange(val, true))
+					.onChange((val) => this.handleInputNumChange('change', val))
+					.onBlur(() => this.handleInputNumChange('blur', this.inputNumValue))
 					.focusable(!(this.disabled || this.disableInput))
 			}
 			if (this.showPlus) {

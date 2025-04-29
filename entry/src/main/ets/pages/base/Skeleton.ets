@@ -1,7 +1,7 @@
-import { IBestSkeleton, IBestSkeletonParagraph, IBestSwitch } from "@ibestservices/ibest-ui-v2"
-import { modeColor, SPACE } from "../../assets/styles/BaseStyle"
-import ComponentShowContainer from "../../components/ComponentShowContainer"
-import CustomNavBar from "../../components/CustomNavBar"
+import { IBestSkeleton, IBestSkeletonParagraph, IBestSwitch } from '@ibestservices/ibest-ui-v2'
+import { modeColor, SPACE } from '../../assets/styles/BaseStyle'
+import ComponentShowContainer from '../../components/ComponentShowContainer'
+import CustomNavBar from '../../components/CustomNavBar'
 
 @Builder
 export function SkeletonBuilder(_: string, title: string){

@@ -2,7 +2,7 @@ import AbilityConstant from '@ohos.app.ability.AbilityConstant';
 import UIAbility from '@ohos.app.ability.UIAbility';
 import Want from '@ohos.app.ability.Want';
 import window from '@ohos.window';
-import { IBestInit, IBestSetUIBaseStyle } from '@ibestservices/ibest-ui-v2';
+import { IBestInit } from '@ibestservices/ibest-ui-v2';
 import { ConfigurationConstant } from '@kit.AbilityKit';
 import GlobalStore from '../utils/global';
 

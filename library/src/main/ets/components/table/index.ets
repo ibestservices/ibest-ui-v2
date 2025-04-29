@@ -5,7 +5,13 @@ import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { emitter } from '../../utils/EventEmitter'
 import { IBestTableColor } from './color'
-import { IBestTableColumnInfo, COMPONENT_NAME, TABLE_EVENT_NAME, IBestTableColumnData, IBestCellPosition } from './index.type'
+import {
+	COMPONENT_NAME,
+	IBestCellPosition,
+	IBestTableColumnData,
+	IBestTableColumnInfo,
+	TABLE_EVENT_NAME
+} from './index.type'
 import { AppStorageV2 } from '@kit.ArkUI'
 
 @Extend(Scroll) function ibestTableFixScrollStyle(position: string){
@@ -24,7 +30,7 @@ export struct IBestTable {
     /**
      * 表格id
      */
-    @Param @Require tableId: string
+    @Param @Require tableId: IBestStringNumber
     /**
      * 表格数据
      */
@@ -355,7 +361,7 @@ export struct IBestTableColumn{
     /**
      * 表格id
      */
-    @Param @Require tableId: string
+    @Param @Require tableId: IBestStringNumber
     /**
      * 列标题
      */

@@ -14,7 +14,6 @@ import {
 	IBestUploader,
 	IBestUploaderFile
 } from '@ibestservices/ibest-ui-v2'
-
 import { FONT_SIZE, modeColor, SPACE } from '../assets/styles/BaseStyle'
 import CustomNavBar from '../components/CustomNavBar'
 import { savePixelMap, shareImage } from '../utils/utils'

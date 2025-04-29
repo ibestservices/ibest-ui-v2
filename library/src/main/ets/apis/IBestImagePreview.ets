@@ -1,9 +1,8 @@
-import { ComponentContent, ImmersiveMode, PromptAction, window } from '@kit.ArkUI'
+import { ComponentContent, PromptAction, window } from '@kit.ArkUI'
 import { CONTAINER_SIZE } from '../theme-chalk/src/container'
 import { clamp, convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit } from '../utils/utils'
 import { IBestActionSheetColor } from './color'
 import { IBestBaseDataType, IBestStringNumber } from '../model/Global.type'
-import GlobalStore from '../utils/GlobalStore'
 type IBestPreviewImgType = PixelMap | ResourceStr | DrawableDescriptor
 
 interface CenterLocation {

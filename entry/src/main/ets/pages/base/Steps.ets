@@ -1,7 +1,7 @@
-import { IBestButton, IBestStep, IBestSteps } from "@ibestservices/ibest-ui-v2"
-import { modeColor, SPACE } from "../../assets/styles/BaseStyle"
-import ComponentShowContainer from "../../components/ComponentShowContainer"
-import CustomNavBar from "../../components/CustomNavBar"
+import { IBestButton, IBestStep, IBestSteps } from '@ibestservices/ibest-ui-v2'
+import { modeColor, SPACE } from '../../assets/styles/BaseStyle'
+import ComponentShowContainer from '../../components/ComponentShowContainer'
+import CustomNavBar from '../../components/CustomNavBar'
 
 @Builder
 export function StepsBuilder(_: string, title: string){

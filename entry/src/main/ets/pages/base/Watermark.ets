@@ -1,8 +1,7 @@
-import { IBestButton, IBestNavBar, IBestToast, IBestWatermark } from '@ibestservices/ibest-ui-v2';
+import { IBestButton, IBestToast, IBestWatermark } from '@ibestservices/ibest-ui-v2';
 import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
 import CustomNavBar from '../../components/CustomNavBar';
-import RouterUtil from '../../utils/routerUtil';
 
 @Builder
 export function WatermarkBuilder(_: string, title: string){

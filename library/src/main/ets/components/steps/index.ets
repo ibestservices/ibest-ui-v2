@@ -1,12 +1,12 @@
-import { IBestIcon, IBestProgress, IBestStringNumber } from "../../../../../Index"
-import { CONTAINER_SIZE } from "../../theme-chalk/src/container"
-import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from "../../theme-chalk/src/index.type"
-import { emitter } from "../../utils/EventEmitter"
-import { convertDimensionsWidthUnit, getComponentsInfo, getEventName, getSizeByUnit } from "../../utils/utils"
-import { IBestStepsColor } from "./color"
-import { COMPONENT_NAME, IBestStepConfig, IBestStepMarkType, STEPS_EVENT_NAME } from "./index.type"
-import { AppStorageV2 } from "@kit.ArkUI"
-import { IBestStorageKey } from "../../model/Global.type"
+import { IBestIcon, IBestProgress, IBestStringNumber } from '../../../../../Index'
+import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
+import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
+import { emitter } from '../../utils/EventEmitter'
+import { convertDimensionsWidthUnit, getComponentsInfo, getEventName, getSizeByUnit } from '../../utils/utils'
+import { IBestStepsColor } from './color'
+import { COMPONENT_NAME, IBestStepConfig, IBestStepMarkType, STEPS_EVENT_NAME } from './index.type'
+import { AppStorageV2 } from '@kit.ArkUI'
+import { IBestStorageKey } from '../../model/Global.type'
 
 @ComponentV2
 export struct IBestSteps{

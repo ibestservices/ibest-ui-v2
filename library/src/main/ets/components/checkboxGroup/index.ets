@@ -3,17 +3,10 @@ import { convertDimensionsWidthUnit, getEventName, getSizeByUnit, sleep } from '
 import { CHECKBOX_GROUP_EVENT_NAME, COMPONENT_NAME, IBestCheckboxGroupController } from './index.type';
 import { IBestStringNumber } from '../../model/Global.type';
 
-export interface CheckboxGroupContext {
-	/**
-	 * 切换全选反选
-	 * @param { boolean } [isSelectedAll] 切换所有复选框，传 true 为选中，false 为取消选中，不传参为取反
-	 */
-	toggleAll: (isSelectedAll?: boolean) => void
-}
 @ComponentV2
 export struct IBestCheckboxGroup {
 	/**
-	 * 多个相同群组名称的CheckboxGroup，仅第一个CheckboxGroup生效。
+	 * 分组id
 	 */
 	@Param @Require group: IBestStringNumber
 	/**
@@ -32,6 +25,11 @@ export struct IBestCheckboxGroup {
 	 * 排列间距
 	 */
 	@Param space: IBestStringNumber = convertDimensionsWidthUnit(12)
+	/**
+	 * 是否禁用
+	 * @since 0.0.5
+	 */
+	@Param disabled: boolean = false
 	/**
 	 * 默认内容
 	 */
@@ -59,7 +57,7 @@ export struct IBestCheckboxGroup {
 		if (this.group) {
 			emitter.on(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.GET_ALL_NAME, this.group), this.uniId, (name: IBestStringNumber): void => this.getAllNames(name))
 			emitter.on(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.uniId, (name: IBestStringNumber, checked: boolean): Promise<void> => this.onItemChange(name, checked))
-			sleep().then(() => {
+			sleep(50).then(() => {
 				this.initChildren()
 				this.handleMaxChange()
 			})
@@ -76,8 +74,9 @@ export struct IBestCheckboxGroup {
 			this.allCheckNames.push(name)
 		}
 	}
+	@Monitor("disabled")
 	initChildren() {
-		emitter.emit(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.INIT_CHILDREN, this.group), this.activeList)
+		emitter.emit(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.INIT_CHILDREN, this.group), this.activeList, this.disabled)
 	}
 	@Monitor("activeList")
 	activeChange(){
@@ -126,16 +125,19 @@ export struct IBestCheckboxGroup {
 	}
 	// 全选与反选
 	toggleAll(isSelectAll?: boolean) {
+		let arr: IBestStringNumber[] = []
 		if(typeof isSelectAll == 'boolean'){
 			if(isSelectAll){
-				this.$activeList(this.allCheckNames)
+				arr = this.allCheckNames
+				this.$activeList(arr)
 			}else {
 				this.$activeList([])
 			}
 		}else{
-			let arr = this.allCheckNames.filter(item => !this.activeList.includes(item))
+			arr = this.allCheckNames.filter(item => !this.activeList.includes(item))
 			this.$activeList(arr)
 		}
+		this.onChange(arr)
 	}
 	build() {
 		if (this.placeDirection == Axis.Horizontal) {

@@ -2,7 +2,13 @@ import { IBestStringNumber } from '../../model/Global.type'
 import { emitter } from '../../utils/EventEmitter'
 import { getEventName } from '../../utils/utils'
 import { IBestCollapseColor } from './color'
-import { COLLAPSE_EVENT_NAME, IBestCollapseItemData, COMPONENT_NAME, IBestCollapseController, ToggleOption } from './index.type'
+import {
+	COLLAPSE_EVENT_NAME,
+	COMPONENT_NAME,
+	IBestCollapseController,
+	IBestCollapseItemData,
+	ToggleOption
+} from './index.type'
 
 @ComponentV2
 export struct IBestCollapse {

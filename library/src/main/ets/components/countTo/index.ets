@@ -1,9 +1,9 @@
-import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from "../../theme-chalk/src/index.type"
-import { convertDimensionsWidthUnit, getSizeByUnit } from "../../utils/utils"
-import { IBestCountToColor } from "./color"
-import { IBestCountToController } from "./index.type"
-import { AppStorageV2 } from "@kit.ArkUI"
-import { IBestStorageKey, IBestStringNumber } from "../../model/Global.type"
+import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
+import { convertDimensionsWidthUnit, getSizeByUnit } from '../../utils/utils'
+import { IBestCountToColor } from './color'
+import { IBestCountToController } from './index.type'
+import { AppStorageV2 } from '@kit.ArkUI'
+import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 
 @ComponentV2
 export struct IBestCountTo{
