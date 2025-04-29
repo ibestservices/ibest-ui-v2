@@ -56,7 +56,7 @@ export struct IBestRadioGroup {
 			emitter.off(getEventName(COMPONENT_NAME, RADIO_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.uniId)
 		}
 	}
-	@Monitor("active, disabled")
+	@Monitor("active", "disabled")
 	initRadio() {
 		emitter.emit(getEventName(COMPONENT_NAME, RADIO_GROUP_EVENT_NAME.INIT_CHILDREN, this.group), this.active, this.disabled)
 	}

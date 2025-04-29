@@ -58,6 +58,7 @@ struct CalendarItem {
     }
 
     aboutToAppear(): void {
+		console.log("", this.selectType)
         this.itemChange()
     }
     isToday(){
@@ -232,7 +233,7 @@ export struct IBestCalendar{
     /**
      * 选择类型
      */
-    @Param selectType: SelectType = "single"
+    @Param @Once selectType: SelectType = "single"
     /**
      * 选中样式
      */
@@ -306,7 +307,6 @@ export struct IBestCalendar{
      * 选择回调
      */
     @Event onConfirm: (value: IBestCalendarConfirmResult[]) => void = () => {}
-    @Event $selectType: (value: SelectType) => void = () => {}
 
     // 当前点击选择的年月日
     @Local curSelectedDate: string = dayjs().format('YYYY-MM-DD')
@@ -418,7 +418,7 @@ export struct IBestCalendar{
      */
     init(){
         if(this.clock){
-            this.$selectType("range")
+            this.selectType = "range"
         }
         let index = this.headerList.findIndex(e => e.key == this.weekFirstDay)
         index = index == -1 ? 1 : index

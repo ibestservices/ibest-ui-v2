@@ -181,7 +181,7 @@ struct CalendarPage {
                     ComponentShowContainer({ title: '平铺展示', titlePaddingLeft: SPACE.XS }) {
                         IBestCalendar({
                             isShowLunar: true,
-                            selectedColor: "#ed4040",
+							selectType: "multiple",
                             isShowMark: true,
                             defaultSelectedDate: this.defaultSelectedDate,
 							dayItemBuilder: this.itemBuilder

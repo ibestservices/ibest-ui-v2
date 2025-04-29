@@ -78,7 +78,7 @@ export struct IBestCheckboxGroup {
 	initChildren() {
 		emitter.emit(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.INIT_CHILDREN, this.group), this.activeList, this.disabled)
 	}
-	@Monitor("activeList")
+	@Monitor("activeList", "activeList.length")
 	activeChange(){
 		this.initChildren()
 		this.handleMaxChange()

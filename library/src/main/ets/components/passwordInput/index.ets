@@ -132,10 +132,10 @@ export struct IBestPasswordInput {
 		NumberKeyboard({
 			value: this.inputVal!!,
 			title: this.numberKeyboardConfig?.title || '',
-			extraKey: this.numberKeyboardConfig?.extraKey,
-			closeButtonText: this.numberKeyboardConfig?.closeBtnText,
-			deleteButtonText: this.numberKeyboardConfig?.deleteButtonText,
-			styleType: this.numberKeyboardConfig?.styleType,
+			extraKey: this.numberKeyboardConfig?.extraKey || '',
+			closeButtonText: this.numberKeyboardConfig?.closeBtnText || '',
+			deleteButtonText: this.numberKeyboardConfig?.deleteButtonText || '',
+			styleType: this.numberKeyboardConfig?.styleType || 'default',
 			isRandomKeyOrder: this.numberKeyboardConfig?.isRandomKeyOrder,
 			maxLength: this.inputLength,
 			onClose: () => {
