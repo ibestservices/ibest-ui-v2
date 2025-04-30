@@ -1,8 +1,14 @@
-import { IBestButton,IBestCalendar,IBestCalendarConfirmResult,
-	IBestCalendarDayItem,IBestCalendarDialog,IBestCell,IBestCellGroup,IBestNavBar } from '@ibestservices/ibest-ui-v2'
-import promptAction from '@ohos.promptAction'
+import {
+	IBestButton,
+	IBestCalendar,
+	IBestCalendarConfirmResult,
+	IBestCalendarDayItem,
+	IBestCalendarDialog,
+	IBestCell,
+	IBestCellGroup
+} from '@ibestservices/ibest-ui-v2'
 import ComponentShowContainer from '../../components/ComponentShowContainer'
-import {  modeColor, SPACE } from '../../assets/styles/BaseStyle'
+import { modeColor, SPACE } from '../../assets/styles/BaseStyle'
 import dayjs from '@hview/dayjs'
 import CustomNavBar from '../../components/CustomNavBar'
 @Builder
@@ -175,7 +181,7 @@ struct CalendarPage {
                     ComponentShowContainer({ title: '平铺展示', titlePaddingLeft: SPACE.XS }) {
                         IBestCalendar({
                             isShowLunar: true,
-                            selectedColor: "#ed4040",
+							selectType: "multiple",
                             isShowMark: true,
                             defaultSelectedDate: this.defaultSelectedDate,
 							dayItemBuilder: this.itemBuilder

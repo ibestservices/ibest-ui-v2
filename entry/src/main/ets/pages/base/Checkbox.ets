@@ -1,4 +1,11 @@
-import { IBestButton, IBestCell, IBestCheckbox, IBestCheckboxGroup, IBestCheckboxGroupController, IBestDialogUtil } from '@ibestservices/ibest-ui-v2';
+import {
+	IBestButton,
+	IBestCell,
+	IBestCheckbox,
+	IBestCheckboxGroup,
+	IBestCheckboxGroupController,
+	IBestDialogUtil
+} from '@ibestservices/ibest-ui-v2';
 import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
 import CustomNavBar from '../../components/CustomNavBar';

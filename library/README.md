@@ -1,6 +1,22 @@
-# IBest-UI-V2
+<p align="center">
+    <img src="https://ibestservices.github.io/ibest-ui/AppScope/resources/base/media/app_logo_trans.png" width="100">
+</p>
 
-## 简介
+<p align="center"><strong>IBest-UI-V2</strong></p>
+
+<p align="center">轻量、可定制的 HarmonyOS NEXT 组件库</p>
+
+<p align="center">
+    <a style="color:#0366d6;" onclick="openPage('https://ibestui-v2.ibestservices.com')">文档</a>
+    &nbsp;
+    ·
+    &nbsp;
+    <a style="color:#0366d6;" onclick="openPage('https://github.com/ibestservices/ibest-ui-v2')">Github</a>
+</p>
+
+---
+
+## 介绍
 
 IBest-UI-V2由 <a style="color:#0366d6;" href="https://www.ibestservices.com/" target="_blank">安徽百得思维信息科技有限公司</a>
 开源，是一个**轻量、简单易用、可定制主题、支持深色模式和浅色模式**的鸿蒙开源UI组件库, 包含 Button、Calendar、Form、Field、Picker、Popup、Toast、Dialog、ImageCropper 等50+个优质组件，上手简单，使用方便，可大大提高鸿蒙开发者的开发效率。
@@ -11,10 +27,6 @@ IBest-UI-V2由 <a style="color:#0366d6;" href="https://www.ibestservices.com/" t
 	<img src="https://ibestservices.github.io/ibest-ui/screenshot/IBest-UI-Light.png" width="48%">
 	<img src="https://ibestservices.github.io/ibest-ui/screenshot/IBest-UI-Dark.png" width="48%">
 </div>
-
-## 文档地址
-
-https://ibestui-v2.ibestservices.com
 
 ## 特性
 - 🚀 50+ 个高质量组件，覆盖移动端主流场景
@@ -89,12 +101,15 @@ OpenHarmony ohpm 环境配置等更多内容，请参考[如何安装 OpenHarmon
 | CircleProgress 环形进度条 | 圆环形的进度条组件。                         | <a href="https://ibestui-v2.ibestservices.com/components/circleProgress/" target="__blank">文档</a> |
 | Collapse 折叠面板        | 将一组内容放置在多个折叠面板中，点击面板的标题可以展开或收缩其内容。 | <a href="https://ibestui-v2.ibestservices.com/components/collapse/" target="__blank">文档</a>       |
 | CountDown 倒计时        | 用于实时展示倒计时数值，支持毫秒精度。                | <a href="https://ibestui-v2.ibestservices.com/components/countDown/" target="__blank">文档</a>      |
+| CountTo 数字滚动         | 用于需要滚动数字到某一个值的场景，目标要求是一个递增的值。      | <a href="https://ibestui-v2.ibestservices.com/components/countTo/" target="_blank">文档</a>         |
 | Divider 分割线          | 用于将内容分隔为多个区域。                      | <a href="https://ibestui-v2.ibestservices.com/components/divider/" target="__blank">文档</a>        |
 | Empty 空状态            | 空状态时的占位提示。                         | <a href="https://ibestui-v2.ibestservices.com/components/empty/" target="__blank">文档</a>          |
 | Highlight 高亮文本       | 高亮指定文本内容。                          | <a href="https://ibestui-v2.ibestservices.com/components/highlight/" target="__blank">文档</a>      |
 | ImagePreview 图片预览    | 图片放大预览。                            | <a href="https://ibestui-v2.ibestservices.com/components/imagepreview/" target="__blank">文档</a>   |
 | NoticeBar 通知栏        | 用于循环播放展示一组消息通知。                    | <a href="https://ibestui-v2.ibestservices.com/components/noticeBar/" target="__blank">文档</a>      |
 | Popover 气泡弹出框        | 弹出式的气泡菜单。                          | <a href="https://ibestui-v2.ibestservices.com/components/popover/" target="__blank">文档</a>        |
+| Skeleton 骨架屏         | 用于在内容加载过程中展示一组占位图形。                | <a href="https://ibestui-v2.ibestservices.com/components/skeleton/" target="_blank">文档</a>        |
+| Steps 步骤条            | 用于展示操作流程的各个环节，让用户了解当前的操作在整体流程中的位置。 | <a href="https://ibestui-v2.ibestservices.com/components/steps/" target="_blank">文档</a>           |
 | Progress 进度条         | 用于展示操作的当前进度。                       | <a href="https://ibestui-v2.ibestservices.com/components/progress/" target="__blank">文档</a>       |
 | Table 表格             | 用于展示多条结构类似的数据。                     | <a href="https://ibestui-v2.ibestservices.com/components/table/" target="__blank">文档</a>          |
 | Tag 标签               | 用于标记关键词和概括主要内容。                    | <a href="https://ibestui-v2.ibestservices.com/components/tag/" target="__blank">文档</a>            |

@@ -2,6 +2,8 @@ import { IBestButton, IBestCell, IBestCellGroup, IBestIcon, IBestPopup, IBestToa
 import ComponentShowContainer from '../../components/ComponentShowContainer'
 import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle'
 import CustomNavBar from '../../components/CustomNavBar'
+import RouterUtil from '../../utils/routerUtil'
+
 @Builder
 export function PopupBuilder(_: string, title: string){
 	PopupPage({title})
@@ -37,10 +39,13 @@ struct PopupPage {
 	@Local bottomCornerVisible: boolean = false
 	@Local bgImageVisible: boolean = false
 	@Local cusHeightVisible: boolean = false
+	@Local innerVisible: boolean = false
+	@Local uniId: number = 0
 	@Local eventVisible: boolean = false
 	@Local safeAreaVisible: boolean = false
 	@Local popupWidth: number = 300
 	@Local popupHeight: number = 150
+	private uiContext = this.getUIContext()
 
 	@Builder centerBuilder() {
 		Column()
@@ -69,6 +74,20 @@ struct PopupPage {
 		.justifyContent(FlexAlign.Center)
 		.alignItems(HorizontalAlign.Center)
 	}
+	@Builder innerBuilder(){
+		Column() {
+			IBestButton({
+				type: 'primary',
+				text: "跳转页面",
+				onBtnClick: () => {
+					RouterUtil.push("Button", "Button 按钮")
+				}
+			})
+		}
+		.width("100%")
+		.height("100%")
+		.justifyContent(FlexAlign.Center)
+	}
 	@Builder safeBuilder() {
 		Column(){
 			Text($r("app.string.content")).fontSize(14)
@@ -78,6 +97,15 @@ struct PopupPage {
 		.height(CONTAINER_SIZE.FULL)
 		.justifyContent(FlexAlign.SpaceBetween)
 		.alignItems(HorizontalAlign.Center)
+	}
+
+	onDidBuild(): void {
+		setTimeout(() => {
+			let uniId = this.uiContext.getAttachedFrameNodeById("main")?.getUniqueId()
+			if(uniId){
+				this.uniId = uniId
+			}
+		}, 50)
 	}
 
 	build() {
@@ -226,6 +254,20 @@ struct PopupPage {
 					}
 				}
 				ListItem() {
+					ComponentShowContainer({ title: $r("app.string.inner_jump"), titlePaddingLeft: SPACE.MD }) {
+						IBestCellGroup({ inset: true }) {
+							IBestCell({
+								title: $r("app.string.inner_jump"),
+								isLink: true,
+								hasBorder: false,
+								onCellClick: () => {
+									this.innerVisible = true
+								}
+							})
+						}
+					}
+				}
+				ListItem() {
 					ComponentShowContainer({ title: $r("app.string.event"), titlePaddingLeft: SPACE.MD }) {
 						IBestCellGroup({ inset: true }) {
 							IBestCell({
@@ -321,6 +363,14 @@ struct PopupPage {
 				popupHeight: this.popupHeight,
 				contentBuilder: (): void => this.cusHeightBuilder()
 			})
+			// 内部跳转
+			IBestPopup({
+				visible: this.innerVisible!!,
+				popupAlign: "bottom",
+				levelMode: 1,
+				levelUniqueId: this.uniId,
+				contentBuilder: (): void => this.innerBuilder()
+			})
 			// 事件监听
 			IBestPopup({
 				visible: this.eventVisible!!,
@@ -343,5 +393,6 @@ struct PopupPage {
 		}
 		.hideTitleBar(true)
 		.backgroundColor(modeColor.bg)
+		.id("main")
 	}
 }

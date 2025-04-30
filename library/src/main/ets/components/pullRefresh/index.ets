@@ -1,4 +1,4 @@
-import { IBestRefreshContentParams, IBestPullRefreshStatus } from './index.type'
+import { IBestPullRefreshStatus, IBestRefreshContentParams } from './index.type'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { IBestLoading } from '../loading'

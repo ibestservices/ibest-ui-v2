@@ -1,6 +1,6 @@
-import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
+import { modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
-import { IBestNavBar, IBestTextEllipsis } from '@ibestservices/ibest-ui-v2';
+import { IBestTextEllipsis } from '@ibestservices/ibest-ui-v2';
 import CustomNavBar from '../../components/CustomNavBar';
 
 @Builder

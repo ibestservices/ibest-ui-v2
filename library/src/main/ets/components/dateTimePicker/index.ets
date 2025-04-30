@@ -22,11 +22,11 @@ export struct IBestDateTimePicker {
 	/**
 	 * 最小时间
 	 */
-	@Param minDate: Date = dayjs(new Date().getFullYear() + '-01-01 00:00:00').subtract(10, 'year').toDate()
+	@Param @Once minDate: Date = dayjs(new Date().getFullYear() + '-01-01 00:00:00').subtract(10, 'year').toDate()
 	/**
 	 * 最大时间
 	 */
-	@Param maxDate: Date = dayjs(new Date().getFullYear() + '-01-01 00:00:00').add(10, 'year').toDate()
+	@Param @Once maxDate: Date = dayjs(new Date().getFullYear() + '-01-01 00:00:00').add(10, 'year').toDate()
 	/**
 	 * 是否显示单位
 	 */
@@ -75,7 +75,6 @@ export struct IBestDateTimePicker {
 	 * 选中项改变事件
 	 */
 	@Event onChange: (value: IBestDateTimePickerResult) => void = () => {}
-	@Event $minDate: (minDate: Date) => void = () => {}
 	@Event $value: (value: string[]) => void = () => {}
 
 	// 唯一id
@@ -322,7 +321,7 @@ export struct IBestDateTimePicker {
 	handleGroupChange(uniId: number, selectedValues: string[]) {
 		if(this.uniId > uniId){
 			let selectDate = dayjs(selectedValues.slice(0, 3).join('-') + ' ' + selectedValues.slice(3).join(":")).toDate()
-			this.$minDate(selectDate)
+			this.minDate = selectDate
 			if(selectDate > this.maxDate || selectDate < this.minDate){
 				this.$value(selectedValues)
 			}

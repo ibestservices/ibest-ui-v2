@@ -1,6 +1,5 @@
-import { GRAY_COLOR } from '../../theme-chalk/src/color';
 import { curves } from '@kit.ArkUI';
-import { convertDimensionsWidthUnit, getSizeByUnit } from '../../utils/utils';
+import { getSizeByUnit } from '../../utils/utils';
 import { IBestStringNumber } from '../../model/Global.type';
 
 @ComponentV2

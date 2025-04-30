@@ -8,7 +8,7 @@ export struct IBestRadioGroup {
 	/**
 	 * 分组标识
 	 */
-	@Param @Require @Once group: string
+	@Param @Require @Once group: IBestStringNumber
 	/**
 	 * 激活的标识
 	 */
@@ -21,6 +21,11 @@ export struct IBestRadioGroup {
 	 * 排列间距
 	 */
 	@Param space: IBestStringNumber = convertDimensionsWidthUnit(12)
+	/**
+	 * 是否禁用
+	 * @since 0.0.5
+	 */
+	@Param disabled: boolean = false
 	/**
 	 * 默认内容
 	 */
@@ -51,9 +56,9 @@ export struct IBestRadioGroup {
 			emitter.off(getEventName(COMPONENT_NAME, RADIO_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.uniId)
 		}
 	}
-	@Monitor("active")
+	@Monitor("active", "disabled")
 	initRadio() {
-		emitter.emit(getEventName(COMPONENT_NAME, RADIO_GROUP_EVENT_NAME.INIT_CHILDREN, this.group), this.active)
+		emitter.emit(getEventName(COMPONENT_NAME, RADIO_GROUP_EVENT_NAME.INIT_CHILDREN, this.group), this.active, this.disabled)
 	}
 	async handleBeforeClose(name: IBestStringNumber | boolean) {
 		let status = true

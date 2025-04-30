@@ -1,6 +1,13 @@
 import { modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
-import { IBestButton, IBestIcon, IBestTable, IBestTableColumn, IBestTableColumnData, IBestToast } from '@ibestservices/ibest-ui-v2';
+import {
+	IBestButton,
+	IBestIcon,
+	IBestTable,
+	IBestTableColumn,
+	IBestTableColumnData,
+	IBestToast
+} from '@ibestservices/ibest-ui-v2';
 import CustomNavBar from '../../components/CustomNavBar';
 
 @Builder

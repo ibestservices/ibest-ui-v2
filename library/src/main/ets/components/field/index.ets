@@ -1,8 +1,22 @@
 import { GRAY_COLOR } from '../../theme-chalk/src/color'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
-import { COMPONENT_NAME, FieldValidateResult, FORM_EVENT_NAME, IBestFormRuleItem, IBestFormSendFieldCallResult } from '../form/index.type'
-import type { ClearTriggerType, FieldTextAlign, FormatTriggerType, IBestFieldType, IBestFieldValueType, LabelPositionType, RequireAsteriskPositionType } from './index.type'
+import {
+	COMPONENT_NAME,
+	FieldValidateResult,
+	FORM_EVENT_NAME,
+	IBestFormRuleItem,
+	IBestFormSendFieldCallResult
+} from '../form/index.type'
+import type {
+	ClearTriggerType,
+	FieldTextAlign,
+	FormatTriggerType,
+	IBestFieldType,
+	IBestFieldValueType,
+	LabelPositionType,
+	RequireAsteriskPositionType
+} from './index.type'
 import { emitter } from '../../utils/EventEmitter'
 import { runRuleValidator, runSyncRule } from './utils'
 import { clamp, convertDimensionsWidthUnit, getEventName, getResourceStr, getSizeByUnit } from '../../utils/utils'

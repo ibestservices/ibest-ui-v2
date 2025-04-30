@@ -3,8 +3,15 @@ import { Lunar } from 'lunar'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { COLOR_TYPE, ColorType } from '../../theme-chalk/src/color.type'
 import { GRAY_COLOR } from '../../theme-chalk/src/color'
-import { IBestCalendarDay,HeaderItemType,IBestCalendarConfirmResult,SelectedStyleType,SelectType,WeekDayType,
-	IBestCalendarDayItem } from './index.type'
+import {
+	HeaderItemType,
+	IBestCalendarConfirmResult,
+	IBestCalendarDay,
+	IBestCalendarDayItem,
+	SelectedStyleType,
+	SelectType,
+	WeekDayType
+} from './index.type'
 import promptAction from '@ohos.promptAction'
 import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit } from '../../utils/utils'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
@@ -51,6 +58,7 @@ struct CalendarItem {
     }
 
     aboutToAppear(): void {
+		console.log("", this.selectType)
         this.itemChange()
     }
     isToday(){
@@ -225,7 +233,7 @@ export struct IBestCalendar{
     /**
      * 选择类型
      */
-    @Param selectType: SelectType = "single"
+    @Param @Once selectType: SelectType = "single"
     /**
      * 选中样式
      */
@@ -299,7 +307,6 @@ export struct IBestCalendar{
      * 选择回调
      */
     @Event onConfirm: (value: IBestCalendarConfirmResult[]) => void = () => {}
-    @Event $selectType: (value: SelectType) => void = () => {}
 
     // 当前点击选择的年月日
     @Local curSelectedDate: string = dayjs().format('YYYY-MM-DD')
@@ -411,7 +418,7 @@ export struct IBestCalendar{
      */
     init(){
         if(this.clock){
-            this.$selectType("range")
+            this.selectType = "range"
         }
         let index = this.headerList.findIndex(e => e.key == this.weekFirstDay)
         index = index == -1 ? 1 : index

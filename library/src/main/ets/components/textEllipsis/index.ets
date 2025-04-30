@@ -1,7 +1,13 @@
 import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
-import { convertDimensionsWidthUnit, getComponentsInfo, getResourceStr, getSizeByUnit, measureTextSize } from '../../utils/utils'
+import {
+	convertDimensionsWidthUnit,
+	getComponentsInfo,
+	getResourceStr,
+	getSizeByUnit,
+	measureTextSize
+} from '../../utils/utils'
 import { IBestTextEllipsisColor } from './color'
 import { AppStorageV2 } from '@kit.ArkUI'
 

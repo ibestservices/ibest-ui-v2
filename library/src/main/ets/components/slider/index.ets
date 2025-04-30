@@ -1,9 +1,17 @@
-import { addNumber, clamp, convertDimensions, convertDimensionsWidthUnit, getComponentsInfo, getLengthUnit, getSizeByUnit } from '../../utils/utils'
+import {
+	addNumber,
+	clamp,
+	convertDimensions,
+	convertDimensionsWidthUnit,
+	getComponentsInfo,
+	getLengthUnit,
+	getSizeByUnit
+} from '../../utils/utils'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { AppStorageV2, LengthUnit } from '@kit.ArkUI'
 import { IBestSliderValue } from './index.type'
-import { IBestGlobalConfig, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
+import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { IBestSliderColor } from './color'
 
 @ComponentV2

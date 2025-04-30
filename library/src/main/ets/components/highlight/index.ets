@@ -1,6 +1,6 @@
 import { getResourceStr, getSizeByUnit } from '../../utils/utils'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
-import { Chunks, Chunk } from './index.type'
+import { Chunk, Chunks } from './index.type'
 import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { IBestHighlightColor } from './color'
 import { AppStorageV2 } from '@kit.ArkUI'

@@ -2,7 +2,6 @@ import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle'
 import ComponentShowContainer from '../../components/ComponentShowContainer'
 import { IBestButton, IBestCell, IBestCellGroup, IBestDialog, IBestDialogUtil } from '@ibestservices/ibest-ui-v2'
 import CustomNavBar from '../../components/CustomNavBar'
-import { LevelMode } from '@kit.ArkUI'
 import RouterUtil from '../../utils/routerUtil'
 export interface TextData {
 	title: string,

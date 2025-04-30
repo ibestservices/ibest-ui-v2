@@ -1,10 +1,10 @@
-import { IBestStorageKey, IBestStringNumber } from "../../model/Global.type"
-import { CONTAINER_SIZE } from "../../theme-chalk/src/container"
-import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from "../../theme-chalk/src/index.type"
-import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit } from "../../utils/utils"
-import { IBestHsva, IBestColorFormat, IBestFormatPredefineColor } from "./index.type"
-import { color2Hsva, getRgbaStr, hsva2HexColor, hsva2RgbColor } from "./util"
-import { AppStorageV2, LengthMetrics } from "@kit.ArkUI"
+import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
+import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
+import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
+import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit } from '../../utils/utils'
+import { IBestColorFormat, IBestFormatPredefineColor, IBestHsva } from './index.type'
+import { color2Hsva, getRgbaStr, hsva2HexColor, hsva2RgbColor } from './util'
+import { AppStorageV2, LengthMetrics } from '@kit.ArkUI'
 
 @ComponentV2
 export struct IBestColorPicker{
