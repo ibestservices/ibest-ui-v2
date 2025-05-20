@@ -66,6 +66,11 @@ export struct IBestWatermark {
 	 */
 	@Param bgColor: ResourceColor = ""
 	/**
+	 * 水印在上层时,内容是否可交互, 仅 waterMarkZIndex 大于0有效
+	 * @since 0.0.6
+	 */
+	@Param contentInteractive: boolean = false
+	/**
 	 * 默认的插槽
 	 */
 	@BuilderParam defaultBuilder: CustomBuilder
@@ -84,6 +89,7 @@ export struct IBestWatermark {
 			.width(this.waterMarkContainWidth)
 			.height(this.waterMarkContainHeight)
 			.opacity(this.waterMarkOpacity)
+			.hitTestBehavior(this.contentInteractive ? HitTestMode.Transparent : HitTestMode.Default)
 	}
 	getBgColor() {
 		return this.bgColor || IBestWatermarkColor.bgColor

@@ -672,6 +672,7 @@ export struct IBestDialog {
 			messageTextAlign: this.messageTextAlign,
 			messageMaxHeight: this.messageMaxHeight,
 			theme: this.theme,
+			buttonSpace: this.buttonSpace,
 			showConfirmButton: this.showConfirmButton,
 			showCancelButton: this.showCancelButton,
 			confirmButtonText: this.confirmButtonText,

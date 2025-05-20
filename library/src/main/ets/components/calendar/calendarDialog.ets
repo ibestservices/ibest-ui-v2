@@ -120,13 +120,7 @@ export struct IBestCalendarDialog {
 	@Event $visible: (value: boolean) => void = () => {}
 	// 已选日期
 	@Local selectedDate: IBestCalendarConfirmResult[] = []
-	@Local popupVisible: boolean = false
-	@Monitor("popupVisible") popupVisibleChange(){
-		this.$visible(this.popupVisible)
-	}
-	@Monitor("visible") visibleChange(){
-		this.popupVisible = this.visible
-	}
+
 	@Builder baseBuilder() {
 		IBestCalendar({
 			defaultSelectedDate: this.selectedDate.length ? this.selectedDate.map(item => item.dateStr) : this.defaultSelectedDate,
@@ -160,12 +154,12 @@ export struct IBestCalendarDialog {
 		if (value.length) {
 			this.selectedDate = value
 			this.onConfirm(this.selectedDate)
-			this.popupVisible = false
+			this.$visible(false)
 		}
 	}
 	build() {
 		IBestPopup({
-			visible: this.popupVisible!!,
+			visible: this.visible,
 			offsetY: this.offsetY,
 			isModal: this.isModal,
 			cornerRadius: this.cornerRadius,
@@ -173,7 +167,8 @@ export struct IBestCalendarDialog {
 			popupHeight: "auto",
 			closeOnBackPress: true,
 			safeAreaInsetBottom: true,
-			contentBuilder: (): void => this.baseBuilder()
+			contentBuilder: (): void => this.baseBuilder(),
+			$visible: (value): void => this.$visible(value)
 		})
 	}
 }

@@ -77,7 +77,6 @@ struct defaultContent{
 
 	// 暂不支持
 	// aboutToReuse(): void {
-	// 	console.log("aboutToReuse")
 	// 	this.transY = "-100%"
 	// }
 	aboutToAppear(): void {

@@ -400,7 +400,10 @@ class ImagePreview{
 			isModal: true,
 			maskColor: opt.maskColor,
 			autoCancel: false,
-			// immersiveMode: ImmersiveMode.EXTEND
+			onDidDisappear: () => {
+				this.contentNode?.dispose()
+				this.contentNode = null
+			}
 		})
 	}
 	/**
@@ -408,10 +411,7 @@ class ImagePreview{
 	 */
 	public hide(){
 		if(this.contentNode && this.promptAction){
-			this.promptAction.closeCustomDialog(this.contentNode).then(() => {
-				this.contentNode?.dispose()
-				this.contentNode = null
-			})
+			this.promptAction.closeCustomDialog(this.contentNode)
 		}
 	}
 }

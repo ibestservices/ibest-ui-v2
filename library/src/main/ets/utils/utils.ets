@@ -41,7 +41,6 @@ export const accAdd = (arg1: number, arg2: number) => {
 		r2 = 0;
 	}
 	m = Math.pow(10, Math.max(r1, r2));
-	//console.log(m)
 	return (arg1 * m + arg2 * m) / m;
 }
 /**
@@ -139,24 +138,6 @@ export const getComponentsInfo = (context: UIContext, key: string): ComInfoType 
 export const getComponentSnapshot = (context: UIContext, key: string): PixelMap => {
 	let componentSnapshot = context.getComponentSnapshot()
 	return componentSnapshot.getSync(key)
-}
-/**
- * 获取窗口域尺寸信息
- * */
-export const getWindowAvoidSize = (): ComAvoidAreaSize => {
-	let windowStage = GlobalStore.windowStage
-	let mainWindow: window.Window = windowStage.getMainWindowSync()
-	let avoidArea = mainWindow.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM)
-	let systemDht = mainWindow.getWindowAvoidArea(window.AvoidAreaType.TYPE_NAVIGATION_INDICATOR)
-	// console.log("avoidArea", JSON.stringify(avoidArea))
-	// console.log("systemDht.bottomRect", JSON.stringify(systemDht))
-	return {
-		topSize: px2vp(avoidArea.topRect.height),
-		bottomSize: px2vp(avoidArea.bottomRect.height),
-		leftSize: px2vp(avoidArea.leftRect.width),
-		rightSize: px2vp(avoidArea.rightRect.width),
-		navigationSize: px2vp(systemDht.bottomRect.height)
-	}
 }
 /**
  * 测量文字尺寸
@@ -276,7 +257,7 @@ export function getResourceStr(res: ResourceStr): string {
  */
 export function saveAppStorage(key: string, value: boolean | IBestStringNumber) {
 	let val = AppStorageV2.connect(IBestBaseDataType, key, () => new IBestBaseDataType(0))
-	if(val){
+	if(val != undefined){
 		val.value = value
 	}else{
 		AppStorageV2.connect(IBestBaseDataType, key, () => new IBestBaseDataType(value))

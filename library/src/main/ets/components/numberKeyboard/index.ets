@@ -2,7 +2,7 @@ import { getDefaultBaseStyle } from '../../theme-chalk/src'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { AppStorageV2, LengthMetrics } from '@kit.ArkUI'
-import { KeyboardType } from './index.type'
+import { IBestNumberKeyboardType } from './index.type'
 import { IBestPopup } from '../popup'
 import { convertDimensionsWidthUnit, getResourceStr } from '../../utils/utils'
 import { IBestNumberKeyboardColor } from './color'
@@ -66,7 +66,7 @@ export struct NumberKeyboard{
 	/**
 	 * 额外按键
 	 */
-	@Param extraKey: string | string[] = ''
+	@Param extraKey: ResourceStr | ResourceStr[] = ''
 	/**
 	 * 删除文字
 	 */
@@ -97,9 +97,9 @@ export struct NumberKeyboard{
 	@Event onClose: () => void = () => {}
 	@Event $value: (value: string) => void = () => {}
 
-	@Local keysList: KeyboardType[] = []
+	@Local keysList: IBestNumberKeyboardType[] = []
 
-	@Builder extraButton(item: KeyboardType){
+	@Builder extraButton(item: IBestNumberKeyboardType){
 		if(item.type == "delete"){
 			if(item.text){
 				Text(item.text)
@@ -132,10 +132,10 @@ export struct NumberKeyboard{
 		}
 	}
 	genBasicKeys(){
-		const keys: KeyboardType[] = Array(9)
+		const keys: IBestNumberKeyboardType[] = Array(9)
 			.fill('')
 			.map((_: string, i) => {
-				let obj: KeyboardType = {
+				let obj: IBestNumberKeyboardType = {
 					text: i + 1 + ''
 				}
 				return obj
@@ -146,7 +146,7 @@ export struct NumberKeyboard{
 		return keys
 	}
 	// 获取默认keys
-	genDefaultKeys(): KeyboardType[] {
+	genDefaultKeys(): IBestNumberKeyboardType[] {
 		return [
 			...this.genBasicKeys(),
 			{ text: this.extraKey as string, type: 'extra' },
@@ -155,9 +155,9 @@ export struct NumberKeyboard{
 		]
 	}
 	// 获取自定义keys
-	genCustomKeys(): KeyboardType[] {
+	genCustomKeys(): IBestNumberKeyboardType[] {
 		const keys = this.genBasicKeys()
-		const extraKeys: string[] = Array.isArray(this.extraKey) ? this.extraKey : [this.extraKey]
+		const extraKeys: ResourceStr[] = Array.isArray(this.extraKey) ? this.extraKey : [this.extraKey]
 		if (extraKeys.length === 1) {
 			keys.push(
 				{ text: "0", fullWidth: true },
@@ -176,7 +176,7 @@ export struct NumberKeyboard{
 		return this.closeButtonText || $r("app.string.ibest_text_complete")
 	}
 	// 打乱顺序
-	shuffle(array: KeyboardType[]): void {
+	shuffle(array: IBestNumberKeyboardType[]): void {
 		for (let i = array.length - 1; i > 0; i--) {
 			const j = Math.floor(Math.random() * (i + 1))
 			const temp = array[i]
@@ -185,7 +185,7 @@ export struct NumberKeyboard{
 		}
 	}
 	// 按键点击
-	selectKey(key: KeyboardType): void {
+	selectKey(key: IBestNumberKeyboardType): void {
 		switch (key.type){
 			case "close":
 				this.onClose()
@@ -232,7 +232,7 @@ export struct NumberKeyboard{
 			}
 			Row({ space:6 }){
 				Flex({ justifyContent: FlexAlign.SpaceBetween, wrap: FlexWrap.Wrap, space: { cross: new LengthMetrics(6) } }){
-					ForEach(this.keysList, (item: KeyboardType) => {
+					ForEach(this.keysList, (item: IBestNumberKeyboardType) => {
 						Row() {
 							this.extraButton(item)
 						}
@@ -240,7 +240,7 @@ export struct NumberKeyboard{
 						.onClick(() => {
 							this.selectKey(item)
 						})
-					}, (_: KeyboardType, index: number) => index + "")
+					}, (_: IBestNumberKeyboardType, index: number) => index + "")
 				}
 				.layoutWeight(1)
 				if(this.styleType == "custom"){
@@ -270,7 +270,7 @@ export struct NumberKeyboard{
 		}
 		.width(CONTAINER_SIZE.FULL)
 		.backgroundColor(IBestNumberKeyboardColor.bg)
-		.padding({ bottom: convertDimensionsWidthUnit(this.bottomBarHeight.value as number) })
+		.padding({ bottom: this.bottomBarHeight.value as number })
 	}
 }
 
@@ -327,25 +327,9 @@ export struct IBestNumberKeyboard{
 	@Event $visible: (visible: boolean) => void = () => {}
 	@Event $value: (value: string) => void = () => {}
 
-	@Local popupVisible: boolean = false
-	@Local popupValue: string = ''
-
-	@Monitor("value") valueChange(){
-		this.popupValue = this.value
-	}
-	@Monitor("popupValue") popupValueChange(){
-		this.$value(this.popupValue)
-	}
-	@Monitor("visible") visibleChange(){
-		this.popupVisible = this.visible
-	}
-	@Monitor("popupVisible") popupVisibleChange(){
-		this.$visible(this.popupVisible)
-	}
-
 	@Builder baseBuilder() {
 		NumberKeyboard({
-			value: this.popupValue!!,
+			value: this.value,
 			title: this.title,
 			closeButtonText: this.closeButtonText,
 			extraKey: this.extraKey,
@@ -355,25 +339,27 @@ export struct IBestNumberKeyboard{
 			maxLength: this.maxLength,
 			onInput: (value: string): void => this.onInput(value),
 			onDelete: (): void => this.onDelete(),
-			onClose: (): void => this.close()
+			onClose: (): void => this.close(),
+			$value: (value: string): void => this.$value(value)
 		})
 	}
 
 	// 关闭
 	close(){
-		this.popupVisible = false
+		this.$visible(false)
 		this.onClose()
 	}
 
 	build() {
 		IBestPopup({
-			visible: this.popupVisible!!,
+			visible: this.visible,
 			popupAlign: "bottom",
 			popupHeight: "auto",
 			maskColor: "transparent",
 			closeOnBackPress: true,
 			safeAreaInsetBottom: false,
-			contentBuilder: ():void => this.baseBuilder()
+			contentBuilder: ():void => this.baseBuilder(),
+			$visible: (visible: boolean): void => this.$visible(visible)
 		})
 	}
 }
