@@ -114,7 +114,6 @@ export struct IBestProgress{
 				}
 				.width(this.getWidth())
 				.height(CONTAINER_SIZE.FULL)
-				.backgroundColor(this.getColor())
 				.borderRadius(this.baseStyle.borderRadiusMax)
 				.linearGradient(this.linearGradientColor)
 				.justifyContent(FlexAlign.End)
@@ -122,13 +121,9 @@ export struct IBestProgress{
 				.animation({
 					duration: this.indeterminate ? this.duration*1000 : 300,
 					iterations: this.indeterminate ? -1 : 1,
-					curve: Curve.EaseOut,
-					onFinish: () => {
-						if(this.indeterminate){
-							this.positionX = `-${this.value}%`
-						}
-					}
+					curve: Curve.EaseOut
 				})
+				.backgroundColor(this.getColor())
 				.onAppear(() => {
 					if(this.indeterminate){
 						this.positionX = "100%"

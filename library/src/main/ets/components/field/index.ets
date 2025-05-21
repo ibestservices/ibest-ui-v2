@@ -310,14 +310,14 @@ export struct IBestField{
 		if(this.showLabel){
 			Row(){
 				if(this.leftIcon){
-					Image(this.leftIcon)
-						.width(getSizeByUnit(this.leftIconSize))
-						.fillColor(this.leftIconColor)
-						.aspectRatio(1)
-						.margin({right: this.baseStyle.spaceBase})
-						.onClick(() => {
+					IBestIcon({
+						name: this.leftIcon,
+						iconSize: this.leftIconSize,
+						color: this.leftIconColor,
+						onIconClick: () => {
 							this.onLeftIconClick()
-						})
+						}
+					}).margin({left: this.baseStyle.spaceBase})
 				}
 				if(this.requireAsteriskPosition == "left"){
 					this.asterisk()
@@ -442,14 +442,14 @@ export struct IBestField{
 				}
 				// 右侧图标
 				if(this.rightIcon){
-					Image(this.rightIcon)
-						.width(getSizeByUnit(this.rightIconSize))
-						.aspectRatio(1)
-						.fillColor(this.rightIconColor)
-						.margin({left: this.baseStyle.spaceBase})
-						.onClick(() => {
+					IBestIcon({
+						name: this.rightIcon,
+						iconSize: this.rightIconSize,
+						color: this.rightIconColor,
+						onIconClick: () => {
 							this.onRightIconClick()
-						})
+						}
+					}).margin({left: this.baseStyle.spaceBase})
 				}
 				// 后缀
 				if(this.suffix){
@@ -513,14 +513,9 @@ export struct IBestField{
         .enabled(!this.fieldDisabled)
         .opacity(this.fieldDisabled ? 0.6 : 1)
         .clip(true)
-        .onTouch(event => {
-            if(event.type == TouchType.Up){
-                this.onFieldClick()
-                if((this.fieldDisabled || this.readOnly || this.isLink) && !this.customRightContent){
-                    this.uiContext.getFocusController().requestFocus(`ibest_field_${this.uniId}`)
-                }
-            }
-        })
+		.onClick(() => {
+			this.fieldClick()
+		})
     }
     @Styles ibestFieldContentStyle(){
         .padding({ top: convertDimensionsWidthUnit(10), bottom: convertDimensionsWidthUnit(10) })
@@ -535,6 +530,9 @@ export struct IBestField{
 		.borderRadius(0)
 		.backgroundColor("transparent")
 		.focusable(!(this.fieldDisabled || this.readOnly || this.isLink))
+		.onClick(() => {
+			this.fieldClick()
+		})
 	}
 
 	@Monitor("required") requiredChange(){
@@ -666,7 +664,6 @@ export struct IBestField{
     // value  change变化 执行验证
 	@Monitor("value")
     valueChange(){
-		console.log("valueChange")
         this.sendValidate("change")
     }
 	// 格式化值
@@ -755,6 +752,13 @@ export struct IBestField{
 				return TextAreaType.NUMBER_DECIMAL
 			default:
 				return TextAreaType.NORMAL
+		}
+	}
+	// field点击
+	fieldClick(){
+		this.onFieldClick()
+		if((this.disabled || this.readOnly || this.isLink) && !this.customRightContent){
+			this.uiContext.getFocusController().requestFocus(`ibest_field_${this.uniId}`)
 		}
 	}
 

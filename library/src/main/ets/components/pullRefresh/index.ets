@@ -204,7 +204,6 @@ export struct IBestPullRefresh {
 					break
 				case "move":
 					let newOffset = event.offsetY
-					console.log("move", newOffset, this.isAtEnd)
 					if(newOffset > 0 && this.scrollTop < 1 || newOffset < 0 && this.isAtEnd && this.isEnableSlideUp){
 						this.setRefreshStatus(this.ease(newOffset))
 					}

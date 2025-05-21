@@ -2,12 +2,13 @@ import { GRAY_COLOR } from '../../theme-chalk/src/color';
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container';
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type';
 import { NumberKeyboard } from '../numberKeyboard';
-import { IBestPasswordInputModel, NumberKeyboardConfig } from './index.type';
+import { IBestInputHighlightType, IBestPasswordInputModel, NumberKeyboardConfig } from './index.type';
 import { FocusController } from '@ohos.arkui.UIContext';
 import { convertDimensionsWidthUnit, getSizeByUnit } from '../../utils/utils';
 import { IBestPasInputColor } from './color';
 import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type';
 import { AppStorageV2 } from '@kit.ArkUI';
+
 @Extend(TextInput) function ibestPasswordInputStyle(id: number, inputLength: number){
 	.width(CONTAINER_SIZE.FULL)
 	.height(CONTAINER_SIZE.FULL)
@@ -46,7 +47,7 @@ export struct IBestPasswordInput {
 	 */
 	@Param radius: IBestStringNumber = convertDimensionsWidthUnit(5)
 	/**
-	 * 是否高亮当前正在输入的格子
+	 * 是否高亮当前正在输入的格子, 仅存在间距时有效
 	 */
 	@Param isHighlightCurrent: boolean = true
 	/**
@@ -102,6 +103,21 @@ export struct IBestPasswordInput {
 	 */
 	@Param tipFontSize: IBestStringNumber = this.baseStyle.fontSizeLg as string
 	/**
+	 * 自动获取焦点
+	 * @since 0.0.6
+	 */
+	@Param autoFocus: boolean = false
+	/**
+	 * 是否显示闪烁光标
+	 * @since 0.0.6
+	 */
+	@Param showCursor: boolean = true
+	/**
+	 * 高亮类型
+	 * @since 0.0.6
+	 */
+	@Param highlightType: IBestInputHighlightType = "border"
+	/**
 	 * 区域点击
 	 */
 	@Event onFieldClick: () => void = () => {}
@@ -115,7 +131,6 @@ export struct IBestPasswordInput {
 	@Local uniId: number = 0
 	// 输入框列表
 	@Local inputList: IBestPasswordInputModel[] = []
-	@Local inputVal: string = this.value
 	// 当前聚焦的输入框下标
 	@Local currentFocusIndex: number = 0
 	// 输入框是否聚焦
@@ -123,14 +138,9 @@ export struct IBestPasswordInput {
 	private textInputController: TextInputController = new TextInputController()
 	private focusController: FocusController = this.getUIContext().getFocusController()
 
-	@Monitor("inputVal") inputValChange(){
-		this.$value(this.inputVal)
-		this.formatInputList()
-	}
-
 	@Builder numberKeyboardBuilder(){
 		NumberKeyboard({
-			value: this.inputVal!!,
+			value: this.value,
 			title: this.numberKeyboardConfig?.title || '',
 			extraKey: this.numberKeyboardConfig?.extraKey || '',
 			closeButtonText: this.numberKeyboardConfig?.closeBtnText || '',
@@ -138,6 +148,7 @@ export struct IBestPasswordInput {
 			styleType: this.numberKeyboardConfig?.styleType || 'default',
 			isRandomKeyOrder: this.numberKeyboardConfig?.isRandomKeyOrder,
 			maxLength: this.inputLength,
+			$value: (value: string): void => this.$value(value),
 			onClose: () => {
 				this.stopEdit()
 			}
@@ -149,12 +160,13 @@ export struct IBestPasswordInput {
 		this.formatInputList()
 	}
 	// 格式化inputList
+	@Monitor("value")
 	formatInputList(){
-		let value = this.inputVal
+		let value = this.value
 		if(/\s/g.test(value)){
-			this.inputVal = value.replace(/\s/g, "")
+			this.$value(value.replace(/\s/g, ""))
 		}else if(value.length > this.inputLength){
-			this.inputVal = value.slice(0, this.inputLength)
+			this.$value(value.slice(0, this.inputLength))
 		}else {
 			this.inputList = Array(this.inputLength).fill("").map((_: string, index: number) => new IBestPasswordInputModel(value[index] || ""))
 			this.currentFocusIndex = value.length
@@ -171,7 +183,8 @@ export struct IBestPasswordInput {
 		Column({ space: this.baseStyle.spaceMd as string }){
 			Stack(){
 				if(this.useSystemKeyboard){
-					TextInput({ text: $$this.inputVal, controller: this.textInputController })
+					TextInput({ text: $$this.value, controller: this.textInputController })
+						.defaultFocus(this.autoFocus)
 						.ibestPasswordInputStyle(this.uniId, this.inputLength)
 						.onFocus(() => {
 							this.focused = true
@@ -180,7 +193,8 @@ export struct IBestPasswordInput {
 							this.focused = false
 						})
 				}else{
-					TextInput({ text: $$this.inputVal, controller: this.textInputController })
+					TextInput({ text: $$this.value, controller: this.textInputController })
+						.defaultFocus(this.autoFocus)
 						.ibestPasswordInputStyle(this.uniId, this.inputLength)
 						.customKeyboard(this.numberKeyboardBuilder, { supportAvoidance: true })
 						.onFocus(() => {
@@ -200,6 +214,7 @@ export struct IBestPasswordInput {
 							space: this.space,
 							radius: this.radius,
 							isHighlightCurrent: this.isHighlightCurrent,
+							highlightType: this.highlightType,
 							highlightColor: this.highlightColor,
 							isShowBorder: this.isShowBorder,
 							bdColor: this.bdColor,
@@ -207,6 +222,7 @@ export struct IBestPasswordInput {
 							cellTextColor: this.cellTextColor,
 							dotFontSize: this.dotFontSize,
 							textFontSize: this.textFontSize,
+							showCursor: this.showCursor,
 							focused: this.focused,
 							currentFocusIndex: this.currentFocusIndex
 						})
@@ -225,11 +241,11 @@ export struct IBestPasswordInput {
 			.height(getSizeByUnit(this.inputHeight))
 			// 提示信息
 			if(this.tip || this.errorTip){
-				Text(this.inputVal.length == this.inputLength && this.errorTip ? this.errorTip : this.tip)
+				Text(this.value.length == this.inputLength && this.errorTip ? this.errorTip : this.tip)
 					.width(CONTAINER_SIZE.FULL)
 					.textAlign(TextAlign.Center)
 					.fontSize(getSizeByUnit(this.tipFontSize, true))
-					.fontColor(this.inputVal.length == this.inputLength && this.errorTip ? this.baseStyle.danger : GRAY_COLOR.GRAY_6)
+					.fontColor(this.value.length == this.inputLength && this.errorTip ? this.baseStyle.danger : GRAY_COLOR.GRAY_6)
 			}
 		}
 		.width(CONTAINER_SIZE.FULL)
@@ -243,6 +259,7 @@ struct InputField {
 	@Param @Require space: IBestStringNumber
 	@Param @Require radius: IBestStringNumber
 	@Param @Require isHighlightCurrent: boolean
+	@Param @Require highlightType: IBestInputHighlightType
 	@Param @Require highlightColor: ResourceColor
 	@Param @Require isShowBorder: boolean
 	@Param @Require bdColor: ResourceColor
@@ -250,6 +267,7 @@ struct InputField {
 	@Param @Require cellTextColor: ResourceColor
 	@Param @Require dotFontSize: IBestStringNumber
 	@Param @Require textFontSize: IBestStringNumber
+	@Param @Require showCursor: boolean
 	@Param @Require focused: boolean
 	@Param @Require currentFocusIndex: number
 	@Param @Require index: number
@@ -259,8 +277,12 @@ struct InputField {
 	// 光标闪烁时长
 	@Local cursorBlinkDuration: number = 500
 	private uiContext = this.getUIContext()
+	// 当前输入框是否聚焦
+	getIsFocus(){
+		return this.isHighlightCurrent && this.focused && this.space && this.currentFocusIndex == this.index
+	}
 	// 光标闪烁
-	cursorBlink(): void{
+	cursorBlink(){
 		this.uiContext.keyframeAnimateTo({ iterations: -1 }, [
 			{
 				duration: this.cursorBlinkDuration,
@@ -282,7 +304,7 @@ struct InputField {
 				.fontSize(getSizeByUnit(this.isHidden ? this.dotFontSize : this.textFontSize, true))
 				.fontColor(this.cellTextColor)
 				.visibility(this.item.value ? Visibility.Visible : Visibility.None)
-			if(this.focused && this.currentFocusIndex == this.index){
+			if(this.showCursor && this.focused && this.currentFocusIndex == this.index){
 				Divider()
 					.strokeWidth(1)
 					.height("50%")
@@ -300,14 +322,14 @@ struct InputField {
 		.backgroundColor(this.cellBgColor)
 		.border(this.space ? {
 			width: this.isShowBorder ? 1 : 0,
-			color: this.bdColor
+			color: this.getIsFocus() ? this.highlightType == 'border' ? this.highlightColor : '' : this.bdColor
 		} : {
 			width: { left: this.index > 0 && this.isShowBorder ? 1 : 0 },
 			color: this.bdColor
 		})
 		.borderRadius(this.space ? getSizeByUnit(this.radius) : 0)
 		.shadow({
-			radius: this.isHighlightCurrent && this.focused && this.space && this.currentFocusIndex == this.index ? 20 : 0,
+			radius: this.highlightType == 'shadow' && this.getIsFocus() ? 20 : 0,
 			color: this.highlightColor,
 			type: ShadowType.COLOR
 		})

@@ -75,7 +75,6 @@ export struct IBestCollapse {
     setName(name: IBestStringNumber, isExpand: boolean){
         if(this.accordion){ // 手风琴模式
 			let activeName = this.activeName != undefined && !isExpand ? "" : name
-			console.log("手风琴模式", activeName)
             this.$activeName(activeName)
             this.initItem(activeName)
 			this.onChange(activeName)
@@ -104,7 +103,6 @@ export struct IBestCollapse {
         let actives = Array.isArray(this.activeName) ? this.activeName : [this.activeName]
 		let activeName: IBestStringNumber[] = []
         if(option == undefined){    // 切换
-			console.log("切换", JSON.stringify(actives))
 			activeName = this.allCollapseItem.filter((e: IBestCollapseItemData) => !actives.includes(e.name)).map((e: IBestCollapseItemData) => e.name)
         }else if(typeof option == 'boolean'){
 			activeName = option ? this.allCollapseItem.map((e: IBestCollapseItemData) => e.name) : []

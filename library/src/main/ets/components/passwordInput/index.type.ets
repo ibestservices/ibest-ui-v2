@@ -1,4 +1,9 @@
 import { generateId } from '../../utils/utils'
+
+/**
+ * 高亮类型
+ */
+export type IBestInputHighlightType = 'border' | 'shadow'
 /**
  * 输入框model
  */
@@ -14,10 +19,10 @@ export class IBestPasswordInputModel {
  * 自定义键盘配置
  */
 export interface NumberKeyboardConfig {
-	title?: string,
-	extraKey?: string | string[],
-	closeBtnText?: string,
-	deleteButtonText?: string,
+	title?: ResourceStr,
+	extraKey?: ResourceStr | ResourceStr[],
+	closeBtnText?: ResourceStr,
+	deleteButtonText?: ResourceStr,
 	styleType?: 'default' | 'custom',
 	isRandomKeyOrder?: boolean
 }

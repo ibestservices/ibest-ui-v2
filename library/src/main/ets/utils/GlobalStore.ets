@@ -1,6 +1,6 @@
 import window from '@ohos.window'
 import font from '@ohos.font'
-import { getWindowAvoidSize, saveAppStorage } from './utils'
+import { saveAppStorage } from './utils'
 import { bundleManager, common } from '@kit.AbilityKit'
 import { IBestGlobalConfig, IBestGlobalConfigType, IBestStorageKey } from '../model/Global.type'
 import { setIBestUIBaseStyle } from '../theme-chalk/src'
@@ -22,10 +22,8 @@ export default class GlobalStore {
 	public static init(windowStage: window.WindowStage, context: common.UIAbilityContext){
 		GlobalStore.windowStage = windowStage
 		GlobalStore.context = context
-		// 获取顶部和底部规避尺寸
-		GlobalStore.getAvoidSize()
-		// 获取屏幕尺寸
-		GlobalStore.getScreenSize()
+		// 获取屏幕尺寸 顶部和底部规避尺寸
+		GlobalStore.getScreenAndAvoidSize()
 		// 获取是否是应用
 		GlobalStore.getBundleType()
 		// 设置旋转监听
@@ -35,37 +33,35 @@ export default class GlobalStore {
 		// 注册字体
 		font.registerFont({
 			familyName: 'ibestFont',
-			familySrc: $rawfile('vant_font.woff')
+			familySrc: $rawfile('ibest_font.woff')
 		})
 	}
 	/**
 	 * 获取规避尺寸
      */
-	private static getAvoidSize(){
-		let res = getWindowAvoidSize()
-		saveAppStorage(IBestStorageKey.TOP_AVOID_HEIGHT, res.topSize)
-		saveAppStorage(IBestStorageKey.BOTTOM_BAR_HEIGHT, res.navigationSize)
-	}
-	/**
-	 * 获取屏幕尺寸
-     */
-	private static getScreenSize(){
+	private static getScreenAndAvoidSize(){
 		try {
-			let mainWindow = GlobalStore.windowStage.getMainWindowSync()
+			let mainWindow: window.Window = GlobalStore.windowStage.getMainWindowSync()
 			let screenInfo: window.WindowProperties = mainWindow.getWindowProperties()
+			let avoidArea = mainWindow.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM)
+			let systemDht = mainWindow.getWindowAvoidArea(window.AvoidAreaType.TYPE_NAVIGATION_INDICATOR)
+			let topSize = px2vp(avoidArea.topRect.height)
+			let navigationSize = px2vp(systemDht.bottomRect.height)
 			let o = display.getDefaultDisplaySync().orientation
 			let screenWidth = screenInfo.windowRect.width
 			let screenHeight = screenInfo.windowRect.height
 			GlobalStore.screenWidth = screenWidth
 			GlobalStore.screenHeight = screenHeight
 			saveAppStorage(IBestStorageKey.IS_LANDSCAPE, o == 1 || o == 3)
+			saveAppStorage(IBestStorageKey.TOP_AVOID_HEIGHT, topSize)
+			saveAppStorage(IBestStorageKey.BOTTOM_BAR_HEIGHT, navigationSize)
 			mainWindow.on("avoidAreaChange", data => {
 				if (data.type == window.AvoidAreaType.TYPE_KEYBOARD) {
 					saveAppStorage(IBestStorageKey.KEYBOARD_HEIGHT, px2vp(data.area.bottomRect.height))
 				}
 			})
 		}catch (e) {
-			throw new Error(e)
+			console.error(e.code, e.message)
 		}
 	}
 	/**
@@ -74,8 +70,7 @@ export default class GlobalStore {
 	private static screenRotateListener() {
 		display.on("change", () => {
 			setTimeout(() => {
-				GlobalStore.getScreenSize()
-				GlobalStore.getAvoidSize()
+				GlobalStore.getScreenAndAvoidSize()
 			}, 300)
 		})
 	}

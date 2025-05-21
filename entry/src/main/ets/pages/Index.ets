@@ -71,6 +71,14 @@ struct Index {
 					path: "Calendar"
 				},
 				{
+					name: $r("app.string.component_carInput"),
+					path: "CarInput"
+				},
+				{
+					name: $r("app.string.component_carKeyboard"),
+					path: "CarKeyboard"
+				},
+				{
 					name: $r("app.string.component_cascader"),
 					path: "Cascader"
 				},
@@ -158,6 +166,10 @@ struct Index {
 				{
 					name: $r("app.string.component_dialog"),
 					path: "Dialog"
+				},
+				{
+					name: $r("app.string.component_float_bubble"),
+					path: "FloatBubble"
 				},
 				{
 					name: $r("app.string.component_loading"),
@@ -504,7 +516,7 @@ struct Index {
 		this.checkUpdate()
 		this.getUiVersion()
 		setTimeout(() => {
-            // RouterUtil.push("MakePoster")
+            // RouterUtil.push("FloatBubble")
 		}, 300)
 	}
 	getTitleOpacity(){
