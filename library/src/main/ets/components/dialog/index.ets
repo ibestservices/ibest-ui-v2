@@ -4,7 +4,7 @@ import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src
 import { convertDimensionsWidthUnit, getSizeByUnit, sleep } from '../../utils/utils'
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
-import { AppStorageV2, LengthMetrics, LevelMode } from '@kit.ArkUI'
+import { AppStorageV2, ImmersiveMode, LengthMetrics, LevelMode } from '@kit.ArkUI'
 
 @Extend(Button) function defaultBtnStyles(theme: 'default' | 'round-button') {
 	.layoutWeight(1)
@@ -744,7 +744,7 @@ export struct IBestDialog {
 			keyboardAvoidDistance: this.keyboardAvoidDistance,
 			levelMode: this.levelMode,
 			levelUniqueId: this.levelUniqueId,
-			// immersiveMode: ImmersiveMode.EXTEND,
+			immersiveMode: ImmersiveMode.EXTEND,
 			onDidAppear: () => {
 				this.onOpen()
 			},

@@ -102,6 +102,7 @@ export struct IBestCollapseItem {
         return this.disabled || this.readOnly
     }
     changeState(activeNames: IBestStringNumber | IBestStringNumber[]){
+        console.log('changeState', JSON.stringify(activeNames))
         if(typeof activeNames == 'number'){
             activeNames = activeNames.toString()
         }
@@ -114,7 +115,7 @@ export struct IBestCollapseItem {
             setTimeout(() => {
                 this.isShow = true
             }, 250)
-        }, 0)
+        }, 50)
     }
     getHeight(){
         return this.isReady ? this.isExpand ? this.contentHeight : 0 : "auto"

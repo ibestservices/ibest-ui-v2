@@ -164,15 +164,15 @@ export struct IBestNavBar{
 	/**
 	 * 自定义左侧内容
      */
-	@BuilderParam leftBuilder?: CustomBuilder
+	@BuilderParam leftBuilder: CustomBuilder
 	/**
 	 * 自定义右侧内容
      */
-	@BuilderParam rightBuilder?: CustomBuilder
+	@BuilderParam rightBuilder: CustomBuilder
 	/**
 	 * 自定义标题内容
      */
-	@BuilderParam titleBuilder?: CustomBuilder
+	@BuilderParam titleBuilder: CustomBuilder
 	/**
 	 * 左侧点击回调
      */

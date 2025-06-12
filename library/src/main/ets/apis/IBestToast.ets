@@ -54,6 +54,11 @@ class ToastOption extends LoadingOption {
      * toast打开后回调
      */
     onOpened?: () => void
+    /**
+     * toast关闭后回调
+     * @since 0.0.7
+     */
+    onClosed?: () => void
 }
 
 class ToastParams extends ToastOption{
@@ -70,6 +75,7 @@ class ToastParams extends ToastOption{
         this.position = value?.position || "center"
         this.offsetY = value?.offsetY || 0
         this.onOpened = value?.onOpened
+        this.onClosed = value?.onClosed
     }
 }
 
@@ -157,6 +163,9 @@ class Toast{
             transition: TransitionEffect.IDENTITY,
             onDidAppear: () => {
                 params.onOpened?.()
+            },
+            onDidDisappear: () => {
+                params.onClosed?.()
             },
             onWillDismiss: () => {}
         })

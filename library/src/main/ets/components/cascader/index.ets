@@ -69,10 +69,12 @@ export struct IBestCascaderContent{
 	private swiperController: SwiperController = new SwiperController()
 
 	aboutToAppear(): void {
-		if(this.value.length){
-			this.createAllOptionsInstance([], this.options, 0)
-		}else {
-			this.optionsInstance.push(this.createOptionsInstance(this.options))
+		if(this.options.length){
+			if(this.value.length){
+				this.createAllOptionsInstance([], this.options, 0)
+			}else {
+				this.optionsChange()
+			}
 		}
 	}
 	getListHeight(){
@@ -121,6 +123,14 @@ export struct IBestCascaderContent{
 				})
 			})
 			this.currentTabName = this.swiperIndex = this.value.length - 1
+		}
+	}
+	// 选项变化
+	@Monitor("options", "options.length")
+	optionsChange(){
+		if(this.options.length) {
+			this.optionsInstance = []
+			this.optionsInstance.push(this.createOptionsInstance(this.options))
 		}
 	}
 	// 顶部tab切换

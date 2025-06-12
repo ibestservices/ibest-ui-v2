@@ -168,8 +168,16 @@ struct Index {
 					path: "Dialog"
 				},
 				{
+					name: $r("app.string.component_dropdownMenu"),
+					path: "DropdownMenu"
+				},
+				{
 					name: $r("app.string.component_float_bubble"),
 					path: "FloatBubble"
+				},
+				{
+					name: $r("app.string.component_guide"),
+					path: "Guide"
 				},
 				{
 					name: $r("app.string.component_loading"),
@@ -497,15 +505,7 @@ struct Index {
 		.padding({ left: SPACE.LG })
 		.margin({ top: SPACE.SM })
 		.backgroundColor(modeColor.bg3)
-		.stateStyles({
-			normal: {
-				.scale({ x: 1, y: 1 })
-			},
-			pressed: {
-				.scale({ x: .98, y: .98 })
-			}
-		})
-		.animation({ duration: 200 })
+		.clickEffect({level:ClickEffectLevel.LIGHT, scale: 0.9})
 		.onClick(() => {
 			RouterUtil.push(item.path, item.name)
 		})
@@ -516,7 +516,7 @@ struct Index {
 		this.checkUpdate()
 		this.getUiVersion()
 		setTimeout(() => {
-            // RouterUtil.push("FloatBubble")
+            // RouterUtil.push("DropdownMenu")
 		}, 300)
 	}
 	getTitleOpacity(){
