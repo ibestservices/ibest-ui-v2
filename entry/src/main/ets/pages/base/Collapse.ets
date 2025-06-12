@@ -18,11 +18,14 @@ struct CollapsePage {
     @Local activeName1: number = 1
     @Local groupId1: string = "group1"
 
-    @Local activeName2: string[] = []
+    @Local activeName2: number = 1
     @Local groupId2: string = "group2"
 
-    @Local activeName3: number[] = [2]
+    @Local activeName3: string[] = []
     @Local groupId3: string = "group3"
+
+    @Local activeName4: number[] = [2]
+    @Local groupId4: string = "group4"
     private controller: IBestCollapseController = new IBestCollapseController()
     build() {
 		NavDestination() {
@@ -98,11 +101,11 @@ struct CollapsePage {
                 ListItem() {
                     ComponentShowContainer({ title: '禁用状态', titlePaddingLeft: SPACE.MD }) {
                         IBestCollapse({
-                            groupId: this.groupId,
-                            activeName: this.activeName!!
+                            groupId: this.groupId2,
+                            activeName: this.activeName2!!
                         }){
                             IBestCollapseItem({
-                                groupId: this.groupId,
+                                groupId: this.groupId2,
                                 name: '1',
                                 index: 0,
                                 title: '标题1'
@@ -110,7 +113,7 @@ struct CollapsePage {
                                 Text('代码是写出来给人看的，附带能在机器上运行。').fontSize(14).fontColor(modeColor.textColor4)
                             }
                             IBestCollapseItem({
-                                groupId: this.groupId,
+                                groupId: this.groupId2,
                                 name: '2',
                                 index: 1,
                                 title: '标题2',
@@ -119,7 +122,7 @@ struct CollapsePage {
                                 Text('技术无非就是那些开发它的人的共同灵魂。').fontSize(14).fontColor(modeColor.textColor4)
                             }
                             IBestCollapseItem({
-                                groupId: this.groupId,
+                                groupId: this.groupId2,
                                 name: '3',
                                 index: 2,
                                 title: '标题3',
@@ -133,11 +136,11 @@ struct CollapsePage {
                 ListItem() {
                     ComponentShowContainer({ title: '自定义标题', titlePaddingLeft: SPACE.MD }) {
                         IBestCollapse({
-                            groupId: this.groupId2,
-                            activeName: this.activeName2!!
+                            groupId: this.groupId3,
+                            activeName: this.activeName3!!
                         }){
                             IBestCollapseItem({
-                                groupId: this.groupId2,
+                                groupId: this.groupId3,
                                 name: '1',
                                 index: 0,
                                 icon: $r("app.media.icon_like"),
@@ -152,14 +155,14 @@ struct CollapsePage {
                 ListItem() {
                     ComponentShowContainer({ title: '实例方法', titlePaddingLeft: SPACE.MD }) {
                         Column(){
-                            Text("当前禁用name: 2, 当前激活names: " + this.activeName3.join(",")).margin({bottom: SPACE.BASE})
+                            Text("当前禁用name: 2, 当前激活names: " + this.activeName4.join(",")).margin({bottom: SPACE.BASE})
                             IBestCollapse({
-                                groupId: this.groupId3,
-                                activeName: this.activeName3!!,
+                                groupId: this.groupId4,
+                                activeName: this.activeName4!!,
                                 controller: this.controller
                             }){
                                 IBestCollapseItem({
-                                    groupId: this.groupId3,
+                                    groupId: this.groupId4,
                                     name: 1,
                                     index: 0,
                                     title: '标题1'
@@ -167,7 +170,7 @@ struct CollapsePage {
                                     Text('代码是写出来给人看的，附带能在机器上运行。').fontSize(14).fontColor(modeColor.textColor4)
                                 }
                                 IBestCollapseItem({
-                                    groupId: this.groupId3,
+                                    groupId: this.groupId4,
                                     name: 2,
                                     index: 1,
                                     title: '标题2',
@@ -176,7 +179,7 @@ struct CollapsePage {
                                     Text('技术无非就是那些开发它的人的共同灵魂。').fontSize(14).fontColor(modeColor.textColor4)
                                 }
                                 IBestCollapseItem({
-                                    groupId: this.groupId3,
+                                    groupId: this.groupId4,
                                     name: 3,
                                     index: 2,
                                     title: '标题3'

@@ -12,10 +12,6 @@ export struct IBestCellGroup {
 	 */
 	@Local baseStyle: IBestUIBaseStyle = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE, () => new IBestUIBaseStyle({})) as IBestUIBaseStyle
 	/**
-	 * 默认插槽
-	 */
-	@BuilderParam defaultBuilder: CustomBuilder
-	/**
 	 * 分组标题
 	 */
 	@Param title: ResourceStr = ''
@@ -32,16 +28,26 @@ export struct IBestCellGroup {
      */
 	@Param radius: IBestStringNumber = this.baseStyle.borderRadiusLg as string
 	/**
-	 * 获取边框宽度
+	 * 标题内边距
+	 * @since 2.1.2
 	 */
+	@Param titlePadding: IBestStringNumber | Padding = this.baseStyle.spaceMd as string
+	/**
+	 * 默认插槽
+	 */
+	@BuilderParam defaultBuilder: CustomBuilder
+
+	// 获取边框宽度
 	getBorderWidth() {
 		return this.hasBorder && !this.inset ? 1 : 0
 	}
-	/**
-	 * 获取margin
-	 */
+	// 获取margin
 	getMargin() {
 		return this.inset ? { left: this.baseStyle.spaceMd, right: this.baseStyle.spaceMd } as Padding : 0
+	}
+	// 获取内边距
+	getPadding() {
+		return ['string', 'number'].includes(typeof this.titlePadding) ? getSizeByUnit(this.titlePadding as IBestStringNumber) : this.titlePadding
 	}
 	build() {
 		Column() {
@@ -53,7 +59,7 @@ export struct IBestCellGroup {
 						width: { bottom: this.getBorderWidth() },
 						color: IBestCellGroupColor.borderColor
 					})
-					.padding(this.baseStyle.spaceMd)
+					.padding(this.getPadding())
 					.lineHeight(convertDimensionsWidthUnit(16))
 					.fontSize(this.baseStyle.fontSizeMd)
 					.fontColor(IBestCellGroupColor.textColor)

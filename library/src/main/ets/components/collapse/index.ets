@@ -28,14 +28,14 @@ export struct IBestCollapse {
      * 是否显示外边框
      */
     @Param isShowBorder: boolean = true
-	/**
-	 * 组件实例
-	 */
-	@Param controller: IBestCollapseController = new IBestCollapseController()
     /**
      * 默认内容
      */
     @BuilderParam defaultBuilder: CustomBuilder
+    /**
+     * 组件实例
+     */
+    @Param controller: IBestCollapseController = new IBestCollapseController()
     /**
      * 监听面板状态变化
      */
@@ -60,7 +60,10 @@ export struct IBestCollapse {
         emitter.off(getEventName(COMPONENT_NAME, COLLAPSE_EVENT_NAME.GET_ALL_ITEM_NAME, this.groupId), this.uniId)
         emitter.off(getEventName(COMPONENT_NAME, COLLAPSE_EVENT_NAME.ITEM_STATE_CHANGE, this.groupId), this.uniId)
     }
-
+    @Monitor("activeName", "activeName.length")
+    activeChange(){
+        this.initItem(this.activeName)
+    }
     initItem(name?: IBestStringNumber | IBestStringNumber[]){
 		name = name ?? this.activeName
         emitter.emit(getEventName(COMPONENT_NAME, COLLAPSE_EVENT_NAME.INIT_ITEM, this.groupId), name)

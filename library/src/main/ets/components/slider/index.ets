@@ -74,6 +74,11 @@ export struct IBestSlider{
 	 */
 	@BuilderParam customButton: CustomBuilder
 	/**
+	 * 自定义第二个滑块
+	 * @since 0.0.7
+	 */
+	@BuilderParam customSecondButton: CustomBuilder
+	/**
 	 * 进度变化且拖动结束后触发
 	 */
 	@Event onChange: (value: IBestSliderValue) => void = () => {}
@@ -90,8 +95,10 @@ export struct IBestSlider{
 
 	@Builder dragBar(buttonIndex: 0 | 1){
 		Row(){
-			if(this.customButton){
+			if(buttonIndex == 0 && this.customButton){
 				this.customButton()
+			}else if (buttonIndex == 1 && this.customSecondButton) {
+				this.customSecondButton()
 			}else{
 				Row()
 					.width(getSizeByUnit(this.buttonSize))

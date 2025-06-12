@@ -1,11 +1,11 @@
-import { convertDimensionsWidthUnit, getSizeByUnit } from '../../utils/utils'
+import { convertDimensionsWidthUnit, getSizeByUnit, sleep } from '../../utils/utils'
 import { PopupAlign, PopupBaseController } from './index.type'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { IBestPopupColor } from './color'
 import { IBestIcon } from '../icon'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
-import { AppStorageV2, LengthMetrics, LevelMode } from '@kit.ArkUI'
+import { AppStorageV2, ImmersiveMode, LengthMetrics, LevelMode } from '@kit.ArkUI'
 import GlobalStore from '../../utils/GlobalStore'
 
 const popupDuration = 200
@@ -364,14 +364,15 @@ export struct IBestPopup{
 	private baseController: PopupBaseController = new PopupBaseController()
 	private promptAction = this.getUIContext().getPromptAction()
 	private dialogId: number = 0
-	@Monitor("visible") visibleChange(){
+	@Monitor("visible") async visibleChange(){
 		if(this.visible){
 			this.open()
 		}else{
-			this.baseController.hide()
-			setTimeout(() => {
-				this.promptAction.closeCustomDialog(this.dialogId)
-			}, hideDuration)
+			if(this.popupAlign != 'center'){
+				this.baseController.hide()
+				await sleep(hideDuration)
+			}
+			this.promptAction.closeCustomDialog(this.dialogId)
 		}
 	}
 	@Monitor("isLandscape.value") landScapeChange(){
@@ -441,7 +442,7 @@ export struct IBestPopup{
 			keyboardAvoidDistance: this.keyboardAvoidDistance,
 			levelMode: this.levelMode,
 			levelUniqueId: this.levelUniqueId,
-			// immersiveMode: ImmersiveMode.EXTEND,
+			immersiveMode: ImmersiveMode.EXTEND,
 			onDidAppear: () => {
 				this.onOpen()
 			},
