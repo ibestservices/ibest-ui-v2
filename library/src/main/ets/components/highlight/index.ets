@@ -1,6 +1,6 @@
 import { getResourceStr, getSizeByUnit } from '../../utils/utils'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
-import { Chunk, Chunks } from './index.type'
+import { Chunk, Chunks, IBestHighlightKeywords } from './index.type'
 import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { IBestHighlightColor } from './color'
 import { AppStorageV2 } from '@kit.ArkUI'
@@ -12,6 +12,14 @@ export struct IBestHighlight {
 	 */
 	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	/**
+	 * 源文本
+	 */
+	@Param sourceString: ResourceStr = ''
+	/**
+	 * 高亮关键字
+	 */
+	@Param keywords: ResourceStr | ResourceStr[] | IBestHighlightKeywords[] = ''
+	/**
 	 * 是否自动转义
 	 */
 	@Param autoEscape: boolean = true
@@ -19,14 +27,6 @@ export struct IBestHighlight {
 	 * 是否区分大小写
 	 */
 	@Param caseSensitive: boolean = false
-	/**
-	 * 高亮关键字
-	 */
-	@Param keywords: ResourceStr | ResourceStr[] = ''
-	/**
-	 * 源文本
-	 */
-	@Param sourceString: ResourceStr = ''
 	/**
 	 * 文字颜色 默认 "#969799"
 	 */
@@ -55,18 +55,41 @@ export struct IBestHighlight {
 	highlightChunks(): Chunk[] {
 		const flags = this.caseSensitive ? 'g' : 'gi'
 		let sourceStr = this.getRealSourceString()
-		let _keywords: string[] = []
+		let _keywords: IBestHighlightKeywords[] = []
 		if(Array.isArray(this.keywords)){
-			_keywords = this.keywords.map(e => getResourceStr(e))
-		}else{
-			_keywords = [getResourceStr(this.keywords)]
-		}
-		// generate chunks
-		let chunks = _keywords.filter((keyword: string) => keyword).reduce<Chunks>((chunks, keyword: string) => {
-			if (this.autoEscape) {
-				keyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+			if(typeof this.keywords[0] == 'string'){
+				_keywords = (this.keywords as ResourceStr[]).map((e) => {
+					let obj: IBestHighlightKeywords = {
+						text: getResourceStr(e),
+						color: this.highLightColor,
+						fontSize: this.highLightFontSize
+					}
+					return obj
+				})
+			}else {
+				_keywords = (this.keywords as IBestHighlightKeywords[]).map((e) => {
+					let obj: IBestHighlightKeywords = {
+						text: getResourceStr(e.text),
+						color: e.color || this.highLightColor,
+						fontSize: e.fontSize || this.highLightFontSize
+					}
+					return obj
+				})
 			}
-			const regex = new RegExp(keyword, flags)
+		}else{
+			_keywords = [{
+				text: getResourceStr(this.keywords),
+				color: this.highLightColor,
+				fontSize: this.highLightFontSize
+			}]
+		}
+		_keywords = _keywords.filter(e => e.text)
+		// generate chunks
+		let chunks = _keywords.reduce<Chunks>((chunks, item: IBestHighlightKeywords) => {
+			if (this.autoEscape) {
+				item.text = (item.text as string).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+			}
+			const regex = new RegExp(item.text as string, flags)
 			let match: RegExpExecArray | null
 			while ((match = regex.exec(sourceStr))) {
 				const start = match.index
@@ -78,7 +101,9 @@ export struct IBestHighlight {
 				chunks.push({
 					start,
 					end,
-					highlight: true
+					highlight: true,
+					color: item.color,
+					fontSize: item.fontSize
 				})
 			}
 			return chunks
@@ -95,7 +120,9 @@ export struct IBestHighlight {
 						chunks.push({
 							start: unHighlightStart,
 							end: unHighlightEnd,
-							highlight: false
+							highlight: false,
+							color: this.textColor,
+							fontSize: this.textFontSize
 						})
 					}
 					chunks.push(currentChunk)
@@ -109,14 +136,18 @@ export struct IBestHighlight {
 			chunks.push({
 				start: 0,
 				end: sourceStr.length,
-				highlight: false
+				highlight: false,
+				color: this.textColor,
+				fontSize: this.textFontSize
 			})
 		}
 		if (lastChunk && lastChunk.end < sourceStr.length) {
 			chunks.push({
 				start: lastChunk.end,
 				end: sourceStr.length,
-				highlight: false
+				highlight: false,
+				color: this.textColor,
+				fontSize: this.textFontSize
 			})
 		}
 		return chunks
@@ -129,12 +160,12 @@ export struct IBestHighlight {
 			ForEach(this.highlightChunks(), (item: Chunk) => {
 				if (item.highlight) {
 					Span(this.getRealSourceString().slice(item.start, item.end))
-						.fontColor(this.highLightColor)
-						.fontSize(this.highLightFontSize)
+						.fontColor(item.color)
+						.fontSize(item.fontSize)
 				} else {
 					Span(this.getRealSourceString().slice(item.start, item.end))
 				}
-			}, (_: Chunk, index: number) => index.toString())
+			})
 		}
 		.fontSize(getSizeByUnit(this.textFontSize, true))
 		.fontColor(this.textColor)

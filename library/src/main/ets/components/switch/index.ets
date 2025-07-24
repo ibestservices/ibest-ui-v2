@@ -1,4 +1,4 @@
-import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
+import { IBestStorageKey, IBestAwaitable, IBestStringNumber } from '../../model/Global.type'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit } from '../../utils/utils'
 import { IBestLoading } from '../loading'
@@ -54,7 +54,7 @@ export struct IBestSwitch {
 	/**
 	 * 改变前的回调
 	 */
-	@Event beforeChange?: (value: boolean) => Promise<boolean> | boolean = undefined
+	@Event beforeChange?: (value: boolean) => IBestAwaitable = undefined
 	/**
 	 * 点击的回调
 	 */
@@ -116,8 +116,8 @@ export struct IBestSwitch {
 			.borderRadius(this.baseStyle.borderRadiusMax)
 			.shadow({
 				color: 'rgba(0, 0, 0, 0.1)',
-				offsetY: px2vp(3),
-				radius: px2vp(1)
+				offsetY: this.uiContext.px2vp(3),
+				radius: 1
 			})
 			.backgroundColor(IBestSwitchColor.white)
 			.translate({

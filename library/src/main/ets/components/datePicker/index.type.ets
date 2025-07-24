@@ -24,4 +24,6 @@ export interface IBestDatePickerResult {
 	year: string
 	month: string
 	day?: string
+	lunarMonth?: string
+	lunarDay?: string
 }

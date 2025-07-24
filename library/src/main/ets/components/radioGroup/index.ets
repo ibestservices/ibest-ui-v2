@@ -1,7 +1,7 @@
 import { emitter } from '../../utils/EventEmitter'
 import { COMPONENT_NAME, RADIO_GROUP_EVENT_NAME } from './index.type'
 import { convertDimensionsWidthUnit, getEventName, getSizeByUnit, sleep } from '../../utils/utils'
-import { IBestStringNumber } from '../../model/Global.type'
+import { IBestAwaitable, IBestStringNumber } from '../../model/Global.type'
 
 @ComponentV2
 export struct IBestRadioGroup {
@@ -37,24 +37,20 @@ export struct IBestRadioGroup {
 	/**
 	 * 改变前的回调
 	 */
-	@Event beforeChange?: (name: IBestStringNumber | boolean) => Promise<boolean> | boolean = undefined
+	@Event beforeChange?: (name: IBestStringNumber | boolean) => IBestAwaitable = undefined
 	@Event $active: (name: IBestStringNumber | boolean) => void = () => {}
 
 	@Local uniId: number = 0
 
 	aboutToAppear() {
 		this.uniId = this.getUniqueId()
-		if(this.group){
-			emitter.on(getEventName(COMPONENT_NAME, RADIO_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.uniId, (name: IBestStringNumber | boolean): Promise<void> => this.onItemChange(name))
-			sleep(50).then(() => {
-				this.initRadio()
-			})
-		}
+		emitter.on(getEventName(COMPONENT_NAME, RADIO_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.uniId, (name: IBestStringNumber | boolean): Promise<void> => this.onItemChange(name))
+		sleep(50).then(() => {
+			this.initRadio()
+		})
 	}
 	aboutToDisappear() {
-		if(this.group){
-			emitter.off(getEventName(COMPONENT_NAME, RADIO_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.uniId)
-		}
+		emitter.off(getEventName(COMPONENT_NAME, RADIO_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.uniId)
 	}
 	@Monitor("active", "disabled")
 	initRadio() {

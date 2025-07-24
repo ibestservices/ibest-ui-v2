@@ -57,6 +57,11 @@ export struct IBestCountDown{
 	 * 实例
      */
 	@Param controller: IBestCountDownController = new IBestCountDownController()
+	/**
+	 * 结束事件
+	 * @since 0.0.8
+	 */
+	@Event onFinish: () => void = () => {}
 
 	@Local isCounting: boolean = false
 	@Local remain: number = 0
@@ -99,6 +104,8 @@ export struct IBestCountDown{
 				this.remain = this.getRemainSecond()
 				if(this.remain > 0){
 					this.secondCountdown()
+				}else {
+					this.onFinish()
 				}
 			}
 		}, 30)

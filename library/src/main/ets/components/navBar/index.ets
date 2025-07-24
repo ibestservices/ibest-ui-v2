@@ -13,10 +13,6 @@ export struct IBestNavBar{
 	 */
 	@Local baseStyle: IBestUIBaseStyle = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	@Local topAvoidHeight: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.TOP_AVOID_HEIGHT)!
-	@Local uniId: number = 0
-	// 标题区域左右宽度
-	@Local leftWidth: number = 0
-	@Local rightWidth: number = 0
 	/**
 	 * 导航栏高度
 	 */
@@ -152,7 +148,7 @@ export struct IBestNavBar{
 	/**
 	 * 状态栏背景色
 	 */
-	@Param statusBarBgColor: ResourceColor = this.navBarBgColor
+	@Param statusBarBgColor: ResourceColor = ''
 	/**
 	 * 是否保持状态栏背景色与标题栏背景色一致
 	 */
@@ -161,6 +157,11 @@ export struct IBestNavBar{
 	 * 标题对齐方式
 	 */
 	@Param titleTextAlign: "left" | "center" = "center"
+	/**
+	 * 是否扩展至安全区域
+	 * @since 0.0.8
+	 */
+	@Param expandSafeAreaType: SafeAreaType[] = [SafeAreaType.SYSTEM, SafeAreaType.CUTOUT]
 	/**
 	 * 自定义左侧内容
      */
@@ -186,6 +187,10 @@ export struct IBestNavBar{
      */
 	@Event onTitleClick: () => void = () => {}
 
+	@Local uniId: number = 0
+	// 标题区域左右宽度
+	@Local leftWidth: number = 0
+	@Local rightWidth: number = 0
 	private uiContext = this.getUIContext()
 
 	aboutToAppear(): void {
@@ -333,9 +338,10 @@ export struct IBestNavBar{
 			.width(CONTAINER_SIZE.FULL)
 			.height(getSizeByUnit(this.navBarHeight))
 			.justifyContent(FlexAlign.Center)
-			.backgroundColor(this.navBarBgColor)
 			.linearGradient(this.bgLinearGradient)
 			.border({width:{bottom: this.isShowBorder ? 1 : 0}, color: IBestNavbarColor.borderColor})
 		}
+		.backgroundColor(this.navBarBgColor)
+		.expandSafeArea(this.expandSafeAreaType, [SafeAreaEdge.TOP])
 	}
 }

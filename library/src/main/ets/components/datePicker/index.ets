@@ -3,10 +3,11 @@ import { IBestPicker } from '../picker'
 import { IBestPickerOption } from '../picker/index.type'
 import { COMPONENT_NAME, DATE_PICKER_EVENT_NAME, DatePickerColumnType, IBestDatePickerResult } from './index.type'
 import { emitter } from '../../utils/EventEmitter'
-import { clamp, convertDimensionsWidthUnit, getEventName, getResourceStr } from '../../utils/utils'
+import { convertDimensionsWidthUnit, getEventName, getResourceStr } from '../../utils/utils'
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { AppStorageV2 } from '@kit.ArkUI'
+import { Lunar } from 'lunar'
 
 @ComponentV2
 export struct IBestDatePicker {
@@ -77,6 +78,11 @@ export struct IBestDatePicker {
 	 */
 	@Param optionFontSize: IBestStringNumber = this.baseStyle.fontSizeLg as string
 	/**
+	 * 是否显示农历日期
+	 * @since 0.0.8
+	 */
+	@Param lunar: boolean = false
+	/**
 	 * 过滤器
 	 */
 	@Event filter: (type: DatePickerColumnType, options: IBestPickerOption[]) => IBestPickerOption[] = (_, options) => options
@@ -129,28 +135,15 @@ export struct IBestDatePicker {
 	// 初始化
 	@Monitor("language.value")
 	init(){
-		this.options = []
+		let arr: IBestPickerOption[][] = []
 		if(!this.isShowDay){
 			this.listType = ["year", "month"]
 		}
-		this.listType.forEach((item,index) => {
+		this.listType.forEach((item) => {
 			let list = item == "year" ? this.getYearsList() : item == "month" ? this.getMonthsList() : this.getDaysList()
-			let min = list.length ? list[0].value.toString() : ""
-			let max = list.length ? list[list.length-1].value.toString() : ""
-			let newValue = this.modelValue[index] || min
-			let i = list.findIndex((item) => item.value == newValue)
-			if(i == -1){
-				if(list.length){
-					this.modelValue[index] = this.formatValue(clamp(Number(newValue), Number(min), Number(max)))
-				}else{
-					this.modelValue[index] = ''
-				}
-			}else{
-				this.modelValue[index] = newValue
-			}
-			this.modelValue = this.modelValue.filter(e => e)
-			this.options.push(list)
+			arr.push(list)
 		})
+		this.options = arr
 	}
 	// 是否是最小年份
 	isMinYear = (year: number): boolean => year === this.minDate.getFullYear()
@@ -162,7 +155,7 @@ export struct IBestDatePicker {
 	isMaxMonth = (month: number): boolean => month === this.maxDate.getMonth() + 1
 	// 格式化数值
 	formatValue(value: number): string {
-		return value < 10 ? "0" + value : (value + "")
+		return value < 10 ? "0" + value : value.toString()
 	}
 	getValue(type: DatePickerColumnType): number{
 		let minDate = this.minDate
@@ -184,10 +177,11 @@ export struct IBestDatePicker {
 	// 获取年份列表
 	getYearsList(): IBestPickerOption[] {
 		let yearsList: IBestPickerOption[] = []
+		let unit = this.showUnit ? getResourceStr($r("app.string.ibest_year")) : ""
 		for(let i = this.minDate.getFullYear(); i <= this.maxDate.getFullYear(); i++){
 			yearsList.push({
-				value: i + "",
-				text: i + (this.showUnit ? getResourceStr($r("app.string.ibest_year")) : "")
+				value: i.toString(),
+				text: i + unit
 			})
 		}
 		return this.filter("year", yearsList)
@@ -198,10 +192,18 @@ export struct IBestDatePicker {
 		let year = this.getValue("year")
 		let minMonth = this.isMinYear(year) ? this.minDate.getMonth() + 1 : 1
 		let maxMonth = this.isMaxYear(year) ? this.maxDate.getMonth() + 1 : 12
+		let unit = this.showUnit ? getResourceStr($r("app.string.ibest_month")) : ""
 		for(let i = minMonth; i <= maxMonth; i++){
+			let value = this.formatValue(i)
+			let text = ''
+			if(this.lunar){
+				text = Lunar.fromDate(new Date(year, i, 1)).getMonthInChinese()
+			}else {
+				text = this.formatValue(i)
+			}
 			monthsList.push({
-				value: this.formatValue(i),
-				text: this.formatValue(i) + (this.showUnit ? getResourceStr($r("app.string.ibest_month")) : "")
+				value,
+				text: text + unit
 			})
 		}
 		return this.filter("month", monthsList)
@@ -213,10 +215,18 @@ export struct IBestDatePicker {
 		let month = this.getValue("month")
 		let minDay = this.isMinYear(year) && this.isMinMonth(month) ? this.minDate.getDate() : 1
 		let maxDay = this.isMaxYear(year) && this.isMaxMonth(month) ? this.maxDate.getDate() : dayjs(year+"-"+month).daysInMonth()
+		let unit = this.showUnit ? getResourceStr($r("app.string.ibest_day")) : ""
 		for(let i = minDay; i <= maxDay; i++){
+			let value = this.formatValue(i)
+			let text = ''
+			if(this.lunar){
+				text = Lunar.fromDate(dayjs(year+"-"+month+"-"+i).toDate()).getDayInChinese()
+			}else{
+				text = this.formatValue(i) + unit
+			}
 			daysList.push({
-				value: this.formatValue(i),
-				text: this.formatValue(i) + (this.showUnit ? getResourceStr($r("app.string.ibest_day")) : "")
+				value,
+				text: text
 			})
 		}
 		return this.filter("day", daysList)
@@ -243,6 +253,11 @@ export struct IBestDatePicker {
 		}
 		if(this.isShowDay){
 			result.day = this.modelValue[2]
+		}
+		if(this.lunar){
+			let lunar = Lunar.fromDate(date)
+			result.lunarMonth = lunar.getMonthInChinese()
+			result.lunarDay = lunar.getDayInChinese()
 		}
 		return result
 	}

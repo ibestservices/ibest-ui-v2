@@ -69,7 +69,7 @@ struct TablePage {
 			Text(column.title).fontSize(14)
 			IBestIcon({
 				name: "question-o",
-				iconSize: 14
+				iconSize: 30
 			})
 		}
 	}
@@ -170,7 +170,7 @@ struct TablePage {
 				}
 				ListItem() {
 					ComponentShowContainer({ title: '自定义单元格内容' }) {
-						IBestTable({ tableId: this.tableId6, data: this.data }){
+						IBestTable({ tableId: this.tableId6, data: this.data, showBorder: true }){
 							IBestTableColumn({
 								tableId: this.tableId6,
 								title: "日期",

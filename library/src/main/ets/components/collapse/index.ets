@@ -87,7 +87,9 @@ export struct IBestCollapse {
 				arr = this.activeName.split(" ")
             }else if(typeof this.activeName == 'number'){
 				arr = [this.activeName]
-            }
+            }else {
+				arr = this.activeName
+			}
             let index: number = arr.indexOf(name)
             if(index > -1){
 				arr.splice(index, 1)

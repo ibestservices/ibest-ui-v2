@@ -102,7 +102,6 @@ export struct IBestCollapseItem {
         return this.disabled || this.readOnly
     }
     changeState(activeNames: IBestStringNumber | IBestStringNumber[]){
-        console.log('changeState', JSON.stringify(activeNames))
         if(typeof activeNames == 'number'){
             activeNames = activeNames.toString()
         }

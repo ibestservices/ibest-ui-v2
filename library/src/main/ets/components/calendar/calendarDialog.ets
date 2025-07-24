@@ -25,9 +25,9 @@ export struct IBestCalendarDialog {
 	 */
 	@Param isModal: boolean = true
 	/**
-	 * 背板的圆角半径
+	 * 弹框圆角半径
 	 */
-	@Param cornerRadius: IBestStringNumber = convertDimensionsWidthUnit(10)
+	@Param cornerRadius: Length | BorderRadiuses | LocalizedBorderRadiuses = convertDimensionsWidthUnit(10)
 	/**
 	 * 默认选中日期
 	 */
@@ -90,27 +90,27 @@ export struct IBestCalendarDialog {
 	@Param confirmBtnText: ResourceStr = $r("app.string.ibest_text_confirm")
 	/**
 	 * 打卡模式
-	 * @since 2.0.1
 	 */
 	@Param clock: boolean = false
 	/**
 	 * 打卡成功提示
-	 * @since 2.0.1
 	 */
 	@Param clockSuccessText: ResourceStr = $r("app.string.ibest_calendar_clocked")
 	/**
 	 * 是否显示未打卡
-	 * @since 2.0.1
 	 */
 	@Param isShowUnClock: boolean = true
 	/**
 	 * 未打卡提示
-	 * @since 2.0.1
 	 */
 	@Param unClockText: ResourceStr = $r("app.string.ibest_calendar_unclock")
 	/**
+	 * 是否显示其他月份日期
+	 * @since 0.0.8
+	 */
+	@Param showOtherMonthDate: boolean = true
+	/**
 	 * 自定义日期项插槽
-	 * @since 2.0.9
 	 */
 	@BuilderParam dayItemBuilder: ($$: IBestCalendarDayItem) => void
 	/**
@@ -137,6 +137,7 @@ export struct IBestCalendarDialog {
 			isShowMark: this.isShowMark,
 			isShowConfirmBtn: this.selectType != "single",
 			isShowHeader: this.isShowHeader,
+			showOtherMonthDate: this.showOtherMonthDate,
 			confirmBtnColor: this.confirmBtnColor,
 			confirmBtnText: this.confirmBtnText,
 			clock: this.clock,

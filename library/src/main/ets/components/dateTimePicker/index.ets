@@ -113,29 +113,17 @@ export struct IBestDateTimePicker {
 	@Monitor("language.value")
 	init(){
 		let list =  ["year", "month", "day", "hour", "minute"]
+		let arr: IBestPickerOption[][] = []
 		if(this.showSecond){
 			list.push("second")
 		}
 		this.listType = list
 		this.options = []
-		this.listType.forEach((item,index) => {
+		this.listType.forEach((item) => {
 			let list = this.getListByType(item)
-			let min = list.length ? list[0].value.toString() : ""
-			let max = list.length ? list[list.length-1].value.toString() : ""
-			let newValue = this.modelValue[index] || min
-			let i = list.findIndex((item) => item.value === newValue)
-			if(i == -1){
-				if(list.length) {
-					this.modelValue[index] = this.formatValue(clamp(Number(newValue), Number(min), Number(max)))
-				}else{
-					this.modelValue[index] = ''
-				}
-			}else{
-				this.modelValue[index] = newValue
-			}
-			this.$value(this.modelValue.filter(e => e))
-			this.options.push(list)
+			arr.push(list)
 		})
+		this.options = arr
 	}
 	// 是否是最小年份
 	isMinYear = (year: number): boolean => year === this.minDate.getFullYear()

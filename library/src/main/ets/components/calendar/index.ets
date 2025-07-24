@@ -12,7 +12,6 @@ import {
 	SelectType,
 	WeekDayType
 } from './index.type'
-import promptAction from '@ohos.promptAction'
 import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit } from '../../utils/utils'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { isBeforeToday, set16ToRgb } from './utils'
@@ -211,8 +210,6 @@ export struct IBestCalendar{
      */
     @Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
     @Local isLandscape: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.IS_LANDSCAPE)!
-    // 唯一id
-    @Local uniId: number = 0
     /**
      * 默认选中日期
      */
@@ -280,7 +277,7 @@ export struct IBestCalendar{
     /**
      * 圆角
      */
-    @Param cornerRadius: IBestStringNumber = convertDimensionsWidthUnit(10)
+    @Param cornerRadius: Length | BorderRadiuses | LocalizedBorderRadiuses = convertDimensionsWidthUnit(10)
     /**
      * 打卡模式
      */
@@ -298,6 +295,11 @@ export struct IBestCalendar{
      */
     @Param unClockText: ResourceStr = $r("app.string.ibest_calendar_unclock")
 	/**
+	 * 是否显示其他月份日期
+	 * @since 0.0.8
+	 */
+	@Param showOtherMonthDate: boolean = true
+	/**
 	 * 自定义日期项插槽
 	 * @since 0.0.2
 	 */
@@ -307,6 +309,8 @@ export struct IBestCalendar{
      */
     @Event onConfirm: (value: IBestCalendarConfirmResult[]) => void = () => {}
 
+	// 唯一id
+	@Local uniId: number = 0
     // 当前点击选择的年月日
     @Local curSelectedDate: string = dayjs().format('YYYY-MM-DD')
     // 当前所在年月份
@@ -379,25 +383,27 @@ export struct IBestCalendar{
             GridRow({ columns: 7, gutter: { x: 0, y: convertDimensionsWidthUnit(5) }}) {
                 ForEach(this.daysList, (item: IBestCalendarDay, index: number) => {
                     GridCol() {
-                        CalendarItem({
-                            dayItem: item,
-                            index: index,
-                            type: this.type,
-                            selectType: this.selectType,
-                            selectedStyleType: this.selectedStyleType,
-                            selectedColor: this.selectedColor,
-                            itemWidth: this.itemWidth,
-                            isShowLunar: this.isShowLunar,
-                            clock: this.clock,
-                            clockSuccessText: this.clockSuccessText,
-                            isShowUnClock: this.isShowUnClock,
-                            unClockText: this.unClockText,
-							dayItemBuilder: this.dayItemBuilder
-                        })
-                            .enabled(!(this.clock || item.isDisabled))
-                            .onClick(() => {
-                                this.selectDate(item, index)
-                            })
+						if(item.isCurMonthDay || this.showOtherMonthDate) {
+							CalendarItem({
+								dayItem: item,
+								index: index,
+								type: this.type,
+								selectType: this.selectType,
+								selectedStyleType: this.selectedStyleType,
+								selectedColor: this.selectedColor,
+								itemWidth: this.itemWidth,
+								isShowLunar: this.isShowLunar,
+								clock: this.clock,
+								clockSuccessText: this.clockSuccessText,
+								isShowUnClock: this.isShowUnClock,
+								unClockText: this.unClockText,
+								dayItemBuilder: this.dayItemBuilder
+							})
+								.enabled(!(this.clock || item.isDisabled))
+								.onClick(() => {
+									this.selectDate(item, index)
+								})
+						}
                     }
                 })
             }
@@ -654,7 +660,7 @@ export struct IBestCalendar{
                         }
                     }
                     if(isOutRange){
-                        promptAction.showToast({
+						this.context.getPromptAction().showToast({
                             message: $r("app.string.ibest_maximum_limit", this.maxRange),
                             duration: 2000
                         })
@@ -793,9 +799,6 @@ export struct IBestCalendar{
         }
         .width(CONTAINER_SIZE.FULL)
         .backgroundColor(IBestCalendarColor.bgColor)
-        .borderRadius({
-            topLeft: this.cornerRadius,
-            topRight: this.cornerRadius
-        })
+		.borderRadius(getSizeByUnit(this.cornerRadius))
     }
 }

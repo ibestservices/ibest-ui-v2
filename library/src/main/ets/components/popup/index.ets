@@ -69,7 +69,7 @@ export struct IBestPopupBaseContent{
 	/**
 	 * 背板的圆角半径
 	 */
-	@Param cornerRadius: IBestStringNumber = 0
+	@Param cornerRadius: Length | BorderRadiuses | LocalizedBorderRadiuses = 0
 	/**
 	 * 底部偏移
 	 */
@@ -264,7 +264,7 @@ export struct IBestPopup{
 	 */
 	@Param popupHeight: IBestStringNumber = ""
 	/**
-	 * 背景图片
+	 * 背景颜色
 	 */
 	@Param bgColor: ResourceColor = ""
 	/**
@@ -310,7 +310,7 @@ export struct IBestPopup{
 	/**
 	 * 背板的圆角半径
 	 */
-	@Param cornerRadius: IBestStringNumber = 0
+	@Param cornerRadius: Length | BorderRadiuses | LocalizedBorderRadiuses = 0
 	/**
 	 * 是否允许点击遮罩关闭
 	 */
@@ -362,7 +362,8 @@ export struct IBestPopup{
 	@Event onClose: () => void = () => {}
 	@Event $visible: (visible: boolean) => void = () => {}
 	private baseController: PopupBaseController = new PopupBaseController()
-	private promptAction = this.getUIContext().getPromptAction()
+	private uiContext = this.getUIContext()
+	private promptAction = this.uiContext.getPromptAction()
 	private dialogId: number = 0
 	@Monitor("visible") async visibleChange(){
 		if(this.visible){
@@ -431,7 +432,7 @@ export struct IBestPopup{
 				this.defaultContentBuilder()
 			},
 			width: CONTAINER_SIZE.FULL,
-			height: px2vp(GlobalStore.screenHeight),
+			height: this.uiContext.px2vp(GlobalStore.screenHeight),
 			backgroundBlurStyle: BlurStyle.NONE,
 			cornerRadius: 0,
 			alignment: this.getAlignment(),

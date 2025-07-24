@@ -2,6 +2,7 @@ import { IBestDatePicker, IBestPickerOption, IBestToast } from '@ibestservices/i
 import ComponentShowContainer from '../../components/ComponentShowContainer'
 import { modeColor, SPACE } from '../../assets/styles/BaseStyle'
 import CustomNavBar from '../../components/CustomNavBar'
+import dayjs from '@hview/dayjs'
 @Builder
 export function DatePickerBuilder(_: string, title: string){
 	DatePickerPage({title})
@@ -11,10 +12,13 @@ export function DatePickerBuilder(_: string, title: string){
 @ComponentV2
 struct DatePickerPage {
 	@Param title: string = ''
-	@Local selectValue: string[] = ["2025", "03", "20"]
-	@Local selectValue1: string[] = ["2025", "03"]
-	@Local selectValue2: string[] = ["2025", "03", "20"]
-	@Local selectValue3: string[] = ["2025", "03"]
+	@Local selectValue: string[] = dayjs().format("YYYY-MM-DD").split("-")
+	@Local selectValue1: string[] = dayjs().format("YYYY-MM").split("-")
+	@Local selectValue2: string[] = dayjs().format("YYYY-MM-DD").split("-")
+	@Local selectValue3: string[] = dayjs().format("YYYY-MM").split("-")
+	@Local selectValue4: string[] = []
+	@Local minDate: Date = dayjs().subtract(5, 'year').toDate()
+	@Local maxDate: Date = dayjs().add(5, 'year').toDate()
 	filter(type: string, options: IBestPickerOption[]): IBestPickerOption[]{
 		if (type === 'month') {
 			return options.filter((option) => Number(option.value) % 6 === 0)
@@ -29,8 +33,8 @@ struct DatePickerPage {
 					ComponentShowContainer({ title: '基础用法', titlePaddingLeft: SPACE.SM, card: true }) {
 						IBestDatePicker({
 							title: "选择日期",
-							minDate: new Date("2020-05-01"),
-							maxDate: new Date("2028-05-01"),
+							minDate: this.minDate,
+							maxDate: this.maxDate,
 							value: this.selectValue!!,
 							onConfirm: value => {
 								IBestToast.show(value.dateStr)
@@ -45,8 +49,8 @@ struct DatePickerPage {
 					ComponentShowContainer({ title: "选项类型", titlePaddingLeft: SPACE.SM, card: true }) {
 						IBestDatePicker({
 							title: "选择年月",
-							minDate: new Date("2020-05"),
-							maxDate: new Date("2028-05"),
+							minDate: this.minDate,
+							maxDate: this.maxDate,
 							isShowDay: false,
 							value: this.selectValue1!!,
 							onConfirm: value => {
@@ -62,8 +66,8 @@ struct DatePickerPage {
 					ComponentShowContainer({ title: "显示单位", titlePaddingLeft: SPACE.SM, card: true }) {
 						IBestDatePicker({
 							title: "选择日期",
-							minDate: new Date("2020-05-01"),
-							maxDate: new Date("2028-05-01"),
+							minDate: this.minDate,
+							maxDate: this.maxDate,
 							showUnit: true,
 							value: this.selectValue2!!,
 							onConfirm: value => {
@@ -79,8 +83,8 @@ struct DatePickerPage {
 					ComponentShowContainer({ title: "过滤选项", titlePaddingLeft: SPACE.SM, card: true }) {
 						IBestDatePicker({
 							title: "选择年月",
-							minDate: new Date("2020-05"),
-							maxDate: new Date("2028-05"),
+							minDate: this.minDate,
+							maxDate: this.maxDate,
 							isShowDay: false,
 							filter: this.filter,
 							value: this.selectValue3!!,
@@ -89,6 +93,22 @@ struct DatePickerPage {
 							},
 							onChange: value => {
 								IBestToast.show(value.dateStr)
+							}
+						})
+					}
+				}
+				ListItem(){
+					ComponentShowContainer({title: "显示农历", titlePaddingLeft: SPACE.SM, card: true}){
+						IBestDatePicker({
+							title: "选择年月日",
+							value: this.selectValue4!!,
+							lunar: true,
+							showUnit: true,
+							onConfirm: (value) => {
+								IBestToast.show(value.year + "年" + value.lunarMonth + "月" + value.lunarDay)
+							},
+							onChange: (value) => {
+								IBestToast.show(value.year + "年" + value.lunarMonth + "月" + value.lunarDay)
 							}
 						})
 					}

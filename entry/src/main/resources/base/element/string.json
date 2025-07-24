@@ -317,6 +317,10 @@
 			"value": "ColorPicker 颜色选取"
 		},
 		{
+			"name": "component_contactAddress",
+			"value": "ContactAddress 联系人地址"
+		},
+		{
 			"name": "component_imageCropper",
 			"value": "ImageCropper 图片裁剪"
 		},

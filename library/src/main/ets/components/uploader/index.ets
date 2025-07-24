@@ -4,14 +4,13 @@ import { AppStorageV2, LengthMetrics } from '@kit.ArkUI'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { picker } from '@kit.CoreFileKit'
-import { common } from '@kit.AbilityKit'
 import { photoAccessHelper } from '@kit.MediaLibraryKit'
 import { IBestLoading } from '../loading'
 import fs from '@ohos.file.fs'
 import { IBestIcon, IBestImagePreview } from '../../../../../Index'
 import { convertDimensions, convertDimensionsWidthUnit, getLengthUnit, getSizeByUnit } from '../../utils/utils'
 import { IBestUploaderColor } from './color'
-import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
+import { IBestStorageKey, IBestAwaitable, IBestStringNumber } from '../../model/Global.type'
 
 @ComponentV2
 export struct IBestUploader {
@@ -23,6 +22,16 @@ export struct IBestUploader {
 	 * 选择类型
 	 */
 	@Param selectType: IBestUploaderSelectType = "image"
+	/**
+	 * 图片选择配置
+	 * @since 0.0.8
+	 */
+	@Param imageSelectOption: photoAccessHelper.PhotoSelectOptions = {}
+	/**
+	 * 文件选择配置
+	 * @since 0.0.8
+	 */
+	@Param fileSelectOption: picker.DocumentSelectOptions = {}
 	/**
 	 * 触发器背景色
      */
@@ -40,9 +49,9 @@ export struct IBestUploader {
 	 */
 	@Param uploaderIconColor: ResourceColor = IBestUploaderColor.uploaderIconColor
 	/**
-	 * 最大上传数量
+	 * 最大上传数量, 优先级大于imageSelectOption/fileSelectOption的maxSelectNumber
 	 */
-	@Param max: number = -1
+	@Param @Once max: number = -1
 	/**
 	 * 文件大小限制，单位为 byte
 	 */
@@ -69,6 +78,8 @@ export struct IBestUploader {
 	@Param showDelete: boolean = true
 	/**
 	 * 文件选择配置项
+	 * @deprecated since 0.0.8
+	 * @useinstead imageSelectOption/fileSelectOption
 	 */
 	@Param fileSelectOptions?: FileSelectOptions = undefined
 	/**
@@ -88,20 +99,35 @@ export struct IBestUploader {
 	 */
 	@BuilderParam customPreviewBuilder: (file: IBestUploaderFile, index: number) => void
 	/**
+	 * 删除前回调
+	 * @since 0.0.8
+	 */
+	@Event beforeRemove?: (file: IBestUploaderFile, index: number) => IBestAwaitable
+	/**
 	 * 文件插入前回调
 	 */
 	@Event onBeforeInsert: (file: IBestUploaderFile) => boolean = () => true
 	/**
-	 * 文件全部插入后回调
+	 * 文件插入后事件
 	 */
 	@Event onChange: (insertFile: IBestUploaderFile[], allFile: IBestUploaderFile[]) => void = () => {}
 	/**
-	 * 超出限制后回调
+	 * 超出限制事件
 	 */
 	@Event onExceed: () => void = () => {}
+	/**
+	 * 文件删除后事件
+	 * @since 0.0.8
+	 */
+	@Event onRemove: (file: IBestUploaderFile, allFile: IBestUploaderFile[]) => void = () => {}
+	/**
+	 * 文件点击事件, 仅当isPreviewFullImage为false时生效
+	 * @since 0.0.8
+	 */
+	@Event onFileClick: (file: IBestUploaderFile, index: number) => void = () => {}
 	@Event $fileList: (fileList: IBestUploaderFile[]) => void = () => {}
 
-	private context = getContext(this) as common.Context
+	private context = this.getUIContext().getHostContext() as Context
 
 	// 选择器触发
 	select(){
@@ -113,24 +139,25 @@ export struct IBestUploader {
 	}
 	// 选择文件
 	selectFile(){
-		let options = new picker.DocumentSelectOptions()
 		const docPicker = new picker.DocumentViewPicker(this.context)
-		options.maxSelectNumber = this.max > 0 ? this.max : 500
-		if(this.fileSelectOptions){
-			options.defaultFilePathUri = this.fileSelectOptions.defaultFilePathUri
-			options.fileSuffixFilters = this.fileSelectOptions.fileSuffixFilters
+		if(this.max > -1){
+			this.fileSelectOption.maxSelectNumber = this.max
+		}else if(this.fileSelectOption.maxSelectNumber) {
+			this.max = this.fileSelectOption.maxSelectNumber
 		}
-		docPicker.select(options).then(result => {
+		docPicker.select(this.fileSelectOption).then(result => {
 			this.onFileSelect(result)
 		})
 	}
 	// 选择图片
 	selectImg(){
-		let PhotoSelectOptions = new photoAccessHelper.PhotoSelectOptions()
 		let photoPicker = new photoAccessHelper.PhotoViewPicker()
-		PhotoSelectOptions.MIMEType = photoAccessHelper.PhotoViewMIMETypes.IMAGE_TYPE
-		PhotoSelectOptions.maxSelectNumber = this.max > 0 ? this.max : 500
-		photoPicker.select(PhotoSelectOptions).then((result: photoAccessHelper.PhotoSelectResult) => {
+		if(this.max > -1){
+			this.imageSelectOption.maxSelectNumber = this.max
+		}else if(this.imageSelectOption.maxSelectNumber) {
+			this.max = this.imageSelectOption.maxSelectNumber
+		}
+		photoPicker.select(this.imageSelectOption).then((result: photoAccessHelper.PhotoSelectResult) => {
 			this.onFileSelect(result.photoUris)
 		})
 	}
@@ -159,6 +186,7 @@ export struct IBestUploader {
 				previewUri: e,
 				internalUri: `internal://cache/${fullName}`,
 				cacheUri,
+				status: "ready",
 				name: fileName,
 				size: stat.size,
 				isImage: this.selectType == "image" || isImageUrl(e)
@@ -173,18 +201,36 @@ export struct IBestUploader {
 			this.onChange(arr, initList)
 		}
 	}
+	// 处理删除前回调
+	async handleBeforeRemove(file: IBestUploaderFile, index: number){
+		let status = true
+		if(this.beforeRemove){
+			try {
+				status = await this.beforeRemove(file, index)
+			} catch (e) {
+				status = false
+			}
+		}
+		return status
+	}
 	// 删除
-	remove(index: number){
-		let initList = [...this.fileList]
-		initList.splice(index, 1)
-		this.$fileList(initList)
+	async remove(file: IBestUploaderFile, index: number){
+		let status = await this.handleBeforeRemove(file, index)
+		if(status){
+			let initList = [...this.fileList]
+			initList.splice(index, 1)
+			this.$fileList(initList)
+			this.onRemove(file, this.fileList)
+		}
 	}
 	// 预览图片
-	preview(file: IBestUploaderFile){
+	preview(file: IBestUploaderFile, index: number){
 		if(this.isPreviewFullImage){
 			let imgLists = this.fileList.filter(e => e.isImage || isImageUrl(e.url as string))
-			let index = imgLists.findIndex(e => e.internalUri == file.internalUri)
+			let index = imgLists.findIndex(e => e.internalUri == file.internalUri || e.url == file.url)
 			IBestImagePreview.show(imgLists.map(e => e.url || e.previewUri || ""), { startIndex: index || 0 })
+		}else {
+			this.onFileClick(file, index)
 		}
 	}
 
@@ -204,8 +250,8 @@ export struct IBestUploader {
 						showDelete: this.showDelete,
 						disabled: this.disabled,
 						customPreviewBuilder: this.customPreviewBuilder,
-						remove: (index: number): void => this.remove(index),
-						preview: (file: IBestUploaderFile): void => this.preview(file)
+						remove: (file: IBestUploaderFile, index: number): Promise<void> => this.remove(file, index),
+						preview: (file: IBestUploaderFile, index: number): void => this.preview(file, index)
 					})
 				})
 			}
@@ -264,9 +310,9 @@ struct UploadItem{
 	@BuilderParam customPreviewBuilder: (file: IBestUploaderFile, index: number) => void
 
 	// 移除文件
-	@Event remove: (index: number) => void = () => {}
+	@Event remove: (file: IBestUploaderFile, index: number) => void = () => {}
 	// 预览
-	@Event preview: (file: IBestUploaderFile) => void = () => {}
+	@Event preview: (file: IBestUploaderFile, index: number) => void = () => {}
 
 	build() {
 		Column() {
@@ -291,7 +337,7 @@ struct UploadItem{
 								this.isError = true
 							})
 							.onClick(() => {
-								this.preview(this.file)
+								this.preview(this.file, this.index)
 							})
 					}
 				} else {
@@ -314,7 +360,7 @@ struct UploadItem{
 				}
 			}
 			// 状态展示
-			if (this.file.status && this.file.status != 'done') {
+			if (this.file.status == 'uploading' || this.file.status == 'failed') {
 				Column({ space: convertDimensionsWidthUnit(6) }) {
 					if (this.file.status == 'uploading') {
 						IBestLoading({
@@ -358,7 +404,7 @@ struct UploadItem{
 				.borderRadius({ bottomLeft: this.baseStyle.borderRadiusMax })
 				.visibility(this.file.status == 'uploading' ? Visibility.None : Visibility.Visible)
 				.onClick(() => {
-					this.remove(this.index)
+					this.remove(this.file, this.index)
 				})
 			}
 		}
