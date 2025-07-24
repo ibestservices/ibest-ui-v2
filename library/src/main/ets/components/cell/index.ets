@@ -56,9 +56,19 @@ export struct IBestCell {
 	 */
 	@Param isLink: boolean = false
 	/**
-	 * 是否展示右侧箭头并开启点击反馈
+	 * 右侧箭头方向
 	 */
 	@Param arrowDirection: `${ARROW_DIRECTION}` = ARROW_DIRECTION.RIGHT
+	/**
+	 * 右侧箭头大小
+	 * @since 0.0.8
+	 */
+	@Param arrowSize: IBestStringNumber = convertDimensionsWidthUnit(14)
+	/**
+	 * 右侧箭头颜色
+	 * @since 0.0.8
+	 */
+	@Param arrowColor: ResourceColor = GRAY_COLOR.GRAY_6
 	/**
 	 * 是否显示必填*号
 	 */
@@ -133,6 +143,11 @@ export struct IBestCell {
 	 * @since 0.0.6
 	 */
 	@Param labelFontSize: IBestStringNumber = ""
+	/**
+	 * 单元格padding
+	 * @since 0.0.8
+	 */
+	@Param cellPadding: Length | Padding | LocalizedPadding = 0
 	/**
 	 * title的插槽 优先级大于 title
 	 */
@@ -210,16 +225,11 @@ export struct IBestCell {
 								this.iconBuilder()
 							}.margin({ right: getSizeByUnit(this.leftIconMarginRight) })
 						} else if (this.leftIcon) {
-							if (this.leftIconColor) {
-								Image(this.leftIcon)
-									.height(getSizeByUnit(this.leftIconSize))
-									.fillColor(this.leftIconColor)
-									.margin({ right: getSizeByUnit(this.leftIconMarginRight) })
-							} else {
-								Image(this.leftIcon)
-									.height(getSizeByUnit(this.leftIconSize))
-									.margin({ right: getSizeByUnit(this.leftIconMarginRight) })
-							}
+							IBestIcon({
+								name: this.leftIcon,
+								iconSize: this.leftIconSize,
+								color: this.leftIconColor
+							}).margin({ right: getSizeByUnit(this.leftIconMarginRight) })
 						}
 						if (this.titleBuilder) {
 							Row() {
@@ -269,16 +279,18 @@ export struct IBestCell {
 						}
 						.margin({ left: getSizeByUnit(this.rightIconMarginLeft) })
 					} else if (this.rightIcon) {
-						Image(this.rightIcon)
-							.width(getSizeByUnit(this.rightIconSize))
-							.fillColor(this.rightIconColor)
-							.margin({ left: getSizeByUnit(this.rightIconMarginLeft) })
-					} else if (this.isLink) {
+						IBestIcon({
+							name: this.rightIcon,
+							iconSize: this.rightIconSize,
+							color: this.rightIconColor
+						}).margin({ left: getSizeByUnit(this.rightIconMarginLeft) })
+					}
+					if (this.isLink) {
 						Row() {
 							IBestIcon({
 								name: "arrow",
-								iconSize: this.rightIconSize,
-								color: this.rightIconColor
+								iconSize: this.arrowSize,
+								color: this.arrowColor
 							})
 								.margin({
 									left: getSizeByUnit(this.rightIconMarginLeft)
@@ -301,7 +313,7 @@ export struct IBestCell {
 			}
 			.alignItems(this.getAlignItems())
 			.width(CONTAINER_SIZE.FULL)
-			.padding({
+			.padding(this.cellPadding ? getSizeByUnit(this.cellPadding) : {
 				top: this.computedCellSize.padding,
 				bottom: this.computedCellSize.padding,
 				left: getSizeByUnit(this.leftRightPadding),

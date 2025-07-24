@@ -100,7 +100,6 @@ export struct IBestNoticeBar{
 	@Param verticalInterval: number = 3
 	/**
 	 * 圆角
-	 * @since 2.0.9
 	 */
 	@Param radius: IBestStringNumber = 0
 	/**

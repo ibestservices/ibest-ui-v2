@@ -6,8 +6,7 @@ import { common, Want } from '@kit.AbilityKit'
 import { getAppVersion, getResourceStr } from '../utils/utils'
 import { rcp } from '@kit.RemoteCommunicationKit'
 import fs from '@ohos.file.fs'
-import { updateManager } from '@kit.StoreKit'
-import { router } from '@kit.ArkUI'
+import { updateManager } from '@kit.AppGalleryKit'
 import RouterUtil from '../utils/routerUtil'
 
 interface ComponentPart {
@@ -306,6 +305,10 @@ struct Index {
 			path: "ColorPicker"
 		},
 		{
+			name: $r("app.string.component_contactAddress"),
+			path: "ContactAddress"
+		},
+		{
 			name: $r("app.string.component_imageCropper"),
 			path: "ImageCropper"
 		}
@@ -329,7 +332,8 @@ struct Index {
 	@Local uiVersion: string = ""
 	private scrollerForList1: Scroller = new Scroller()
 	private scrollerForList2: Scroller = new Scroller()
-	private context = getContext(this) as common.UIAbilityContext
+	private context = this.getUIContext().getHostContext() as common.UIAbilityContext
+	private router = this.getUIContext().getRouter()
 	private navPathStack: NavPathStack = new NavPathStack()
 
 	@Builder titleBuilder(){
@@ -465,7 +469,7 @@ struct Index {
 							isLink: true,
 							hasBorder: false,
 							onCellClick: () => {
-								router.pushUrl({
+								this.router.pushUrl({
 									url: "pages/PrivacyPolicy"
 								})
 							}
@@ -560,7 +564,7 @@ struct Index {
 		}
 	}
 	async getUiVersion(){
-		let filePath = getContext(this).cacheDir + "/BuildProfile.ets"
+		let filePath = this.context.cacheDir + "/BuildProfile.ets"
 		try {
 			fs.unlinkSync(filePath)
 		} catch(err) {}

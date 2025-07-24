@@ -96,7 +96,7 @@ export struct IBestButton {
 	/**
 	 * 按钮圆角
 	 */
-	@Param btnBorderRadius: IBestStringNumber = ""
+	@Param btnBorderRadius: Length | BorderRadiuses | LocalizedBorderRadiuses = ""
 	/**
 	 * 图标位置
      */
@@ -208,7 +208,7 @@ export struct IBestButton {
 	 * 获取按钮的borderRadius
 	 */
 	getBorderRadius() {
-		return this.btnBorderRadius || (this.square ? 0 : this.round ? this.baseStyle.borderRadiusMax as string : this.baseStyle.borderRadiusMd as string)
+		return this.btnBorderRadius !== '' ? getSizeByUnit(this.btnBorderRadius) : (this.square ? 0 : this.round ? this.baseStyle.borderRadiusMax as string : this.baseStyle.borderRadiusMd as string)
 	}
 	/**
 	 * 获取按钮边框的颜色

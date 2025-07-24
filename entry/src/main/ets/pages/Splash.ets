@@ -1,5 +1,5 @@
 import { CONTAINER_SIZE, modeColor } from '../assets/styles/BaseStyle'
-import { PersistenceV2, router } from '@kit.ArkUI'
+import { PersistenceV2 } from '@kit.ArkUI'
 import { process } from '@kit.ArkTS'
 import { IBestBaseDataType } from '@ibestservices/ibest-ui-v2'
 
@@ -7,6 +7,7 @@ import { IBestBaseDataType } from '@ibestservices/ibest-ui-v2'
 @ComponentV2
 struct Splash {
 	@Local isAgree: IBestBaseDataType = PersistenceV2.connect(IBestBaseDataType, () => new IBestBaseDataType(false))!
+	private router = this.getUIContext().getRouter()
 
 	aboutToAppear(): void {
 		if(this.isAgree.value) {
@@ -21,12 +22,12 @@ struct Splash {
 		this.enterIndex()
 	}
 	enterIndex(){
-		router.replaceUrl({
+		this.router.replaceUrl({
 			url: 'pages/Index'
 		})
 	}
 	viewPrivacyPolicy(){
-		router.pushUrl({
+		this.router.pushUrl({
 			url: 'pages/PrivacyPolicy'
 		})
 	}

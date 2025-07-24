@@ -199,11 +199,16 @@ export struct IBestField{
     /**
      * 背景色
      */
-    @Param bgColor: ResourceColor = IBestFieldColor.bg2
+    @Param bgColor: ResourceColor = IBestFieldColor.bgColor
     /**
      * 输入框文字大小
      */
     @Param inputFontSize: IBestStringNumber = this.baseStyle.fontSizeMd as string
+	/**
+	 * 输入框文字粗细
+	 * since 0.0.8
+	 */
+	@Param inputFontWeight: IBestStringNumber | FontWeight = FontWeight.Normal
     /**
      * 光标颜色
      */
@@ -223,7 +228,7 @@ export struct IBestField{
     /**
      * 外部圆角
      */
-    @Param radius: IBestStringNumber = 0
+    @Param radius: Length | BorderRadiuses | LocalizedBorderRadiuses = 0
     /**
      * 前缀内容
      */
@@ -349,6 +354,7 @@ export struct IBestField{
 					Text(this.prefix)
 						.fontSize(getSizeByUnit(this.inputFontSize, true))
 						.fontColor(this.prefixFontColor)
+						.fontWeight(this.inputFontWeight)
 						.margin({right: this.baseStyle.spaceBase})
 				}
 				if (this.customRightContent) {
@@ -360,6 +366,7 @@ export struct IBestField{
 							.caretColor(this.caretColor)
 							.fontSize(getSizeByUnit(this.inputFontSize, true))
 							.fontColor(IBestFieldColor.inputColor)
+							.fontWeight(this.inputFontWeight)
 							.placeholderFont({
 								size: getSizeByUnit(this.inputFontSize, true)
 							})
@@ -393,6 +400,7 @@ export struct IBestField{
 							.caretColor(this.caretColor)
 							.fontSize(getSizeByUnit(this.inputFontSize, true))
 							.fontColor(IBestFieldColor.inputColor)
+							.fontWeight(this.inputFontWeight)
 							.placeholderFont({
 								size: getSizeByUnit(this.inputFontSize, true)
 							})
@@ -400,6 +408,7 @@ export struct IBestField{
 							.showPasswordIcon(this.showPasswordIcon)
 							.height(this.baseStyle.lineHeightMd)
 							.lineHeight(this.baseStyle.lineHeightMd)
+							.textAlign(this.getInputAlign())
 							.textAlign(this.getInputAlign())
 							.maxLength(this.maxlength)
 							// .showCounter(this.showWordLimit, {
@@ -456,6 +465,7 @@ export struct IBestField{
 					Text(this.suffix)
 						.fontSize(getSizeByUnit(this.inputFontSize, true))
 						.fontColor(this.suffixFontColor)
+						.fontWeight(this.inputFontWeight)
 						.margin({left: this.baseStyle.spaceBase})
 				}
 				// link箭头

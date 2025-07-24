@@ -316,6 +316,11 @@
 			"buildFunction": "ColorPickerBuilder"
 		},
 		{
+			"name": "ContactAddress",
+			"pageSourceFile": "src/main/ets/pages/extend/ContactAddress.ets",
+			"buildFunction": "ContactAddressBuilder"
+		},
+		{
 			"name": "ImageCropper",
 			"pageSourceFile": "src/main/ets/pages/extend/ImageCropper.ets",
 			"buildFunction": "ImageCropperBuilder"

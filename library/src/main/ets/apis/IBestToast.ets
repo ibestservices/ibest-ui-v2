@@ -1,8 +1,9 @@
-import { AppStorageV2, ComponentContent, PromptAction, window } from '@kit.ArkUI'
+import { AppStorageV2, ComponentContent, PromptAction } from '@kit.ArkUI'
 import { IBestIcon } from '../components/icon'
 import { IBestLoading } from '../components/loading'
 import { IBestStorageKey, IBestStringNumber, LoadingIconType, WordBreakType } from '../model/Global.type'
 import { IBestUIBaseStyle } from '../theme-chalk/src/index.type'
+import GlobalStore from '../utils/GlobalStore'
 import { convertDimensionsWidthUnit, getSizeByUnit } from '../utils/utils'
 
 @ObservedV2
@@ -147,7 +148,7 @@ class Toast{
 			await this.hide()
 		}
         this.isLock = true
-		let windowClass = await window.getLastWindow(getContext())
+		let windowClass = GlobalStore.getMainWindow()
 		let uiContext = windowClass.getUIContext()
 		this.promptAction = uiContext.getPromptAction()
         let params: ToastParams = typeof option == "string" ? new ToastParams({ message: option }) : new ToastParams(option)

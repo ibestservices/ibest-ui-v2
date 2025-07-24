@@ -1,10 +1,11 @@
-import { AppStorageV2, ComponentContent, PromptAction, window } from '@kit.ArkUI'
+import { AppStorageV2, ComponentContent, PromptAction } from '@kit.ArkUI'
 import { CONTAINER_SIZE } from '../theme-chalk/src/container'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../theme-chalk/src/index.type'
 import CustomContent from '../common/components/CustomContent'
 import { convertDimensionsWidthUnit, getEventName, getSizeByUnit, sleep } from '../utils/utils'
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../model/Global.type'
 import { emitter } from '../utils/EventEmitter'
+import GlobalStore from '../utils/GlobalStore'
 class IBestNotifyOption{
 	/**
 	 * 展示类型
@@ -147,7 +148,7 @@ class Notify{
 		if(this.contentNode){
 			await this.close()
 		}
-		let windowClass = await window.getLastWindow(getContext())
+		let windowClass = GlobalStore.getMainWindow()
 		let uiContext = windowClass.getUIContext()
 		let params: IBestNotifyParams = new IBestNotifyParams(option)
 		this.promptAction = uiContext.getPromptAction()

@@ -83,7 +83,7 @@ export struct IBestImageCropper {
 	private settings: RenderingContextSettings = new RenderingContextSettings(true)
 	private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings)
 	private uiContext = this.getUIContext()
-	private pageContext = getContext(this) as common.UIAbilityContext
+	private pageContext = this.uiContext.getHostContext() as common.UIAbilityContext
 	private resourceManager = GlobalStore.context.resourceManager
 	private sandBoxPath: string = ""
 
@@ -166,8 +166,8 @@ export struct IBestImageCropper {
 		let imageSource = image.createImageSource(path)
 		this.imgModel = await imageSource.createPixelMap()
 		let imageInfo = await imageSource.getImageInfo()
-		let width = px2vp(imageInfo.size.width)
-		let height = px2vp(imageInfo.size.height)
+		let width = this.uiContext.px2vp(imageInfo.size.width)
+		let height = this.uiContext.px2vp(imageInfo.size.height)
 		let aspect = width / height
 		if (width > height) { // 横向图片
 			this.imgInitHeight = this.realCenterHeight
@@ -205,7 +205,7 @@ export struct IBestImageCropper {
 		this.offsetMaxY = 0
 	}
 	getCommands(){
-		let width = vp2px(this.realCenterWidth/2)
+		let width = this.uiContext.vp2px(this.realCenterWidth/2)
 		return `M0 ${width} V0 0 L${width} 0 A${width} ${width} 0 0 0 0 ${width}`
 	}
 	getId(){

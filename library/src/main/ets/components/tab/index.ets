@@ -98,7 +98,7 @@ export struct IBestTabs{
     /**
      * 选项圆角, 仅type为`line`时有效
      */
-    @Param radius: IBestStringNumber = 0
+    @Param radius: Length | BorderRadiuses | LocalizedBorderRadiuses = 0
 	/**
 	 * 激活文字字重
 	 * @since 0.0.2
@@ -176,8 +176,7 @@ export struct IBestTabs{
 					.width(this.tabBoxWidth)
 					.height(getSizeByUnit(this.tabHeight))
 					.backgroundColor(this.getLineColor())
-					.borderRadius(this.type == "line" ? { topLeft: getSizeByUnit(this.radius), topRight: getSizeByUnit(this.radius) } : 0)
-					.translate({ x: this.tabBoxTranslateX })
+					.borderRadius(this.type == "line" ? getSizeByUnit(this.radius) : 0)					.translate({ x: this.tabBoxTranslateX })
 					.animation({
 						duration: this.isReady ? 100 : 0,
 						curve: Curve.FastOutSlowIn
@@ -352,7 +351,7 @@ export struct IBestTabs{
 					if(index != target){
 						this.$currentName(this.tabsList[target].name)
 					}
-					animateTo({duration: duration}, () => {
+					this.context.animateTo({duration: duration}, () => {
 						this.translateX = this.translateXList[target]
 					})
 				})
@@ -380,7 +379,7 @@ struct IBestTab{
     @Param @Require isShowActiveBg: boolean
     @Param @Require activeBgColor: ResourceColor
     @Param @Require inactiveBgColor: ResourceColor
-    @Param @Require radius: IBestStringNumber
+    @Param @Require radius: Length | BorderRadiuses | LocalizedBorderRadiuses
 	@Param @Require activeFontWeight: FontWeight
 	@Param @Require activeFontSize: IBestStringNumber
     @Event initSize: () => void = () => {}
@@ -429,8 +428,7 @@ struct IBestTab{
         .justifyContent(FlexAlign.Center)
         .padding({left: getSizeByUnit(this.tabPadding), right: getSizeByUnit(this.tabPadding)})
         .layoutWeight(this.tabWidthType == "flex" ? 1 : 0)
-        .borderRadius(this.type == "line" ? { topLeft: getSizeByUnit(this.radius), topRight: getSizeByUnit(this.radius) } : 0)
-        .border({ width: { left: this.type == "card" && this.index > 0 ? 1 : 0 }, color: this.getLineColor() })
+		.borderRadius(this.type == "line" ? getSizeByUnit(this.radius) : 0)        .border({ width: { left: this.type == "card" && this.index > 0 ? 1 : 0 }, color: this.getLineColor() })
         .clip(true)
         .enabled(!this.item.isDisable)
         .opacity(this.item.isDisable ? 0.3 : 1)

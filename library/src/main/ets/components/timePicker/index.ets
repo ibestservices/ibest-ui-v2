@@ -2,7 +2,7 @@ import { IBestPicker } from '../picker'
 import { IBestPickerOption } from '../picker/index.type'
 import { COMPONENT_NAME, IBestTimePickerColumnType, TIME_PICKER_EVENT_NAME } from './index.type'
 import { emitter } from '../../utils/EventEmitter'
-import { clamp, convertDimensionsWidthUnit, getEventName } from '../../utils/utils'
+import { convertDimensionsWidthUnit, getEventName, getResourceStr } from '../../utils/utils'
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { AppStorageV2 } from '@kit.ArkUI'
@@ -113,7 +113,6 @@ export struct IBestTimePicker {
 		this.modelValue = this.value
 		this.init()
 		if(this.groupId){
-			// 监听日期picker变化
 			emitter.on(getEventName(COMPONENT_NAME, TIME_PICKER_EVENT_NAME.COLUMN_CHANGE, this.groupId), this.uniId, (uniId: number, selectedValues: string[]): void => this.handleGroupTimeChange(uniId, selectedValues))
 		}
 	}
@@ -133,22 +132,8 @@ export struct IBestTimePicker {
 		if(!reg.test(this.maxTime)){
 			this.maxTime = "23:59:59"
 		}
-		this.listType.forEach((item,index) => {
+		this.listType.forEach((item) => {
 			let list = item == "hour" ? this.getHoursList() : item == "minute" ? this.getMinutesList() : this.getSecondsList()
-			let min = list.length ? list[0].value : ""
-			let max = list.length ? list[list.length-1].value : ""
-			let newValue = this.modelValue[index] || min
-			let i = list.findIndex((item) => item.value == newValue)
-			if(i == -1){
-				if(list.length){
-					this.modelValue[index] = this.formatValue(clamp(Number(newValue), Number(min), Number(max)))
-				}else{
-					this.modelValue[index] = ""
-				}
-			}else{
-				this.modelValue[index] = newValue.toString()
-			}
-			this.modelValue = this.modelValue.filter(e => e)
 			this.options.push(list)
 		})
 	}
@@ -186,10 +171,11 @@ export struct IBestTimePicker {
 		let list: IBestPickerOption[] = []
 		let min = Number(this.minTime.slice(0, 2))
 		let max = Number(this.maxTime.slice(0, 2))
+		let unit = this.showUnit ? getResourceStr($r("app.string.ibest_hour")) : ""
 		for(let i = min; i <= max; i++){
 			list.push({
 				value: this.formatValue(i),
-				text: this.formatValue(i) + (this.showUnit ? "时" : "")
+				text: this.formatValue(i) + unit
 			})
 		}
 		return this.filter("hour", list)
@@ -200,10 +186,11 @@ export struct IBestTimePicker {
 		let hour = this.getValue("hour")
 		let min = this.isMinHour(hour) ? Number(this.minTime.slice(3, 5)) : 0
 		let max = this.isMaxHour(hour) ? Number(this.maxTime.slice(3, 5)) : 59
+		let unit = this.showUnit ? getResourceStr($r("app.string.ibest_minute")) : ""
 		for(let i = min; i <= max; i++){
 			monthsList.push({
 				value: this.formatValue(i),
-				text: this.formatValue(i) + (this.showUnit ? "分" : "")
+				text: this.formatValue(i) + unit
 			})
 		}
 		return this.filter("minute", monthsList)
@@ -215,10 +202,11 @@ export struct IBestTimePicker {
 		let minute = this.getValue("minute")
 		let min = this.isMinHour(hour) && this.isMinMinute(minute) ? Number(this.minTime.slice(6)) : 0
 		let max = this.isMaxHour(hour) && this.isMaxMinute(minute) ? Number(this.maxTime.slice(6)) : 59
+		let unit = this.showUnit ? getResourceStr($r("app.string.ibest_second")) : ""
 		for(let i = min; i <= max; i++){
 			daysList.push({
 				value: this.formatValue(i),
-				text: this.formatValue(i) + (this.showUnit ? "秒" : "")
+				text: this.formatValue(i) + unit
 			})
 		}
 		return this.filter("second", daysList)

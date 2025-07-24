@@ -61,10 +61,6 @@ export struct IBestStepper {
 	 */
 	@Param decimalLength: number = 0
 	/**
-	 * 是否只允许输入整数
-	 */
-	@Param integer: boolean = false
-	/**
 	 * 是否禁用步进器
 	 */
 	@Param disabled: boolean = false
@@ -110,13 +106,13 @@ export struct IBestStepper {
 	@Event onMinus: () => void = () => {}
 	@Event $value: (value: number) => void = () => {}
 	// 输入框的值
-	@Local inputNumValue: string = ""
+	@Local inputNumValue: string = Number(this.value).toFixed(this.decimalLength)
 	// 减少按钮是否禁用
 	@Local reduceBtnDisabled: boolean = false
 	// 增加按钮是否禁用
 	@Local plusBtnDisabled: boolean = false
 	// 上一次输入正确的值
-	private preValue: string = ""
+	private preValue: string = this.inputNumValue
 	// 自动纠正的时间id
 	private validateTimeId: number = 0
 
@@ -153,20 +149,23 @@ export struct IBestStepper {
 	}
 
 	aboutToAppear() {
-		this.preValue = this.inputNumValue = this.value.toString()
-		this.handleInputNumChange('change', this.inputNumValue, 'init')
+		this.handleInputNumChange('init', this.inputNumValue)
 	}
 	aboutToDisappear() {
 		clearTimeout(this.validateTimeId)
 	}
+	@Monitor("value")
+	valueChange(){
+		this.handleInputNumChange('valueChange', this.value.toString())
+	}
 	// value变化
-	handleInputNumChange(trigger: string, val: string, type: string = '') {
+	handleInputNumChange(trigger: string, val: string) {
 		if (val == '') {
 			this.validateTimeId = setTimeout(() => {
 				if (this.validateTime !== 0) {
 					this.inputNumValue = this.preValue
 					this.inputValueChange()
-					if(type != 'init'){
+					if(trigger != 'init'){
 						this.onChange(this.value)
 					}
 				}
@@ -185,14 +184,11 @@ export struct IBestStepper {
 			}
 		}
 		// 数据限制展示多少位
-		if (this.decimalLength > 0) {
+		if (trigger != 'init' && this.decimalLength > 0) {
 			let index = val.indexOf(".")
 			if(index > -1){
 				let decimal = val.substring(index + 1)
-				if(trigger == 'change' && !decimal){
-					return
-				}
-				if(trigger == 'blur' && !decimal){
+				if(!decimal){
 					val = this.preValue
 				}else if(decimal.length > this.decimalLength){
 					val = Number(val).toFixed(this.decimalLength)
@@ -201,12 +197,13 @@ export struct IBestStepper {
 				val = Number(this.preValue).toFixed(this.decimalLength)
 			}
 		}
-		this.preValue = val
-		this.inputNumValue = String(val)
+		this.preValue = this.inputNumValue = val.toString()
 		this.handleSetStepperBtnStatus()
-		this.inputValueChange()
-		if(type != 'init'){
-			this.onChange(this.value)
+		if(trigger != 'valueChange'){
+			this.inputValueChange()
+			if(trigger != 'init'){
+				this.onChange(this.value)
+			}
 		}
 	}
 	// 监听inputNumChange改变按钮状态
@@ -266,7 +263,6 @@ export struct IBestStepper {
 					.backgroundColor(IBestStepperColor.bg)
 					.borderRadius(0)
 					.textAlign(TextAlign.Center)
-					.onChange((val) => this.handleInputNumChange('change', val))
 					.onBlur(() => this.handleInputNumChange('blur', this.inputNumValue))
 					.focusable(!(this.disabled || this.disableInput))
 			}

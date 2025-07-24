@@ -317,6 +317,10 @@
 			"value": "ColorPicker"
 		},
 		{
+			"name": "component_contactAddress",
+			"value": "ContactAddress"
+		},
+		{
 			"name": "component_imageCropper",
 			"value": "ImageCropper"
 		},

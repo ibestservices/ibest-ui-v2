@@ -31,7 +31,7 @@ export default class GlobalStore {
 		// 监听颜色模式变化
 		GlobalStore.setColorModeListener()
 		// 注册字体
-		font.registerFont({
+		windowStage.getMainWindowSync().getUIContext().getFont().registerFont({
 			familyName: 'ibestFont',
 			familySrc: $rawfile('ibest_font.woff')
 		})
@@ -41,12 +41,12 @@ export default class GlobalStore {
      */
 	private static getScreenAndAvoidSize(){
 		try {
-			let mainWindow: window.Window = GlobalStore.windowStage.getMainWindowSync()
+			let mainWindow: window.Window = GlobalStore.getMainWindow()
 			let screenInfo: window.WindowProperties = mainWindow.getWindowProperties()
 			let avoidArea = mainWindow.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM)
 			let systemDht = mainWindow.getWindowAvoidArea(window.AvoidAreaType.TYPE_NAVIGATION_INDICATOR)
-			let topSize = px2vp(avoidArea.topRect.height)
-			let navigationSize = px2vp(systemDht.bottomRect.height)
+			let topSize = GlobalStore.px2vp(avoidArea.topRect.height)
+			let navigationSize = GlobalStore.px2vp(systemDht.bottomRect.height)
 			let o = display.getDefaultDisplaySync().orientation
 			let screenWidth = screenInfo.windowRect.width
 			let screenHeight = screenInfo.windowRect.height
@@ -57,7 +57,7 @@ export default class GlobalStore {
 			saveAppStorage(IBestStorageKey.BOTTOM_BAR_HEIGHT, navigationSize)
 			mainWindow.on("avoidAreaChange", data => {
 				if (data.type == window.AvoidAreaType.TYPE_KEYBOARD) {
-					saveAppStorage(IBestStorageKey.KEYBOARD_HEIGHT, px2vp(data.area.bottomRect.height))
+					saveAppStorage(IBestStorageKey.KEYBOARD_HEIGHT, GlobalStore.px2vp(data.area.bottomRect.height))
 				}
 			})
 		}catch (e) {
@@ -101,5 +101,20 @@ export default class GlobalStore {
 	public static setGlobalConfig(option?: IBestGlobalConfigType){
 		AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG, () => new IBestGlobalConfig(option))
 		setIBestUIBaseStyle()
+	}
+	/**
+	 * 获取mainWindow
+	 */
+	public static getMainWindow(){
+		return GlobalStore.windowStage.getMainWindowSync()
+	}
+	/**
+	 * 尺寸转换
+	 */
+	public static px2vp(value: number){
+		return GlobalStore.getMainWindow().getUIContext().px2vp(value)
+	}
+	public static vp2px(value: number){
+		return GlobalStore.getMainWindow().getUIContext().vp2px(value)
 	}
 }

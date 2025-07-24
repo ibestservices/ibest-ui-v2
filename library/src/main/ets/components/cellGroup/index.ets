@@ -29,7 +29,7 @@ export struct IBestCellGroup {
 	@Param radius: IBestStringNumber = this.baseStyle.borderRadiusLg as string
 	/**
 	 * 标题内边距
-	 * @since 2.1.2
+	 * @since 0.0.7
 	 */
 	@Param titlePadding: IBestStringNumber | Padding = this.baseStyle.spaceMd as string
 	/**

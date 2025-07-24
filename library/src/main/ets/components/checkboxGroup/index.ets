@@ -1,7 +1,7 @@
 import { emitter } from '../../utils/EventEmitter';
 import { convertDimensionsWidthUnit, getEventName, getSizeByUnit, sleep } from '../../utils/utils';
 import { CHECKBOX_GROUP_EVENT_NAME, COMPONENT_NAME, IBestCheckboxGroupController } from './index.type';
-import { IBestStringNumber } from '../../model/Global.type';
+import { IBestAwaitable, IBestStringNumber } from '../../model/Global.type';
 
 @ComponentV2
 export struct IBestCheckboxGroup {
@@ -45,7 +45,7 @@ export struct IBestCheckboxGroup {
 	/**
 	 * 改变前回调
      */
-	@Event beforeChange?: (checkedItemNames: IBestStringNumber[]) => Promise<boolean> | boolean = undefined
+	@Event beforeChange?: (checkedItemNames: IBestStringNumber[]) => IBestAwaitable = undefined
 	@Event $activeList: (actives: IBestStringNumber[]) => void = () => {}
 
 	@Local uniId: number = 0
