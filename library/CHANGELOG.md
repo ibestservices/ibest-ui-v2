@@ -1,6 +1,6 @@
 # 版本记录
 
-## 0.0.8
+## 0.0.9 - 5.0.3(15)
 #### 新增:
 1. 新增 IBestContactAddress 联系人地址组件;
 2. IBestCell 新增 arrowSize arrowColor cellPadding 属性;
