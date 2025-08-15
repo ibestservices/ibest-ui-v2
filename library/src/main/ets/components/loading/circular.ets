@@ -1,9 +1,10 @@
 import { UIContext } from '@ohos.arkui.UIContext';
-import { IBestGlobalConfig, IBestStorageKey, IBestStringNumber } from '../../model/Global.type';
+import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type';
 import { GRAY_COLOR } from '../../theme-chalk/src/color';
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container';
 import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit } from '../../utils/utils';
 import { AppStorageV2 } from '@kit.ArkUI';
+import { IBestGlobalConfig } from '../../model/GlobalConfig';
 
 class Point {
 	x: number

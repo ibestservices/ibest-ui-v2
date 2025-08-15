@@ -200,6 +200,10 @@ struct Index {
 			title: $r("app.string.display_component"),
 			list: [
 				{
+					name: $r("app.string.component_avatar"),
+					path: "Avatar"
+				},
+				{
 					name: $r("app.string.component_badge"),
 					path: "Badge"
 				},
@@ -246,6 +250,10 @@ struct Index {
 				{
 					name: $r("app.string.component_progress"),
 					path: "Progress"
+				},
+				{
+					name: $r("app.string.component_sectorprogress"),
+					path: "SectorProgress"
 				},
 				{
 					name: $r("app.string.component_skeleton"),

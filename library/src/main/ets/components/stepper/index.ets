@@ -185,17 +185,7 @@ export struct IBestStepper {
 		}
 		// 数据限制展示多少位
 		if (trigger != 'init' && this.decimalLength > 0) {
-			let index = val.indexOf(".")
-			if(index > -1){
-				let decimal = val.substring(index + 1)
-				if(!decimal){
-					val = this.preValue
-				}else if(decimal.length > this.decimalLength){
-					val = Number(val).toFixed(this.decimalLength)
-				}
-			}else {
-				val = Number(this.preValue).toFixed(this.decimalLength)
-			}
+			val = Number(val).toFixed(this.decimalLength)
 		}
 		this.preValue = this.inputNumValue = val.toString()
 		this.handleSetStepperBtnStatus()

@@ -64,6 +64,11 @@ export struct IBestDateTimePicker {
      */
 	@Param showSecond: boolean = true
 	/**
+	 * 外部圆角
+	 * @since 1.0.0
+	 */
+	@Param radius: Length | BorderRadiuses | LocalizedBorderRadiuses = 0
+	/**
 	 * 确认按钮点击事件
 	 */
 	@Event onConfirm: (value: IBestDateTimePickerResult) => void = () => {}
@@ -329,6 +334,7 @@ export struct IBestDateTimePicker {
 			confirmText: this.confirmText,
 			cancelText: this.cancelText,
 			optionFontSize: this.optionFontSize,
+			radius: this.radius,
 			onConfirm: () => {
 				this.onConfirm(this.getResult())
 			},

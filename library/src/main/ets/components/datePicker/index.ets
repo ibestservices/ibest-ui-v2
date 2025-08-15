@@ -83,6 +83,11 @@ export struct IBestDatePicker {
 	 */
 	@Param lunar: boolean = false
 	/**
+	 * 外部圆角
+	 * @since 1.0.0
+	 */
+	@Param radius: Length | BorderRadiuses | LocalizedBorderRadiuses = 0
+	/**
 	 * 过滤器
 	 */
 	@Event filter: (type: DatePickerColumnType, options: IBestPickerOption[]) => IBestPickerOption[] = (_, options) => options
@@ -288,6 +293,7 @@ export struct IBestDatePicker {
 			itemWidth: this.itemWidth,
 			contentHeight: this.contentHeight,
 			optionFontSize: this.optionFontSize,
+			radius: this.radius,
 			onConfirm: () => {
 				this.onConfirm(this.getResult())
 			},

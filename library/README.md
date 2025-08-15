@@ -102,6 +102,7 @@ OpenHarmony ohpm 环境配置等更多内容，请参考[如何安装 OpenHarmon
 ### 展示组件
 | 组件                   | 介绍                                 |                                                                                                   |
 |:---------------------|:-----------------------------------|---------------------------------------------------------------------------------------------------|
+| Avatar 头像            | 用于展示用户头像。                          | <a href="https://ibestui-v2.ibestservices.com/components/avatar/" target="_blank">文档</a>          |
 | Badge 徽标             | 在右上角展示徽标数字或小红点。                    | <a href="https://ibestui-v2.ibestservices.com/components/badge/" target="__blank">文档</a>          |
 | CircleProgress 环形进度条 | 圆环形的进度条组件。                         | <a href="https://ibestui-v2.ibestservices.com/components/circleProgress/" target="__blank">文档</a> |
 | Collapse 折叠面板        | 将一组内容放置在多个折叠面板中，点击面板的标题可以展开或收缩其内容。 | <a href="https://ibestui-v2.ibestservices.com/components/collapse/" target="__blank">文档</a>       |
@@ -113,9 +114,10 @@ OpenHarmony ohpm 环境配置等更多内容，请参考[如何安装 OpenHarmon
 | ImagePreview 图片预览    | 图片放大预览。                            | <a href="https://ibestui-v2.ibestservices.com/components/imagepreview/" target="__blank">文档</a>   |
 | NoticeBar 通知栏        | 用于循环播放展示一组消息通知。                    | <a href="https://ibestui-v2.ibestservices.com/components/noticeBar/" target="__blank">文档</a>      |
 | Popover 气泡弹出框        | 弹出式的气泡菜单。                          | <a href="https://ibestui-v2.ibestservices.com/components/popover/" target="__blank">文档</a>        |
+| Progress 进度条         | 用于展示操作的当前进度。                       | <a href="https://ibestui-v2.ibestservices.com/components/progress/" target="__blank">文档</a>       |
+| SectorProgress 扇形进度条 | 用于展示进度、占比。                         | <a href="https://ibestui-v2.ibestservices.com/components/sectorProgress/" target="_blank">文档</a>  |
 | Skeleton 骨架屏         | 用于在内容加载过程中展示一组占位图形。                | <a href="https://ibestui-v2.ibestservices.com/components/skeleton/" target="_blank">文档</a>        |
 | Steps 步骤条            | 用于展示操作流程的各个环节，让用户了解当前的操作在整体流程中的位置。 | <a href="https://ibestui-v2.ibestservices.com/components/steps/" target="_blank">文档</a>           |
-| Progress 进度条         | 用于展示操作的当前进度。                       | <a href="https://ibestui-v2.ibestservices.com/components/progress/" target="__blank">文档</a>       |
 | Table 表格             | 用于展示多条结构类似的数据。                     | <a href="https://ibestui-v2.ibestservices.com/components/table/" target="__blank">文档</a>          |
 | Tag 标签               | 用于标记关键词和概括主要内容。                    | <a href="https://ibestui-v2.ibestservices.com/components/tag/" target="__blank">文档</a>            |
 | TextEllipsis 文本省略    | 对长文本进行省略，支持展开/收起。                  | <a href="https://ibestui-v2.ibestservices.com/components/textEllipsis/" target="__blank">文档</a>   |
@@ -144,12 +146,14 @@ ohos.permission.INTERNET
 
 | 项目                       | 描述                                                               |                                                                                                                           |
 |:-------------------------|:-----------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------|
-| @ibestservices/area-data | 中国省市区数据，适用于鸿蒙 ArkUI 的 TextPicker 和 IBest-UI 的 IBestCascader 等组件。 | <a style="color:#0366d6;" onclick="openPage('https://ohpm.openharmony.cn/#/cn/detail/@ibestservices%2Farea-data')">地址</a> |
+| @ibestservices/ibest-ui  | 一个**轻量、简单易用、可定制主题、支持深色模式和浅色模式**的鸿蒙开源UI组件库，基于状态管理v1版本。            | <a style="color:#0366d6;" onclick="openPage('https://ohpm.openharmony.cn/#/cn/detail/@ibestservices%2Fibest-ui')">地址</a>  |
 | @ibestservices/ucharts   | 一个类型丰富、高性能、可扩展、支持主题定制的图表库。                                       | <a style="color:#0366d6;" onclick="openPage('https://ohpm.openharmony.cn/#/cn/detail/@ibestservices%2Fucharts')">地址</a>   |
+| @ibestservices/area-data | 中国省市区数据，适用于鸿蒙 ArkUI 的 TextPicker 和 IBest-UI 的 IBestCascader 等组件。 | <a style="color:#0366d6;" onclick="openPage('https://ohpm.openharmony.cn/#/cn/detail/@ibestservices%2Farea-data')">地址</a> |
 
 ## 链接
 - [Github](https://github.com/ibestservices/ibest-ui-v2)
 - [Gitee](https://gitee.com/ibestservices/ibest-ui-v2)
+- [Gitcode](https://gitcode.com/ibestservices/ibest-ui)
 - [更新日志](https://github.com/ibestservices/ibest-ui-v2/releases)
 
 ## 交流QQ群

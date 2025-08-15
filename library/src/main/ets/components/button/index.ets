@@ -106,6 +106,16 @@ export struct IBestButton {
      */
 	@Param space: IBestStringNumber = this.baseStyle.spaceBase as string
 	/**
+	 * 内边距
+	 * @since 1.0.0
+	 */
+	@Param btnPadding: Length | Padding | LocalizedPadding = ""
+	/**
+	 * 是否开启按压态
+	 * @since 1.0.0
+	 */
+	@Param stateEffect: boolean = true
+	/**
 	 * 默认插槽
 	 */
 	@BuilderParam defaultBuilder: CustomBuilder
@@ -270,7 +280,7 @@ export struct IBestButton {
 		}
 		.width(getSizeByUnit(this.getBtnSize().width))
 		.height(getSizeByUnit(this.getBtnSize().height))
-		.padding({ left: getSizeByUnit(this.getBtnSize().padding), right: getSizeByUnit(this.getBtnSize().padding), top: 0, bottom: 0 })
+		.padding(this.btnPadding || { left: getSizeByUnit(this.getBtnSize().padding), right: getSizeByUnit(this.getBtnSize().padding), top: 0, bottom: 0 })
 		.borderWidth(convertDimensionsWidthUnit(this.hairline ? 0.5 : 1))
 		.borderRadius(getSizeByUnit(this.getBorderRadius()))
 		.fontColor(this.getTextColor())
@@ -279,6 +289,7 @@ export struct IBestButton {
 		.hitTestBehavior(this.loading ? HitTestMode.None : HitTestMode.Default)
 		.enabled(!this.disabled)
 		.opacity(this.disabled && this.plain ? 0.5 : 1)
+		.stateEffect(this.stateEffect)
 		.onClick(() => {
 			this.onBtnClick()
 		})

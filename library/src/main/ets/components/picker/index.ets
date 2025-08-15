@@ -96,6 +96,11 @@ export struct IBestPicker{
      */
 	@Param optionFontSize: IBestStringNumber = this.baseStyle.fontSizeLg as string
 	/**
+	 * 外部圆角
+	 * @since 1.0.0
+	 */
+	@Param radius: Length | BorderRadiuses | LocalizedBorderRadiuses = 0
+	/**
 	 * 确认按钮点击事件
 	 */
 	@Event onConfirm: (selectedValues: IBestStringNumber[], selectTexts: string[]) => void = () => {}
@@ -542,6 +547,8 @@ export struct IBestPicker{
 		.width(CONTAINER_SIZE.FULL)
 		.alignItems(HorizontalAlign.Start)
 		.backgroundColor(IBestPickerColor.bgColor)
+		.borderRadius(getSizeByUnit(this.radius))
+		.clip(true)
 		.onVisibleAreaChange([0, 1], (isExpanding: boolean) => {
 			if(isExpanding && !this.itemCalcHeight){
 				this.initSize()

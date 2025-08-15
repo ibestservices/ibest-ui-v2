@@ -24,7 +24,6 @@ export struct IBestDropdownMenu{
      */
     @Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
     @Local topAvoidHeight: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.TOP_AVOID_HEIGHT)!
-    @Local screenHeight: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.TOP_AVOID_HEIGHT)!
     /**
      * 分组id
      */
@@ -145,6 +144,7 @@ export struct IBestDropdownMenu{
     }
     aboutToDisappear() {
         emitter.off(getEventName(COMPONENT_NAME, DROPDOWN_MENU_EVENT_NAME.OPTION_CHANGE, this.groupId), this.uniId)
+        this.manualClose()
     }
     // 更新选项
     updateOption(type: string, option: IBestDropdownMenuContentType, callBack?: (index: number) => void) {

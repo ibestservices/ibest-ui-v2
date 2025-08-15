@@ -4,6 +4,8 @@ import { convertDimensionsWidthUnit } from '../../utils/utils'
 import { IBestBadgeColor } from './color'
 import { IBestBadgePosition } from './index.type'
 import { AppStorageV2 } from '@kit.ArkUI'
+import { IBestIcon } from '../icon'
+
 @ComponentV2
 export struct IBestBadge {
 	/**
@@ -34,6 +36,21 @@ export struct IBestBadge {
 	 * 徽标位置
 	 */
 	@Param badgePosition: IBestBadgePosition = 'top-right'
+	/**
+	 * 徽标图标, 优先级高于 content dot
+	 * @since 1.0.0
+	 */
+	@Param icon: ResourceStr = ''
+	/**
+	 * 徽标图标大小
+	 * @since 1.0.0
+	 */
+	@Param iconSize: IBestStringNumber = convertDimensionsWidthUnit(12)
+	/**
+	 * 徽标图标颜色
+	 * @since 1.0.0
+	 */
+	@Param iconColor: ResourceColor = ''
 	/**
 	 * 自定义内容
 	 */
@@ -101,7 +118,15 @@ export struct IBestBadge {
 			if (this.defaultBuilder) {
 				this.defaultBuilder()
 			}
-			if (this.dot) {
+			if(this.icon){
+				IBestIcon({
+					name: this.icon,
+					iconSize: this.iconSize,
+					color: this.iconColor
+				})
+					.position(this.getPosition())
+					.translate(this.getTranslate())
+			} else if (this.dot) {
 				Text()
 					.width(convertDimensionsWidthUnit(8))
 					.aspectRatio(1)

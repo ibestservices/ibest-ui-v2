@@ -83,20 +83,14 @@ export struct IBestCollapseItem {
     @Local contentHeight: number = 0
     @Local isReady: boolean = false
     @Local isShow: boolean = false
-    private uiContext = this.getUIContext()
 
     aboutToAppear(): void {
         this.uniId = this.getUniqueId()
-        this.getContentHeight()
-        if(this.groupId){
-            emitter.emit(getEventName(COMPONENT_NAME, COLLAPSE_EVENT_NAME.GET_ALL_ITEM_NAME, this.groupId), this.name, this.disabled || this.readOnly)
-            emitter.on(getEventName(COMPONENT_NAME, COLLAPSE_EVENT_NAME.INIT_ITEM, this.groupId), this.uniId, (activeNames: IBestStringNumber | IBestStringNumber[]): void => this.changeState(activeNames))
-        }
+        emitter.emit(getEventName(COMPONENT_NAME, COLLAPSE_EVENT_NAME.GET_ALL_ITEM_NAME, this.groupId), this.name, this.disabled || this.readOnly)
+        emitter.on(getEventName(COMPONENT_NAME, COLLAPSE_EVENT_NAME.INIT_ITEM, this.groupId), this.uniId, (activeNames: IBestStringNumber | IBestStringNumber[]): void => this.changeState(activeNames))
     }
     aboutToDisappear(): void {
-        if(this.groupId){
-            emitter.off(getEventName(COMPONENT_NAME, COLLAPSE_EVENT_NAME.INIT_ITEM, this.groupId), this.uniId)
-        }
+        emitter.off(getEventName(COMPONENT_NAME, COLLAPSE_EVENT_NAME.INIT_ITEM, this.groupId), this.uniId)
     }
     getIsDisabled(){
         return this.disabled || this.readOnly
@@ -106,15 +100,6 @@ export struct IBestCollapseItem {
             activeNames = activeNames.toString()
         }
         this.isExpand = typeof activeNames == "string" ? activeNames == this.name : activeNames.includes(this.name)
-    }
-    getContentHeight(){
-        setTimeout(() => {
-            this.contentHeight = getComponentsInfo(this.uiContext, `ibest_collapse_item_${this.uniId}`).height
-            this.isReady = true
-            setTimeout(() => {
-                this.isShow = true
-            }, 250)
-        }, 50)
     }
     getHeight(){
         return this.isReady ? this.isExpand ? this.contentHeight : 0 : "auto"
@@ -129,10 +114,11 @@ export struct IBestCollapseItem {
         Column(){
             Row(){
                 if(this.icon){
-                    Image(this.icon)
-                        .width(getSizeByUnit(this.iconSize))
-                        .fillColor(this.iconColor)
-                        .margin({right: this.baseStyle.spaceBase})
+                    IBestIcon({
+                        name: this.icon,
+                        iconSize: this.iconSize,
+                        color: this.iconColor
+                    }).margin({right: this.baseStyle.spaceBase})
                 }
                 Text(this.title)
                     .layoutWeight(1)
@@ -168,8 +154,8 @@ export struct IBestCollapseItem {
             .onClick(() => {
                 this.toggle()
             })
-            Row(){
-                Row(){
+            Scroll(){
+                Column(){
                     Divider()
                         .height(1)
                         .color(IBestCollapseColor.borderColor)
@@ -180,10 +166,21 @@ export struct IBestCollapseItem {
                 }
                 .width(CONTAINER_SIZE.FULL)
                 .padding({left: this.baseStyle.spaceMd, right: this.baseStyle.spaceMd, top: this.baseStyle.spaceSm, bottom: this.baseStyle.spaceSm})
-                .id(`ibest_collapse_item_${this.uniId}`)
+                .onAreaChange((oldVal: Area, newVal: Area) => {
+                    if(oldVal.height != newVal.height){
+                        this.contentHeight = newVal.height as number
+                        if(!this.isShow){
+                            this.isReady = true
+                            setTimeout(() => {
+                                this.isShow = true
+                            }, 250)
+                        }
+                    }
+                })
             }
+            .width(CONTAINER_SIZE.FULL)
             .height(this.getHeight())
-            .clip(true)
+            .scrollBar(BarState.Off)
             .animation({
                 duration: this.isShow ? 200 : 0,
                 curve: Curve.EaseInOut

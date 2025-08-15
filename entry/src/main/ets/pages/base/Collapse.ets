@@ -14,6 +14,7 @@ struct CollapsePage {
     @Param title: string = ''
     @Local activeName: string[] = ['1']
     @Local groupId: string = 'group'
+    @Local list: string[] = ['1']
 
     @Local activeName1: number = 1
     @Local groupId1: string = "group1"
@@ -27,6 +28,7 @@ struct CollapsePage {
     @Local activeName4: number[] = [2]
     @Local groupId4: string = "group4"
     private controller: IBestCollapseController = new IBestCollapseController()
+
     build() {
 		NavDestination() {
 			CustomNavBar({title: this.title})
@@ -43,7 +45,14 @@ struct CollapsePage {
                                 index: 0,
                                 title: '标题1'
                             }){
-                                Text('代码是写出来给人看的，附带能在机器上运行。').fontSize(14).fontColor(modeColor.textColor4)
+                                ForEach(this.list, (item: string, index: number) => {
+                                    Text('代码是写出来给人看的，附带能在机器上运行。')
+                                        .fontSize(14)
+                                        .fontColor(modeColor.textColor4)
+                                        .onClick(() => {
+                                            this.list.push('1')
+                                        })
+                                })
                             }
                             IBestCollapseItem({
                                 groupId: this.groupId,

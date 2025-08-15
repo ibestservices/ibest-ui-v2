@@ -75,6 +75,11 @@ export struct IBestTimePicker {
 	 */
 	@Param optionFontSize: IBestStringNumber = this.baseStyle.fontSizeLg as string
 	/**
+	 * 外部圆角
+	 * @since 1.0.0
+	 */
+	@Param radius: Length | BorderRadiuses | LocalizedBorderRadiuses = 0
+	/**
 	 * 过滤器
 	 */
 	@Event filter: (type: IBestTimePickerColumnType, options: IBestPickerOption[]) => IBestPickerOption[] = (_, options) => options
@@ -248,6 +253,7 @@ export struct IBestTimePicker {
 			itemWidth: this.itemWidth,
 			contentHeight: this.contentHeight,
 			optionFontSize: this.optionFontSize,
+			radius: this.radius,
 			onConfirm: (selectedValues) => {
 				this.onConfirm(selectedValues as string[])
 			},
