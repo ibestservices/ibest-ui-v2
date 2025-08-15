@@ -68,9 +68,42 @@ export struct IBestDivider{
      */
 	@Param leftRightMargin: IBestStringNumber = this.baseStyle.spaceXs as string
 	/**
+	 * 虚线间距, 仅在dashed为true时生效
+	 * @since 1.0.0
+	 */
+	@Param dashGap?: LengthMetrics = undefined
+	/**
+	 * 虚线线段长度, 仅在dashed为true时生效
+	 * @since 1.0.0
+	 */
+	@Param dashWidth?: LengthMetrics = undefined
+	/**
+	 * 右侧线颜色, 默认与lineColor一致
+	 * @since 1.0.0
+	 */
+	@Param @Once rightLineColor: ResourceColor = ''
+	/**
+	 * 右侧线是否使用虚线, 默认与dashed一致
+	 * @since 1.0.0
+	 */
+	@Param @Once rightDashed?: boolean = undefined
+	/**
 	 * 自定义文本内容
      */
 	@BuilderParam textBuilder: CustomBuilder
+
+	@Monitor('lineColor')
+	lineColorChange(){
+		if(!this.rightLineColor){
+			this.rightLineColor = this.lineColor
+		}
+	}
+	@Monitor('dashed')
+	dashedChange(){
+		if(this.rightDashed === undefined){
+			this.rightDashed = this.dashed
+		}
+	}
 
 	build() {
 		if(this.vertical){
@@ -78,7 +111,13 @@ export struct IBestDivider{
 				.width(1)
 				.height(getSizeByUnit(this.lineHeight))
 				.scale({x: this.hairline ? 0.5 : 1})
-				.border({ width: { left: this.hairline ? 1 : getSizeByUnit(this.lineWidth) }, color: this.lineColor, style: this.dashed ? BorderStyle.Dashed : BorderStyle.Solid })
+				.border({
+					width: { left: this.hairline ? 1 : getSizeByUnit(this.lineWidth) },
+					color: this.lineColor,
+					style: this.dashed ? BorderStyle.Dashed : BorderStyle.Solid,
+					dashGap: this.dashGap,
+					dashWidth: this.dashWidth
+				})
 				.margin({left: getSizeByUnit(this.leftRightMargin), right: getSizeByUnit(this.leftRightMargin)})
 		}else{
 			Row(){
@@ -87,7 +126,13 @@ export struct IBestDivider{
 					.height(1)
 					.layoutWeight(this.leftLineWidth ? "" : 1)
 					.scale({y: this.hairline ? 0.5 : 1})
-					.border({ width: { top: this.hairline ? 1 : getSizeByUnit(this.lineWidth) }, color: this.lineColor, style: this.dashed ? BorderStyle.Dashed : BorderStyle.Solid })
+					.border({
+						width: { top: this.hairline ? 1 : getSizeByUnit(this.lineWidth) },
+						color: this.lineColor,
+						style: this.dashed ? BorderStyle.Dashed : BorderStyle.Solid,
+						dashGap: this.dashGap,
+						dashWidth: this.dashWidth
+					})
 				if(this.textBuilder || this.text){
 					Row(){
 						if(this.textBuilder){
@@ -104,7 +149,13 @@ export struct IBestDivider{
 						.height(1)
 						.layoutWeight(this.rightLineWidth ? "" : 1)
 						.scale({y: this.hairline ? 0.5 : 1})
-						.border({ width: { top: this.hairline ? 1 : getSizeByUnit(this.lineWidth) }, color: this.lineColor, style: this.dashed ? BorderStyle.Dashed : BorderStyle.Solid })
+						.border({
+							width: { top: this.hairline ? 1 : getSizeByUnit(this.lineWidth) },
+							color: this.rightLineColor || this.lineColor,
+							style: (this.rightDashed ?? this.dashed) ? BorderStyle.Dashed : BorderStyle.Solid,
+							dashGap: this.dashGap,
+							dashWidth: this.dashWidth
+						})
 				}
 			}
 			.width(CONTAINER_SIZE.FULL)

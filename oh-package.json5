@@ -8,7 +8,7 @@
   "license": "",
   "dependencies": {
     "@ibestservices/ibest-ui-v2": "file:library",
-    "@ibestservices/area-data": "^0.0.4",
+    "@ibestservices/area-data": "^0.0.6",
     "@hview/dayjs": "^1.11.11"
   },
   "devDependencies": {

@@ -22,6 +22,10 @@ export enum STEPS_EVENT_NAME {
 	 */
 	GET_MAX_MARK_SIZE= "GET_MAX_MARK_SIZE",
     /**
+     * 获取步骤项宽度
+     */
+    GET_STEP_ITEM_WIDTH = "GET_STEP_ITEM_WIDTH",
+    /**
      * 激活索引变化
      */
     ACTIVE_CHANGE = "ACTIVE_CHANGE"

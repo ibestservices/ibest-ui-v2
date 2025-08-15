@@ -1,7 +1,7 @@
 import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit } from '../../utils/utils';
 import { AppStorageV2, ComponentContent, OverlayManager } from '@kit.ArkUI';
 import { IBestFloatBubbleDragAxis, IBestFloatBubbleParams } from './index.type';
-import { IBestEdges, IBestStorageKey, IBestStringNumber } from '../../model/Global.type';
+import { IBestEdges, IBestShape, IBestStorageKey, IBestStringNumber } from '../../model/Global.type';
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container';
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type';
 import { IBestIcon } from '../icon';
@@ -201,7 +201,7 @@ export struct IBestFloatBubble{
 	/**
 	 * 气泡样式类型
 	 */
-	@Param shape: "square" | "circle" = "circle"
+	@Param shape: IBestShape = "circle"
 	/**
 	 * 气泡图标
 	 */

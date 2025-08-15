@@ -1,10 +1,10 @@
 import window from '@ohos.window'
-import font from '@ohos.font'
 import { saveAppStorage } from './utils'
 import { bundleManager, common } from '@kit.AbilityKit'
-import { IBestGlobalConfig, IBestGlobalConfigType, IBestStorageKey } from '../model/Global.type'
+import { IBestStorageKey } from '../model/Global.type'
 import { setIBestUIBaseStyle } from '../theme-chalk/src'
 import { AppStorageV2, display } from '@kit.ArkUI'
+import { IBestGlobalConfig, IBestGlobalConfigType } from '../model/GlobalConfig'
 
 // 全局存储中心
 export default class GlobalStore {

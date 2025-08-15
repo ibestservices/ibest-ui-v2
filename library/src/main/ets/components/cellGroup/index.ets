@@ -26,12 +26,17 @@ export struct IBestCellGroup {
 	/**
 	 * 圆角大小, 仅inset为true时有效
      */
-	@Param radius: IBestStringNumber = this.baseStyle.borderRadiusLg as string
+	@Param radius: Length | BorderRadiuses | LocalizedBorderRadiuses = this.baseStyle.borderRadiusLg as string
 	/**
 	 * 标题内边距
 	 * @since 0.0.7
 	 */
-	@Param titlePadding: IBestStringNumber | Padding = this.baseStyle.spaceMd as string
+	@Param titlePadding: Padding | Length | LocalizedPadding = this.baseStyle.spaceMd as string
+	/**
+	 * 外边距, 仅inset为true时有效
+	 * @since 1.0.0
+	 */
+	@Param outerMargin: Padding | Length | LocalizedPadding = { left: this.baseStyle.spaceMd, right: this.baseStyle.spaceMd }
 	/**
 	 * 默认插槽
 	 */
@@ -43,11 +48,7 @@ export struct IBestCellGroup {
 	}
 	// 获取margin
 	getMargin() {
-		return this.inset ? { left: this.baseStyle.spaceMd, right: this.baseStyle.spaceMd } as Padding : 0
-	}
-	// 获取内边距
-	getPadding() {
-		return ['string', 'number'].includes(typeof this.titlePadding) ? getSizeByUnit(this.titlePadding as IBestStringNumber) : this.titlePadding
+		return this.inset ? getSizeByUnit(this.outerMargin) : 0
 	}
 	build() {
 		Column() {
@@ -59,7 +60,7 @@ export struct IBestCellGroup {
 						width: { bottom: this.getBorderWidth() },
 						color: IBestCellGroupColor.borderColor
 					})
-					.padding(this.getPadding())
+					.padding(getSizeByUnit(this.titlePadding))
 					.lineHeight(convertDimensionsWidthUnit(16))
 					.fontSize(this.baseStyle.fontSizeMd)
 					.fontColor(IBestCellGroupColor.textColor)

@@ -2,7 +2,6 @@ import { AppStorageV2, componentUtils, ComponentUtils, LengthUnit, MeasureOption
 import {
 	ComInfoType,
 	IBestBaseDataType,
-	IBestGlobalConfig,
 	IBestStorageKey,
 	IBestStringNumber
 } from '../model/Global.type'
@@ -10,6 +9,8 @@ import { AnyType } from '../model/AnyType'
 import GlobalStore from './GlobalStore'
 import { util } from '@kit.ArkTS'
 import { image } from '@kit.ImageKit'
+import { IBestGlobalConfig } from '../model/GlobalConfig'
+
 /**
  * 休眠
  * @param {number} time 休眠时间
@@ -109,6 +110,18 @@ export function padZero(num: number, targetLength = 2): string {
 		str = '0' + str
 	}
 	return str
+}
+/**
+ * 取一个区间数
+ * @param {Number} min 最小值
+ * @param {Number} max 最大值
+ */
+export function random(min: number, max: number) {
+	if (min >= 0 && max > 0 && max >= min) {
+		const gab = max - min + 1
+		return Math.floor(Math.random() * gab + min)
+	}
+	return 0
 }
 /**
  * 获取组件信息

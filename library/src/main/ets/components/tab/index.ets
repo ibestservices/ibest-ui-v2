@@ -109,6 +109,11 @@ export struct IBestTabs{
 	 * @since 0.0.2
 	 */
 	@Param activeFontSize: IBestStringNumber = this.fontSize
+    /**
+     * 外侧圆角
+     * @since 1.0.0
+     */
+    @Param outerRadius: Length | BorderRadiuses | LocalizedBorderRadiuses = 0
 	/**
 	 * tabContent 内容列表
 	 * @since 0.0.2
@@ -208,7 +213,7 @@ export struct IBestTabs{
 			}
 			.width(this.tabWidthType == "flex" ? "100%" : "")
 			.height(getSizeByUnit(this.tabHeight))
-			.borderRadius(this.baseStyle.borderRadiusSm)
+			.borderRadius(this.outerRadius || this.baseStyle.borderRadiusSm)
 			.border({ width: this.type == "card" ? 1 : 0, color: this.getLineColor() })
 			// 标记线
 			if(this.type == "line" && this.showActiveLine){
@@ -359,6 +364,8 @@ export struct IBestTabs{
         }
         .width(CONTAINER_SIZE.FULL)
         .alignItems(HorizontalAlign.Start)
+        .borderRadius(getSizeByUnit(this.outerRadius))
+        .clip(true)
     }
 }
 
