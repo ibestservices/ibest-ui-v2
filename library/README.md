@@ -187,4 +187,4 @@ Non-Bundled Plugins:
 ```
 
 ## 开源协议
-本项目基于 Apache License 2.0，请自由地享受和参与开源。
+本项目基于 MIT 协议，请自由地享受和参与开源。

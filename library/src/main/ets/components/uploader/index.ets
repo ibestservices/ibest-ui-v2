@@ -102,7 +102,7 @@ export struct IBestUploader {
 	 * 删除前回调
 	 * @since 0.0.8
 	 */
-	@Event beforeRemove?: (file: IBestUploaderFile, index: number) => IBestAwaitable
+	@Event beforeRemove?: (file: IBestUploaderFile, index: number) => IBestAwaitable = undefined
 	/**
 	 * 文件插入前回调
 	 */
