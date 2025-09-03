@@ -1,12 +1,12 @@
-import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
+import { IBestBorderSizeType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { GRAY_COLOR } from '../../theme-chalk/src/color'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestUIBaseStyle } from '../../theme-chalk/src/index.type'
 import { SIZE } from '../../theme-chalk/src/size.type'
-import { convertDimensionsWidthUnit, getSizeByUnit } from '../../utils/utils'
+import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit } from '../../utils/utils'
 import { IBestIcon } from '../icon'
 import { IBestCellColor } from './color'
-import { ARROW_DIRECTION, BorderSizeType, CellSizeType } from './index.type'
+import { ARROW_DIRECTION, CellSizeType } from './index.type'
 import { AppStorageV2 } from '@kit.ArkUI'
 
 @ComponentV2
@@ -120,11 +120,11 @@ export struct IBestCell {
 	/**
 	 * 底部分割线尺寸类型
 	 */
-	@Param borderSizeType: BorderSizeType = "center"
+	@Param borderSizeType: IBestBorderSizeType = "center"
 	/**
 	 * 底部分割线left值
 	 */
-	@Param borderLeft: Dimension = this.baseStyle.spaceMd as Dimension
+	@Param @Once borderLeft?: Dimension = undefined
 	/**
 	 * 底部分割线颜色
 	 */
@@ -172,15 +172,41 @@ export struct IBestCell {
 	 * 点击单元格的回调
 	 */
 	@Event onCellClick: () => void = () => {}
-	/**
-	 * 根据arrow direction获取图标旋转角度
-	 */
-	arrowDirection2RotateDegMap: Record<string, number> = {
+
+	@Local borderRight: number = 0
+	// 根据arrow direction获取图标旋转角度
+	private arrowDirection2RotateDegMap: Record<string, number> = {
 		[ARROW_DIRECTION.RIGHT]: 0,
 		[ARROW_DIRECTION.TOP]: -90,
 		[ARROW_DIRECTION.BOTTOM]: 90,
 		[ARROW_DIRECTION.LEFT]: 180,
 	}
+	private uiContext = this.getUIContext()
+	private uniId: number = 0
+
+	@Builder cellDividerBuilder(){
+		Divider()
+			.width(this.borderSizeType == 'center' ? `calc(100% - ${this.borderLeft}vp - ${this.borderRight}vp)` : CONTAINER_SIZE.FULL)
+			.height(1)
+			.color(this.bdColor)
+			.position({ left: this.borderSizeType == "full" ? 0 : this.borderLeft, bottom: 0 })
+	}
+
+	aboutToAppear(){
+		this.uniId = this.getUniqueId()
+		setTimeout(() => {
+			this.init()
+		}, 100)
+	}
+	init(){
+		if(this.borderLeft === undefined){
+			this.borderLeft = getComponentsInfo(this.uiContext, `ibest_cell_left_${this.uniId}`).localLeft
+		}
+		let fullWidth = getComponentsInfo(this.uiContext, `ibest_cell_${this.uniId}`).width
+		let rightInfo = getComponentsInfo(this.uiContext, `ibest_cell_right_${this.uniId}`)
+		this.borderRight = fullWidth - rightInfo.width - rightInfo.localLeft
+	}
+
 	/**
 	 * 根据size获取单元格的尺寸
 	 */
@@ -238,7 +264,7 @@ export struct IBestCell {
 						} else {
 							Text(this.title)
 								.layoutWeight(1)
-								.fontSize(this.computedCellSize.fontSize)
+								.fontSize(getSizeByUnit(this.computedCellSize.fontSize, true))
 								.fontColor(this.titleColor)
 						}
 					}.width(CONTAINER_SIZE.FULL)
@@ -251,7 +277,7 @@ export struct IBestCell {
 						if (this.label) {
 							Text(this.label)
 								.width(CONTAINER_SIZE.FULL)
-								.fontSize(this.computedCellSize.labelFontSize)
+								.fontSize(getSizeByUnit(this.computedCellSize.labelFontSize, true))
 								.margin({
 									top: this.baseStyle.spaceBase
 								})
@@ -262,6 +288,7 @@ export struct IBestCell {
 				.layoutWeight(this.leftContentWidth ? 0 : 1)
 				.width(getSizeByUnit(this.leftContentWidth))
 				.alignItems(this.center ? HorizontalAlign.Center : HorizontalAlign.Start)
+				.id(`ibest_cell_left_${this.uniId}`)
 				Row() {
 					Row() {
 						if (this.valueBuilder) {
@@ -269,7 +296,7 @@ export struct IBestCell {
 						} else {
 							Text(this.value)
 								.textAlign(TextAlign.Start)
-								.fontSize(this.computedCellSize.fontSize)
+								.fontSize(getSizeByUnit(this.computedCellSize.fontSize, true))
 								.fontColor(this.valueColor)
 						}
 					}.justifyContent(FlexAlign.End).layoutWeight(1)
@@ -304,26 +331,18 @@ export struct IBestCell {
 				}
 				.layoutWeight(1)
 				.alignItems(this.getAlignItems())
-				if (this.hasBorder && this.borderSizeType == "center") {
-					CellDivider({
-						bottom: "-" + this.computedCellSize.padding as Dimension,
-						bdColor: this.bdColor
-					})
-				}
+				.id(`ibest_cell_right_${this.uniId}`)
 			}
 			.alignItems(this.getAlignItems())
 			.width(CONTAINER_SIZE.FULL)
 			.padding(this.cellPadding ? getSizeByUnit(this.cellPadding) : {
-				top: this.computedCellSize.padding,
-				bottom: this.computedCellSize.padding,
+				top: getSizeByUnit(this.computedCellSize.padding),
+				bottom: getSizeByUnit(this.computedCellSize.padding),
 				left: getSizeByUnit(this.leftRightPadding),
 				right: getSizeByUnit(this.leftRightPadding)
 			})
-			if (this.hasBorder && this.borderSizeType != "center") {
-				CellDivider({
-					left: this.borderSizeType == "right" ? this.borderLeft : 0,
-					bdColor: this.bdColor
-				})
+			if (this.hasBorder) {
+				this.cellDividerBuilder()
 			}
 		}
 		.stateStyles({
@@ -339,21 +358,10 @@ export struct IBestCell {
 		})
 		.enabled(!this.disabled)
 		.opacity(this.disabled ? 0.6 : 1)
+		.clip(true)
+		.id(`ibest_cell_${this.uniId}`)
 		.onClick(() => {
 			this.onCellClick()
 		})
-	}
-}
-@ComponentV2
-struct CellDivider {
-	@Param bdColor: ResourceColor = ''
-	@Param left: Dimension = 0
-	@Param bottom: Dimension = 0
-	build() {
-		Divider()
-			.width("100%")
-			.height(1)
-			.color(this.bdColor)
-			.position({ left: this.left, bottom: this.bottom })
 	}
 }

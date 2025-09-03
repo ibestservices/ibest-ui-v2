@@ -165,6 +165,12 @@ struct FieldPage {
                             label: "网址",
                             prefix: "https://",
                             suffix: ".com",
+                        })
+                        IBestField({
+                            value: this.value23!!,
+                            label: "图标",
+                            prefixIcon: "location-o",
+                            suffixIcon: "setting-o",
                             hasBorder: false
                         })
                     }
@@ -189,6 +195,15 @@ struct FieldPage {
                 }
                 ListItem() {
                     ComponentShowContainer({ title: '点击反馈' }) {
+                        IBestField({
+                            value: this.value9!!,
+                            label: "地区",
+                            placeholder: "点击选择地区",
+                            clickable: true,
+                            onFieldClick: () => {
+                                IBestToast.show("点击")
+                            }
+                        })
                         IBestField({
                             value: this.value9!!,
                             label: "地区",
@@ -324,6 +339,34 @@ struct FieldPage {
                             label: "文本",
                             hasBorder: false,
                             customRightContent: (): void => this.radioContent()
+                        })
+                    }
+                }
+                ListItem() {
+                    ComponentShowContainer({ title: $r("app.string.custom_style", $r("app.string.border")) }) {
+                        IBestField({
+                            value: this.value!!,
+                            label: "full",
+                            readOnly: true,
+                            borderSizeType: 'full'
+                        })
+                        IBestField({
+                            value: this.value!!,
+                            label: "center",
+                            readOnly: true,
+                            borderSizeType: 'center'
+                        })
+                        IBestField({
+                            value: this.value!!,
+                            label: "right",
+                            readOnly: true,
+                            borderSizeType: 'right'
+                        })
+                        IBestField({
+                            value: this.value!!,
+                            label: "文本",
+                            readOnly: true,
+                            hasBorder: false
                         })
                     }
                 }

@@ -24,9 +24,10 @@ export struct IBestCheckbox {
 	 */
 	@Param @Once name: IBestStringNumber = ""
 	/**
-	 * 是否选中, 支持双向绑定
+	 * 是否选中, 支持双向绑定, 仅单独使用时有效
+	 * @since 2.1.7 开始支持string number类型
 	 */
-	@Param value: boolean = false
+	@Param value: IBestStringNumber | boolean = false
 	/**
 	 * 形状
 	 */
@@ -72,22 +73,32 @@ export struct IBestCheckbox {
      */
 	@Param bdColor: ResourceColor = IBestCheckboxColor.borderColor
 	/**
+	 * 选中时的值，仅单独使用时生效
+	 * @since 1.0.2
+	 */
+	@Param trueValue: IBestStringNumber = '1'
+	/**
+	 * 没有选中时的值，仅单独使用时生效
+	 * @since 1.0.2
+	 */
+	@Param falseValue: IBestStringNumber = '0'
+	/**
 	 * 改变的回调
 	 */
-	@Event onChange: (checked: boolean) => void = () => {}
+	@Event onChange: (checked: IBestStringNumber | boolean) => void = () => {}
 	/**
 	 * 改变前的回调
 	 */
 	@Event beforeChange?: (value: boolean) => IBestAwaitable = undefined
-	@Event $value: (checked: boolean) => void = () => {}
+	@Event $value: (checked: IBestStringNumber | boolean) => void = () => {}
 	/**
 	 * 自定义文本插槽
 	 */
-	@BuilderParam defaultBuilder: (data: IBestCheckboxBuilderParams) => void
+	@BuilderParam defaultBuilder: ($$: IBestCheckboxBuilderParams) => void
 	/**
 	 * 自定义图标插槽
 	 */
-	@BuilderParam iconBuilder: (data: IBestCheckboxBuilderParams) => void
+	@BuilderParam iconBuilder: ($$: IBestCheckboxBuilderParams) => void
 
 	@Local uniId: number = 0
 	@Local localValue: boolean = false
@@ -104,7 +115,7 @@ export struct IBestCheckbox {
 		if(this.defaultBuilder || this.label) {
 			Row() {
 				if (this.defaultBuilder) {
-					this.defaultBuilder({ checked: this.getValue(), disabled: this.getIsDisabled() })
+					this.defaultBuilder({ checked: this.getBooleanValue(), disabled: this.getIsDisabled() })
 				} else {
 					Text(this.label)
 						.fontColor(this.getLabelColor())
@@ -147,16 +158,16 @@ export struct IBestCheckbox {
 		}
 		return this.value
 	}
-	setValue(value: boolean) {
-		if (this.group) {
-			this.localValue = value
-		} else {
-			this.$value(value)
+	getBooleanValue(){
+		if(this.group){
+			return this.localValue
 		}
+		return typeof this.value === 'boolean' ? this.value : this.value === this.trueValue
 	}
 	// 是否展示背景色
 	isShowBackground() {
-		return this.getValue() || this.indeterminate
+		let value = this.getValue()
+		return (typeof value === 'boolean' ? value : value === this.trueValue) || this.indeterminate
 	}
 	// 获取背景色
 	getBackgroundColor() {
@@ -186,6 +197,11 @@ export struct IBestCheckbox {
 	isLeftLabel() {
 		return this.labelPosition === 'left'
 	}
+	updateGroup(value: boolean) {
+		if (this.group) {
+			emitter.emit(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.name, value)
+		}
+	}
 	async handleBeforeClose(value: boolean) {
 		let status = true
 		try {
@@ -198,19 +214,22 @@ export struct IBestCheckbox {
 		return status
 	}
 	// 点击改变选中状态的回调
-	async handleCheckedChange(status = !this.getValue()) {
+	async handleCheckedChange() {
 		if (this.getIsDisabled()) {
 			return
 		}
-		let state = await this.handleBeforeClose(status)
+		let value = this.getValue()
+		let booleanValue = typeof value == 'boolean' ? !value : value === this.trueValue ? value === this.falseValue : value === this.trueValue
+		let changedValue = typeof value == 'boolean' ? !value : value === this.trueValue ? this.falseValue : this.trueValue
+		let state = await this.handleBeforeClose(booleanValue)
 		if(!state){
 			return
 		}
-		this.setValue(status)
-		this.onChange(status)
-		if (this.group) {
-			emitter.emit(getEventName(COMPONENT_NAME, CHECKBOX_GROUP_EVENT_NAME.ITEM_CHANGE, this.group), this.name, status)
+		if (!this.group) {
+			this.$value(value)
 		}
+		this.onChange(changedValue)
+		this.updateGroup(booleanValue)
 	}
 	// 当选中的最大数量变化时 或者选中的数据变化时
 	handleMaxChange(data: IBestCheckboxMaxChangeParams) {
@@ -248,7 +267,7 @@ export struct IBestCheckbox {
 			}
 			Column() {
 				if (this.iconBuilder) {
-					this.iconBuilder({ checked: this.getValue(), disabled: this.getIsDisabled() })
+					this.iconBuilder({ checked: this.getBooleanValue(), disabled: this.getIsDisabled() })
 				} else {
 					IBestIcon({
 						name: this.isShowIndeterminateImg ? "minus" : "success",

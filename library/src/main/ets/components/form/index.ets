@@ -81,6 +81,7 @@ export struct IBestForm {
 		this.controller.validateField = (name: string, callBack?: (valid: boolean, field?: FieldValidateResult) => void): Promise<IBestFieldValidateResult> => this.validateField(name, callBack)
 		this.controller.resetValidation = (name?: string | string[]): void => this.resetValidation(name)
 		this.controller.getFormValues = (): Record<string, IBestFieldValueType> => this.getFormValues()
+		this.controller.setFormValues = (values: Record<string, IBestFieldValueType>): void => this.setFormValues(values)
 		// 初始化收集表单项信息
 		emitter.on(getEventName(COMPONENT_NAME, FORM_EVENT_NAME.SEND_FIELD, this.formId), this.uniId, (data: IBestFieldItem, callBack: (result: IBestFormSendFieldCallResult) => void): void => this.init(data, callBack))
 		// 验证单个表单
@@ -136,18 +137,16 @@ export struct IBestForm {
 	validateField(prop: string, callBack?: (valid: boolean, field?: FieldValidateResult) => void): Promise<IBestFieldValidateResult>{
 		return new Promise((resolve) => {
 			const item = this.formItems.find((item: IBestFieldItem) => item.prop === prop)
-			if (item) {
-				item.validate(this.rules[prop]).then((res: FieldValidateResult) => {
-					if(callBack){
-						callBack(res === undefined, res)
-					}else{
-						resolve({
-							valid: res === undefined,
-							field: res
-						})
-					}
-				})
-			}
+			item && item.validate(this.rules[prop]).then((res: FieldValidateResult) => {
+				if(callBack){
+					callBack(res === undefined, res)
+				}else{
+					resolve({
+						valid: res === undefined,
+						field: res
+					})
+				}
+			})
 		})
 	}
 	// 重置表单
@@ -155,9 +154,7 @@ export struct IBestForm {
 		let names = prop ? (Array.isArray(prop) ? prop : [prop]) : this.formItems.map((item: IBestFieldItem) => item.prop)
 		names.forEach((name: string) => {
 			const item = this.formItems.find((item: IBestFieldItem) => item.prop === name)
-			if (item) {
-				item.resetValidation()
-			}
+			item && item.resetValidation()
 		})
 	}
 	// 获取表单值
@@ -167,6 +164,15 @@ export struct IBestForm {
 			result[item.prop] = item.getValue()
 		})
 		return result
+	}
+	// 设置表单值
+	setFormValues(values: Record<string, IBestFieldValueType>){
+		let keys = Object.keys(values)
+		this.formItems.forEach((item: IBestFieldItem) => {
+			if(keys.includes(item.prop)){
+				item.setValue(values[item.prop])
+			}
+		})
 	}
 	build() {
 		Column({ space: getSizeByUnit(this.space) }){

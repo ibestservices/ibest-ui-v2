@@ -192,6 +192,9 @@ export struct IBestPasswordInput {
 						.onBlur(() => {
 							this.focused = false
 						})
+						.onChange((value: string) => {
+							this.$value(value)
+						})
 				}else{
 					TextInput({ text: $$this.value, controller: this.textInputController })
 						.defaultFocus(this.autoFocus)

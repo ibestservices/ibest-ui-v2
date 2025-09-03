@@ -1,5 +1,23 @@
 # 版本记录
 
+## 1.0.2
+#### 新增：
+1. IBestCheckBox value值新增 string number 类型，新增 trueValue falseValue 属性;
+2. IBestField 新增 inputFontColor borderSizeType borderLeft fieldPadding bdColor prefixIcon prefixSize suffixIcon suffixSize showValue 属性;
+3. IBestForm 新增 setFormValues 方法.
+
+#### 优化：
+1. IBestCheckBox 异步切换时动画.
+
+#### bug修复：
+1. IBestCellGroup 在存在title时，顶部圆角不生效问题;
+2. IBestForm value为boolean类型且自定义表单项时，值为false会触发校验问题;
+3. IBestTextEllipsis 字符串中有表情时行数异常问题;
+4. IBestDropdownMenu 在close方法执行多次时报错问题;
+5. v2 IBestPasswordInput 在使用系统键盘时无法输入问题;
+6. v2 IBestField 在传入number类型的值时无法初始赋值问题;
+7. v2 修复在5.0.5编辑器下stepper报错问题.
+
 ## 1.0.1
 #### 新增:
 1. 新增 IBestAvatar 头像组件;
@@ -19,7 +37,7 @@
 3. IBestStepper 有小数时无法增加问题;
 4. IBestDropdownMenu 在页面返回没有关闭问题;
 
-## 0.0.9 - 5.0.3(15)
+## 0.0.9 - 5.0.5(17)
 #### 新增:
 1. 新增 IBestContactAddress 联系人地址组件;
 2. IBestCell 新增 arrowSize arrowColor cellPadding 属性;
@@ -94,6 +112,6 @@
 3. IBestCheckBox 禁用状态在分组中失效问题;
 4. IBestStepper 输入时无法限制大小问题.
 
-## 0.0.4
+## 0.0.4 - 5.0.3(15)
 #### Bug修复:
 1. 部分组件报错问题。

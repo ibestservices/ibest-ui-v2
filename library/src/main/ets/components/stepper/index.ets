@@ -19,7 +19,7 @@ export struct IBestStepper {
 	/**
 	 * 绑定值
 	 */
-	@Param @Require value: number
+	@Param @Require value: number = 1
 	/**
 	 * 输入框宽度
 	 */

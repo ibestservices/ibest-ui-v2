@@ -38,7 +38,7 @@ class Form{
 }
 @ObservedV2
 class Form1{
-	@Trace value1: string = "123"
+	@Trace value1: number = 123.45
 	@Trace value2: string = ""
 	@Trace value3: string = "abc"
 	@Trace value4: string = ""
@@ -48,15 +48,15 @@ class Form2{
 	@Trace value1: boolean = false
 	@Trace value2: boolean = false
 	@Trace value3: string[] = []
-	@Trace value4: string = ""
-	@Trace value5: number = 0
-	@Trace value6: string = ""
+	@Trace value4: boolean = false
+	@Trace value5: number = 1
+	@Trace value6: string[] = []
 	@Trace value7: string = ""
 	@Trace value8: IBestUploaderFile[] = []
 }
 @ObservedV2
 class Form3{
-	@Trace sex: string = ""
+	@Trace sex: string | number = ''
 	@Trace info1: string = ""
 	@Trace info2: string = ""
 	@Trace list: Subject[] = []
@@ -114,7 +114,7 @@ struct FormPage {
 
 	@Local form2: Form2 = new Form2()
 	@Local visible: boolean = false
-	@Local selectValue: string[] = []
+	@Local selectValue: string = ''
 	@Local visible1: boolean = false
 	private formId2: string = 'form2'
 	private rules2: IBestFormRule = {
@@ -268,12 +268,12 @@ struct FormPage {
 			IBestRadio({
 				group: "group1",
 				label: "单选框1",
-				name: "1"
+				name: true
 			})
 			IBestRadio({
 				group: "group1",
 				label: "单选框2",
-				name: "2"
+				name: false
 			})
 		}
 	}
@@ -286,12 +286,12 @@ struct FormPage {
 			IBestRadio({
 				group: "group2",
 				label: "男",
-				name: "1"
+				name: 1
 			})
 			IBestRadio({
 				group: "group2",
 				label: "女",
-				name: "2"
+				name: 2
 			})
 		}
 	}
@@ -446,14 +446,14 @@ struct FormPage {
 								IBestField({
 									formId: this.formId2,
 									prop: 'value1',
-									value: this.form2.value1,
+									value: this.form2.value1!!,
 									label: "开关",
 									customRightContent: (): void => this.switchContent()
 								})
 								IBestField({
 									formId: this.formId2,
 									prop: 'value2',
-									value: this.form2.value2,
+									value: this.form2.value2!!,
 									label: "复选框",
 									rules: this.form2.value1 ? [{required: true, message: '请选择'}] : [],
 									customRightContent: (): void => this.checkboxContent()
@@ -461,28 +461,29 @@ struct FormPage {
 								IBestField({
 									formId: this.formId2,
 									prop: 'value3',
-									value: this.form2.value3,
+									value: this.form2.value3!!,
 									label: "复选框组",
 									customRightContent: (): void => this.checkboxGroupContent()
 								})
 								IBestField({
 									formId: this.formId2,
 									prop: 'value4',
-									value: this.form2.value4,
+									value: this.form2.value4!!,
 									label: "单选框",
 									customRightContent: (): void => this.radioContent()
 								})
 								IBestField({
 									formId: this.formId2,
 									prop: 'value5',
-									value: this.form2.value5,
+									value: this.form2.value5!!,
 									label: "步进器",
 									customRightContent: (): void => this.stepperContent()
 								})
 								IBestField({
 									formId: this.formId2,
 									prop: 'value6',
-									value: this.form2.value6,
+									value: this.form2.value6!!,
+									showValue: this.selectValue,
 									label: "选择城市",
 									placeholder: "请选择城市",
 									isLink: true,
@@ -493,7 +494,7 @@ struct FormPage {
 								IBestField({
 									formId: this.formId2,
 									prop: 'value7',
-									value: this.form2.value7,
+									value: this.form2.value7!!,
 									label: "日历",
 									placeholder: "请选择日期",
 									isLink: true,
@@ -504,12 +505,28 @@ struct FormPage {
 								IBestField({
 									formId: this.formId2,
 									prop: 'value8',
-									value: this.form2.value8,
+									value: this.form2.value8!!,
 									label: "上传图片",
 									hasBorder: false,
 									customRightContent: (): void => this.uploadImg()
 								})
 							}
+							IBestButton({
+								text: "设置值",
+								type: 'primary',
+								buttonSize: 'large',
+								onBtnClick: () => {
+									this.controller2.setFormValues({
+										"value1": true,
+										"value2": true,
+										"value3": ['1'],
+										"value4": true,
+										"value6": ["320000","320500","320583"],
+										"value9": '2025-08-25'
+									})
+									this.selectValue = "江苏省,苏州市,昆山市"
+								}
+							})
 							IBestButton({
 								text: "提交",
 								type: 'primary',
@@ -544,7 +561,7 @@ struct FormPage {
 									hasBorder: this.form3.sex != '',
 									customRightContent: (): void => this.radioContent1()
 								})
-								if(this.form3.sex == '1'){
+								if(this.form3.sex == 1){
 									IBestField({
 										formId: this.formId3,
 										prop: 'info1',
@@ -553,7 +570,7 @@ struct FormPage {
 										placeholder: "请输入男生信息",
 										hasBorder: false
 									})
-								}else if(this.form3.sex == '2'){
+								}else if(this.form3.sex == 2){
 									IBestField({
 										formId: this.formId3,
 										prop: 'info2',
@@ -606,9 +623,9 @@ struct FormPage {
 			IBestCascader({
 				visible: this.visible!!,
 				options: this.options,
-				value: this.selectValue!!,
+				value: this.form2.value6!!,
 				onConfirm: value => {
-					this.form2.value6 = value.map(item => item.text).join(',')
+					this.selectValue = value.map(item => item.text).join(',')
 				}
 			})
 			// 日历
