@@ -84,6 +84,7 @@ export interface IBestFieldItem{
 	validate: (rules: IBestFormRuleItem[]) => Promise<FieldValidateResult>
 	resetValidation: () => void
 	getValue: () => IBestFieldValueType
+	setValue: (value: IBestFieldValueType) => void
 }
 export interface IBestFormValidateResult{
 	valid: boolean
@@ -136,4 +137,9 @@ export class IBestFormController {
 		let res: Record<string, IBestFieldValueType> = {}
 		return res
 	}
+	/**
+	 * 设置表单值
+	 * @since 1.0.2
+	 */
+	public setFormValues: (values: Record<string, IBestFieldValueType>) => void = () => {}
 }

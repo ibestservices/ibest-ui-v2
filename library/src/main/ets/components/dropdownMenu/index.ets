@@ -230,11 +230,13 @@ export struct IBestDropdownMenu{
         return new Promise<void>((resolve) => {
             this.baseController.hide()
             setTimeout(() => {
-                this.promptAction.closeCustomDialog(this.menuList[index].dialogId as number)
-                this.menuList[index].dialogId = ''
-                this.menuList[index].onClose!()
-                this.activeIndex = ''
-                resolve()
+                try {
+                    this.promptAction.closeCustomDialog(this.menuList[index].dialogId as number)
+                    this.menuList[index].dialogId = ''
+                    this.menuList[index].onClose!()
+                    this.activeIndex = ''
+                    resolve()
+                }catch (e) {}
             }, hideDuration)
         })
     }

@@ -19,10 +19,12 @@ import type {
 } from './index.type'
 import { emitter } from '../../utils/EventEmitter'
 import { runRuleValidator, runSyncRule } from './utils'
-import { clamp, convertDimensionsWidthUnit, getEventName, getResourceStr, getSizeByUnit } from '../../utils/utils'
+import { clamp, convertDimensionsWidthUnit,
+	getComponentsInfo,
+	getEventName, getResourceStr, getSizeByUnit } from '../../utils/utils'
 import { IBestFieldColor } from './color'
 import { IBestIcon } from '../icon'
-import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
+import { IBestBorderSizeType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { AppStorageV2 } from '@kit.ArkUI'
 
 @ComponentV2
@@ -209,6 +211,11 @@ export struct IBestField{
 	 * since 0.0.8
 	 */
 	@Param inputFontWeight: IBestStringNumber | FontWeight = FontWeight.Normal
+	/**
+	 * 输入框文字颜色
+	 * @since 1.0.2
+	 */
+	@Param inputFontColor: ResourceColor = IBestFieldColor.inputColor
     /**
      * 光标颜色
      */
@@ -233,18 +240,68 @@ export struct IBestField{
      * 前缀内容
      */
     @Param prefix: ResourceStr = ""
+	/**
+	 * 前缀图标, 优先级高于prefix
+	 * @since 1.0.2
+	 */
+	@Param prefixIcon: ResourceStr = ""
     /**
      * 前缀内容颜色
      */
     @Param prefixFontColor: ResourceColor = IBestFieldColor.prefixFontColor
+	/**
+	 * 前缀内容大小
+	 * @since 1.0.2
+	 */
+	@Param prefixSize: IBestStringNumber = this.baseStyle.fontSizeMd as string
     /**
      * 后缀内容
      */
     @Param suffix: ResourceStr = ""
+	/**
+	 * 后缀图标, 优先级高于suffix
+	 * @since 1.0.2
+	 */
+	@Param suffixIcon: ResourceStr = ""
     /**
      * 后缀内容颜色
      */
     @Param suffixFontColor: ResourceColor = IBestFieldColor.suffixFontColor
+	/**
+	 * 后缀内容大小
+	 * @since 1.0.2
+	 */
+	@Param suffixSize: IBestStringNumber = this.baseStyle.fontSizeMd as string
+	/**
+	 * 底部边框线尺寸类型
+	 * @since 1.0.2
+	 */
+	@Param borderSizeType: IBestBorderSizeType = "center"
+	/**
+	 * 底部边框线left值
+	 * @since 1.0.2
+	 */
+	@Param @Once borderLeft?: Dimension = undefined
+	/**
+	 * 内边距
+	 * @since 1.0.2
+	 */
+	@Param fieldPadding: Length | Padding | LocalizedPadding = {
+		left: this.baseStyle.spaceMd,
+		right: this.baseStyle.spaceMd,
+		top: convertDimensionsWidthUnit(10),
+		bottom: convertDimensionsWidthUnit(10)
+	}
+	/**
+	 * 底部边框线颜色
+	 * @since 1.0.2
+	 */
+	@Param bdColor: ResourceColor = IBestFieldColor.borderColor
+	/**
+	 * 要显示的内容，当需要显示的内容与value不同时可使用该属性，仅autosize为false且disabled | readOnly | isLink为true时生效
+	 * @since 1.0.2
+	 */
+	@Param showValue: ResourceStr = ''
     /**
      * 右侧按钮builder
      */
@@ -299,6 +356,7 @@ export struct IBestField{
 	@Local status: 'passed' | 'failed' | 'unvalidated' = 'unvalidated'
 	// 验证信息
 	@Local validateMessage: ResourceStr = ""
+	@Local borderRight: number = 0
     private uiContext = this.getUIContext()
 
 	@Builder asterisk(){
@@ -345,14 +403,35 @@ export struct IBestField{
 			.margin({right: this.baseStyle.spaceSm})
 			.alignItems(VerticalAlign.Center)
 			.justifyContent(this.labelAlign == "left" ? FlexAlign.Start : this.labelAlign == "center" ? FlexAlign.Center : FlexAlign.End)
+			.id(`ibest_field_label_${this.uniId}`)
 		}
+	}
+	@Builder focusText(){
+		Text()
+			.focusable(true)
+			.position({left: 0, top: 0})
+			.zIndex(-10)
+			.id(`ibest_field_focus_text_${this.uniId}`)
+	}
+	@Builder fieldDivider() {
+		Divider()
+			.width(this.borderSizeType == 'center' ? `calc(100% - ${this.borderLeft}vp - ${this.borderRight}vp)` : CONTAINER_SIZE.FULL)
+			.height(1)
+			.color(this.bdColor)
+			.position({ left: this.borderSizeType == "full" ? 0 : this.borderLeft, bottom: 0 })
 	}
 	@Builder fieldContent(){
 		Column(){
 			Row() {
-				if(this.prefix){
+				if (this.prefixIcon) {
+					IBestIcon({
+						name: this.prefixIcon,
+						iconSize: this.prefixSize,
+						color: this.prefixFontColor
+					}).margin({ right: this.baseStyle.spaceBase })
+				} else if(this.prefix){
 					Text(this.prefix)
-						.fontSize(getSizeByUnit(this.inputFontSize, true))
+						.fontSize(getSizeByUnit(this.prefixSize, true))
 						.fontColor(this.prefixFontColor)
 						.fontWeight(this.inputFontWeight)
 						.margin({right: this.baseStyle.spaceBase})
@@ -365,7 +444,7 @@ export struct IBestField{
 							.ibestFieldInputStyle()
 							.caretColor(this.caretColor)
 							.fontSize(getSizeByUnit(this.inputFontSize, true))
-							.fontColor(IBestFieldColor.inputColor)
+							.fontColor(this.inputFontColor)
 							.fontWeight(this.inputFontWeight)
 							.placeholderFont({
 								size: getSizeByUnit(this.inputFontSize, true)
@@ -395,42 +474,54 @@ export struct IBestField{
 								}
 							})
 					} else {
-						TextInput({ text: $$this.value, placeholder: this.placeholder })
-							.ibestFieldInputStyle()
-							.caretColor(this.caretColor)
-							.fontSize(getSizeByUnit(this.inputFontSize, true))
-							.fontColor(IBestFieldColor.inputColor)
-							.fontWeight(this.inputFontWeight)
-							.placeholderFont({
-								size: getSizeByUnit(this.inputFontSize, true)
-							})
-							.placeholderColor(this.placeholderColor)
-							.showPasswordIcon(this.showPasswordIcon)
-							.height(this.baseStyle.lineHeightMd)
-							.lineHeight(this.baseStyle.lineHeightMd)
-							.textAlign(this.getInputAlign())
-							.textAlign(this.getInputAlign())
-							.maxLength(this.maxlength)
-							// .showCounter(this.showWordLimit, {
-							//     thresholdPercentage: 1,
-							//     highlightBorder: false
-							// })
-							.selectionMenuHidden(true)
-							.type(this.getInputType())
-							.onChange((value: string) => {
-								this.formatValue(value, "onchange")
-							})
-							.onFocus(() => {
-								this.isFocus = true
-								this.onFieldFocus()
-							})
-							.onBlur(() => {
-								this.isFocus = false
-								this.onFieldBlur()
-								if (typeof this.value == "string") {
-									this.formatValue(this.value, "onblur")
-								}
-							})
+						Stack({alignContent: Alignment.Start}){
+							TextInput({ text: $$this.value, placeholder: this.placeholder })
+								.ibestFieldInputStyle()
+								.opacity((this.disabled || this.readOnly || this.isLink) && this.showValue ? 0 : 1)
+								.caretColor(this.caretColor)
+								.fontSize(getSizeByUnit(this.inputFontSize, true))
+								.fontColor(this.inputFontColor)
+								.fontWeight(this.inputFontWeight)
+								.placeholderFont({
+									size: getSizeByUnit(this.inputFontSize, true)
+								})
+								.placeholderColor(this.placeholderColor)
+								.showPasswordIcon(this.showPasswordIcon)
+								.height(this.baseStyle.lineHeightMd)
+								.lineHeight(this.baseStyle.lineHeightMd)
+								.textAlign(this.getInputAlign())
+								.textAlign(this.getInputAlign())
+								.maxLength(this.maxlength)
+								// .showCounter(this.showWordLimit, {
+								//     thresholdPercentage: 1,
+								//     highlightBorder: false
+								// })
+								.selectionMenuHidden(true)
+								.type(this.getInputType())
+								.onChange((value: string) => {
+									this.formatValue(value, "onchange")
+								})
+								.onFocus(() => {
+									this.isFocus = true
+									this.onFieldFocus()
+								})
+								.onBlur(() => {
+									this.isFocus = false
+									this.onFieldBlur()
+									if (typeof this.value == "string") {
+										this.formatValue(this.value, "onblur")
+									}
+								})
+							if((this.disabled || this.readOnly || this.isLink) && this.showValue){
+								Text(this.showValue)
+									.width(CONTAINER_SIZE.FULL)
+									.fontSize(getSizeByUnit(this.inputFontSize, true))
+									.fontColor(this.inputFontColor)
+									.fontWeight(this.inputFontWeight)
+									.lineHeight(this.baseStyle.lineHeightMd)
+									.textAlign(this.getInputAlign())
+							}
+						}.layoutWeight(1)
 					}
 					// 清除图标
 					if (this.clearable && this.value && (this.clearTrigger == 'always' || this.isFocus)) {
@@ -439,7 +530,7 @@ export struct IBestField{
 							iconSize: this.rightIconSize
 						})
 							.onClick(() => {
-								this.$value('')
+								this.setValue('')
 								this.onClear()
 							})
 							.margin({ left: this.baseStyle.spaceBase })
@@ -461,9 +552,15 @@ export struct IBestField{
 					}).margin({left: this.baseStyle.spaceBase})
 				}
 				// 后缀
-				if(this.suffix){
+				if (this.suffixIcon) {
+					IBestIcon({
+						name: this.suffixIcon,
+						iconSize: this.suffixSize,
+						color: this.suffixFontColor
+					}).margin({ left: this.baseStyle.spaceBase })
+				} else if(this.suffix) {
 					Text(this.suffix)
-						.fontSize(getSizeByUnit(this.inputFontSize, true))
+						.fontSize(getSizeByUnit(this.suffixSize, true))
 						.fontColor(this.suffixFontColor)
 						.fontWeight(this.inputFontWeight)
 						.margin({left: this.baseStyle.spaceBase})
@@ -500,17 +597,10 @@ export struct IBestField{
 		.width(this.labelPosition == "top" ? CONTAINER_SIZE.FULL : "auto")
 		.layoutWeight(this.labelPosition == "top" ? 0 : 1)
 		.alignItems(HorizontalAlign.Start)
+		.id(`ibest_field_content_${this.uniId}`)
 	}
-    @Builder focusText(){
-        Text()
-            .focusable(true)
-            .position({left: 0, top: 0})
-            .zIndex(-10)
-            .id(`ibest_field_${this.uniId}`)
-    }
     @Styles ibestFieldStyle(){
         .width(CONTAINER_SIZE.FULL)
-        .padding({ left: this.baseStyle.spaceMd, right: this.baseStyle.spaceMd })
         .stateStyles({
             normal: {
                 .backgroundColor(this.bgColor)
@@ -523,16 +613,13 @@ export struct IBestField{
         .enabled(!this.fieldDisabled)
         .opacity(this.fieldDisabled ? 0.6 : 1)
         .clip(true)
+		.id(`ibest_field_${this.uniId}`)
 		.onClick(() => {
 			this.fieldClick()
 		})
     }
     @Styles ibestFieldContentStyle(){
-        .padding({ top: convertDimensionsWidthUnit(10), bottom: convertDimensionsWidthUnit(10) })
-        .border({
-            width: { bottom: this.hasBorder ? 1 : 0 },
-            color: IBestFieldColor.borderColor
-        })
+		.padding(getSizeByUnit(this.fieldPadding))
     }
 	@Styles ibestFieldInputStyle(){
 		.layoutWeight(1)
@@ -561,6 +648,9 @@ export struct IBestField{
         }else{
             this.init()
         }
+		setTimeout(() => {
+			this.initBorderSize()
+		}, 100)
     }
     aboutToDisappear(): void {
         if(this.formId && this.prop) {
@@ -569,6 +659,15 @@ export struct IBestField{
             emitter.emit(getEventName(COMPONENT_NAME, FORM_EVENT_NAME.RESEND_FORM_ITEM, this.formId))
         }
     }
+	// 获取左右边距
+	initBorderSize(){
+		if(this.borderLeft === undefined){
+			this.borderLeft = getComponentsInfo(this.uiContext, `ibest_field_label_${this.uniId}`).localLeft
+		}
+		let fullWidth = getComponentsInfo(this.uiContext, `ibest_field_${this.uniId}`).width
+		let rightInfo = getComponentsInfo(this.uiContext, `ibest_field_content_${this.uniId}`)
+		this.borderRight = fullWidth - rightInfo.width - rightInfo.localLeft
+	}
 	@Monitor("rules")
     rulesChange(){
 		let required = this.rules.length > 0 && this.rules.some((item: IBestFormRuleItem) => item.required)
@@ -580,8 +679,11 @@ export struct IBestField{
         }
     }
     initValue(){
+		if (typeof this.value == "number" && !this.customRightContent) {
+			this.setValue(this.value.toString())
+		}
         if(this.value === undefined || this.value === null){
-            this.$value("")
+            this.setValue("")
         }
     }
     // 发送表单子项信息
@@ -589,9 +691,10 @@ export struct IBestField{
         emitter.emit(getEventName(COMPONENT_NAME, FORM_EVENT_NAME.SEND_FIELD, this.formId), {
             uniId: this.uniId,
             prop: this.prop,
-            validate: (rules: IBestFormRuleItem[]):Promise<void | FieldValidateResult> => this.validate(rules),
+            validate: (rules: IBestFormRuleItem[]): Promise<void | FieldValidateResult> => this.validate(rules),
             getValue: (): IBestFieldValueType => this.value,
-            resetValidation: (): void => this.resetValidation()
+            resetValidation: (): void => this.resetValidation(),
+			setValue: (value: IBestFieldValueType): void => this.setValue(value)
         }, (result: IBestFormSendFieldCallResult): void => this.init(result))
     }
     // 初始化参数
@@ -696,7 +799,7 @@ export struct IBestField{
 				}
 			}
 		}
-		this.$value(value)
+		this.setValue(value)
 		if(trigger == 'onchange'){
 			this.onChange(value)
 		}
@@ -716,11 +819,7 @@ export struct IBestField{
         }
     }
     getVerticalAlign(){
-        if(this.verticalAlign){
-            return this.verticalAlign == 'top' ? VerticalAlign.Top : VerticalAlign.Center
-        }else{
-            return (this.showWordLimit || this.autosize || this.validateMessage) ? VerticalAlign.Top : VerticalAlign.Center
-        }
+        return this.verticalAlign == 'top' ? VerticalAlign.Top : VerticalAlign.Center
     }
 	getInputAlign(){
 		return this.inputAlign == 'center' ? TextAlign.Center : this.inputAlign == 'right' ? TextAlign.End : TextAlign.Start
@@ -768,10 +867,13 @@ export struct IBestField{
 	fieldClick(){
 		this.onFieldClick()
 		if((this.disabled || this.readOnly || this.isLink) && !this.customRightContent){
-			this.uiContext.getFocusController().requestFocus(`ibest_field_${this.uniId}`)
+			this.uiContext.getFocusController().requestFocus(`ibest_field_focus_text_${this.uniId}`)
 		}
 	}
-
+	// 设置值
+	setValue(value: IBestFieldValueType) {
+		this.$value(value)
+	}
     build() {
         if(this.labelPosition == "left"){
             Row(){
@@ -782,6 +884,9 @@ export struct IBestField{
                 .alignItems(this.getVerticalAlign())
                 .ibestFieldContentStyle()
                 this.focusText()
+				if (this.hasBorder) {
+					this.fieldDivider()
+				}
             }
             .ibestFieldStyle()
         }else{
@@ -793,6 +898,9 @@ export struct IBestField{
                 .alignItems(HorizontalAlign.Start)
                 .ibestFieldContentStyle()
                 this.focusText()
+				if (this.hasBorder) {
+					this.fieldDivider()
+				}
             }
             .alignItems(HorizontalAlign.Start)
             .ibestFieldStyle()

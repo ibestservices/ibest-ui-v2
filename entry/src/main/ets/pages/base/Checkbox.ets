@@ -2,9 +2,11 @@ import {
 	IBestButton,
 	IBestCell,
 	IBestCheckbox,
+	IBestCheckboxBuilderParams,
 	IBestCheckboxGroup,
 	IBestCheckboxGroupController,
-	IBestDialogUtil
+	IBestDialogUtil,
+	IBestIcon
 } from '@ibestservices/ibest-ui-v2';
 import { CONTAINER_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle';
 import ComponentShowContainer from '../../components/ComponentShowContainer';
@@ -20,6 +22,8 @@ export function CheckboxBuilder(_: string, title: string){
 struct CheckboxPage {
 	@Param title: string = ''
 	@Local isChecked: boolean = true
+	@Local isChecked1: string = '1'
+	@Local isChecked2: number = 1
 	@Local group: string = "group"
 	@Local activeList: string[] = ["1", "2"]
 	@Local group1: string = "group1"
@@ -37,6 +41,17 @@ struct CheckboxPage {
 	@Local cellCheckedMaxNum: number = 2
 	private controller: IBestCheckboxGroupController = new IBestCheckboxGroupController()
 	private controller1: IBestCheckboxGroupController = new IBestCheckboxGroupController()
+	@Builder iconBuilder($$: IBestCheckboxBuilderParams){
+		IBestIcon({
+			name: "like-o",
+			color: "#fff",
+			iconSize: 18
+		})
+			.opacity($$.checked ? 1 : 0)
+	}
+	@Builder labelBuilder($$: IBestCheckboxBuilderParams) {
+		Text($$.checked ? "选中" : "未选中")
+	}
 	@Builder CellCheckbox(name: string, group: string) {
 		IBestCheckbox({
 			name,
@@ -115,6 +130,22 @@ struct CheckboxPage {
 					}
 				}
 				ListItem() {
+					ComponentShowContainer({ title: '自定义内容' }) {
+						Column({space: 14}){
+							IBestCheckbox({
+								value: this.isChecked!!,
+								iconBuilder: this.iconBuilder,
+								label: '自定义图标'
+							})
+							IBestCheckbox({
+								value: this.isChecked!!,
+								defaultBuilder: this.labelBuilder
+							})
+						}
+						.alignItems(HorizontalAlign.Start)
+					}
+				}
+				ListItem() {
 					ComponentShowContainer({ title: '左侧文本' }) {
 						IBestCheckbox({
 							value: this.isChecked!!,
@@ -153,6 +184,24 @@ struct CheckboxPage {
 								})
 							}
 						})
+					}
+				}
+				ListItem() {
+					ComponentShowContainer({ title: '其他类型' }) {
+						Column({ space: SPACE.SM }) {
+							IBestCheckbox({
+								value: this.isChecked1!!,
+								label: "string：" + this.isChecked1,
+								trueValue: "1",
+								falseValue: "2"
+							})
+							IBestCheckbox({
+								value: this.isChecked2!!,
+								label: "number：" + this.isChecked2.toString(),
+								trueValue: 1,
+								falseValue: 0
+							})
+						}.alignItems(HorizontalAlign.Start)
 					}
 				}
 				ListItem() {
@@ -280,7 +329,7 @@ struct CheckboxPage {
 								indeterminate: this.isIndeterminate,
 								onChange: checked => {
 									this.isIndeterminate = false
-									this.controller1.toggleAll(checked)
+									this.controller1.toggleAll(checked as boolean)
 								}
 							})
 						}

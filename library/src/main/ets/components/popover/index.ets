@@ -1,9 +1,9 @@
-import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
+import { IBestBorderSizeType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { convertDimensionsWidthUnit, getSizeByUnit } from '../../utils/utils'
 import { IBestIcon } from '../icon'
 import { IBestPopoverColor } from './color'
-import { BorderSizeType, IBestPopoverAction, IBestPopoverController, PopoverMask } from './index.type'
+import { IBestPopoverAction, IBestPopoverController, PopoverMask } from './index.type'
 import { AppStorageV2 } from '@kit.ArkUI'
 
 @ComponentV2
@@ -91,7 +91,7 @@ export struct IBestPopover{
     /**
      * 底部分割线尺寸类型
      */
-    @Param borderSizeType: BorderSizeType = "center"
+    @Param borderSizeType: IBestBorderSizeType = "center"
     /**
      * 固定高度
      */

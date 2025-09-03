@@ -1,4 +1,4 @@
-import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
+import { IBestStorageKey } from '../../model/Global.type'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestUIBaseStyle } from '../../theme-chalk/src/index.type'
 import { convertDimensionsWidthUnit, getSizeByUnit } from '../../utils/utils'
@@ -66,7 +66,13 @@ export struct IBestCellGroup {
 					.fontColor(IBestCellGroupColor.textColor)
 			}
 			if (this.defaultBuilder) {
-				this.defaultBuilder()
+				Column(){
+					this.defaultBuilder()
+				}
+				.width(CONTAINER_SIZE.FULL)
+				.alignItems(HorizontalAlign.Start)
+				.borderRadius(this.inset ? getSizeByUnit(this.radius) : 0)
+				.clip(true)
 			}
 		}
 		.border({
@@ -74,7 +80,5 @@ export struct IBestCellGroup {
 			color: IBestCellGroupColor.borderColor
 		})
 		.margin(this.getMargin())
-		.borderRadius(this.inset ? getSizeByUnit(this.radius) : 0)
-		.clip(true)
 	}
 }

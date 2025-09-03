@@ -6,7 +6,6 @@ export enum ARROW_DIRECTION {
 	BOTTOM = 'bottom',
 	LEFT = 'left'
 }
-export type BorderSizeType = "full" | "center" | "right"
 export interface CellSizeType {
 	padding: IBestStringNumber
 	fontSize: IBestStringNumber
