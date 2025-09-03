@@ -14,9 +14,9 @@
 2. IBestForm value为boolean类型且自定义表单项时，值为false会触发校验问题;
 3. IBestTextEllipsis 字符串中有表情时行数异常问题;
 4. IBestDropdownMenu 在close方法执行多次时报错问题;
-5. v2 IBestPasswordInput 在使用系统键盘时无法输入问题;
-6. v2 IBestField 在传入number类型的值时无法初始赋值问题;
-7. v2 修复在5.0.5编辑器下stepper报错问题.
+5. IBestPasswordInput 在使用系统键盘时无法输入问题;
+6. IBestField 在传入number类型的值时无法初始赋值问题;
+7. 修复在5.0.5编辑器下stepper报错问题.
 
 ## 1.0.1
 #### 新增:
