@@ -143,6 +143,10 @@ export struct IBestUploader {
 	}
 	// 选择文件
 	selectFile(){
+		// 设置maxSelectNumber
+		if (this.max !== undefined) {
+			this.fileSelectOption.maxSelectNumber = this.max - this.fileList.length
+		}
 		const docPicker = new picker.DocumentViewPicker(this.context)
 		docPicker.select(this.fileSelectOption).then(result => {
 			this.onFileSelect(result)
@@ -150,6 +154,10 @@ export struct IBestUploader {
 	}
 	// 选择图片
 	selectImg(){
+		// 设置maxSelectNumber
+		if (this.max !== undefined) {
+			this.imageSelectOption.maxSelectNumber = this.max - this.fileList.length
+		}
 		let photoPicker = new photoAccessHelper.PhotoViewPicker()
 		photoPicker.select(this.imageSelectOption).then((result: photoAccessHelper.PhotoSelectResult) => {
 			this.onFileSelect(result.photoUris)
