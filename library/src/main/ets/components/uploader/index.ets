@@ -91,6 +91,10 @@ export struct IBestUploader {
      */
 	@Param showPreviewList: boolean = true
 	/**
+	 * 居中对齐显示
+  */
+	@Param center: boolean = false
+	/**
 	 * 自定义上传触发器
 	 */
 	@BuilderParam customUploader: CustomBuilder
@@ -228,7 +232,9 @@ export struct IBestUploader {
 		Flex({ wrap: FlexWrap.Wrap, space: {
 			main: new LengthMetrics(convertDimensions(8), getLengthUnit()),
 			cross: new LengthMetrics(convertDimensions(8), getLengthUnit())
-		}}){
+		},
+      justifyContent: this.center ? FlexAlign.Center : FlexAlign.Start
+    }){
 			if(this.showPreviewList && this.fileList.length){
 				ForEach(this.fileList, (item: IBestUploaderFile, index: number) => {
 					UploadItem({
@@ -282,6 +288,7 @@ export struct IBestUploader {
 				})
 			}
 		}
+
 	}
 }
 
