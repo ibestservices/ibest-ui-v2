@@ -268,12 +268,18 @@ export struct IBestUploader {
 					this.select()
 				})
 			}else{
-				Row(){
+				Column({
+					space: 8
+				}){
 					IBestIcon({
 						name: this.uploaderIcon,
 						iconSize: this.uploaderIconSize,
 						color: this.uploaderIconColor
 					})
+					if (this.max !== undefined) {
+						Text(`(${this.fileList.length}/${this.max})`)
+              .fontColor(IBestUploaderColor.textColor)
+					}
 				}
 				.width(getSizeByUnit(this.previewSize))
 				.aspectRatio(1)
