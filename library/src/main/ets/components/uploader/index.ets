@@ -91,6 +91,10 @@ export struct IBestUploader {
      */
 	@Param showPreviewList: boolean = true
 	/**
+	 * 居中对齐显示
+  */
+	@Param center: boolean = false
+	/**
 	 * 自定义上传触发器
 	 */
 	@BuilderParam customUploader: CustomBuilder
@@ -139,6 +143,10 @@ export struct IBestUploader {
 	}
 	// 选择文件
 	selectFile(){
+		// 设置maxSelectNumber
+		if (this.max !== undefined) {
+			this.fileSelectOption.maxSelectNumber = this.max - this.fileList.length
+		}
 		const docPicker = new picker.DocumentViewPicker(this.context)
 		docPicker.select(this.fileSelectOption).then(result => {
 			this.onFileSelect(result)
@@ -146,6 +154,10 @@ export struct IBestUploader {
 	}
 	// 选择图片
 	selectImg(){
+		// 设置maxSelectNumber
+		if (this.max !== undefined) {
+			this.imageSelectOption.maxSelectNumber = this.max - this.fileList.length
+		}
 		let photoPicker = new photoAccessHelper.PhotoViewPicker()
 		photoPicker.select(this.imageSelectOption).then((result: photoAccessHelper.PhotoSelectResult) => {
 			this.onFileSelect(result.photoUris)
@@ -228,7 +240,9 @@ export struct IBestUploader {
 		Flex({ wrap: FlexWrap.Wrap, space: {
 			main: new LengthMetrics(convertDimensions(8), getLengthUnit()),
 			cross: new LengthMetrics(convertDimensions(8), getLengthUnit())
-		}}){
+		},
+      justifyContent: this.center ? FlexAlign.Center : FlexAlign.Start
+    }){
 			if(this.showPreviewList && this.fileList.length){
 				ForEach(this.fileList, (item: IBestUploaderFile, index: number) => {
 					UploadItem({
@@ -254,12 +268,18 @@ export struct IBestUploader {
 					this.select()
 				})
 			}else{
-				Row(){
+				Column({
+					space: 8
+				}){
 					IBestIcon({
 						name: this.uploaderIcon,
 						iconSize: this.uploaderIconSize,
 						color: this.uploaderIconColor
 					})
+					if (this.max !== undefined) {
+						Text(`(${this.fileList.length}/${this.max})`)
+              .fontColor(IBestUploaderColor.textColor)
+					}
 				}
 				.width(getSizeByUnit(this.previewSize))
 				.aspectRatio(1)
@@ -282,6 +302,7 @@ export struct IBestUploader {
 				})
 			}
 		}
+
 	}
 }
 
