@@ -5,7 +5,8 @@ import {
 	IBestCalendarDayItem,
 	IBestCalendarDialog,
 	IBestCell,
-	IBestCellGroup
+	IBestCellGroup,
+    IBestToast
 } from '@ibestservices/ibest-ui-v2'
 import ComponentShowContainer from '../../components/ComponentShowContainer'
 import { modeColor, SPACE } from '../../assets/styles/BaseStyle'
@@ -21,23 +22,23 @@ export function CalendarBuilder(_: string, title: string){
 struct CalendarPage {
     @Param title: string = ''
     @Local singleVisible: boolean = false
-    @Local selectDate: string = "请选择日期"
+    @Local selectDate: string = ""
     @Local multipleVisible: boolean = false
-    @Local multipleDateRange: string = "请选择日期"
+    @Local multipleDateRange: string[] = []
     @Local rangeVisible: boolean = false
-    @Local rangeDateRange: string = "请选择日期"
+    @Local rangeDateRange: string[] = []
     @Local customColorVisible: boolean = false
-    @Local customColorDate: string = "请选择日期"
+    @Local customColorDate: string[] = []
     @Local customRangeVisible: boolean = false
-    @Local customRangeDate: string = "请选择日期"
+    @Local customRangeDate: string[] = []
     @Local lunarVisible: boolean = false
-    @Local lunarDate: string = "请选择日期"
+    @Local lunarDate: string = ""
     @Local customWeekVisible: boolean = false
-    @Local customWeekDate: string = "请选择日期"
+    @Local customWeekDate: string = ""
     @Local rangeNumVisible: boolean = false
-    @Local rangeNumDate: string = "请选择日期"
+    @Local rangeNumDate: string[] = []
     @Local waterBgVisible: boolean = false
-    @Local waterBgDate: string = "请选择日期"
+    @Local waterBgDate: string = ""
 
     @Local clockDate: string[] = [dayjs().startOf("month").format('YYYY-MM-DD')]
 
@@ -60,38 +61,6 @@ struct CalendarPage {
 		.backgroundImagePosition(Alignment.Center)
 	}
 
-    onDialogConfirm(type: string, value: IBestCalendarConfirmResult[]): void {
-        switch (type){
-            case "selectDate":
-                this.selectDate = value[0].dateStr
-                break
-            case "multipleDateRange":
-                this.multipleDateRange = value.map(item => item.dateStr).join(",")
-                break
-            case "rangeDateRange":
-                this.rangeDateRange = value[0].dateStr + " - " + value[value.length-1].dateStr
-                break
-            case "customColorDate":
-                this.customColorDate = value.map(item => item.dateStr).join(",")
-                break
-            case "lunarDate":
-                this.lunarDate = value[0].dateStr
-                break
-            case "customRangeDate":
-                this.customRangeDate = value.map(item => item.dateStr).join(",")
-                break
-            case "rangeNumDate":
-                this.rangeNumDate = value[0].dateStr + " - " + value[value.length-1].dateStr
-                break
-            case "customWeekDate":
-                this.customWeekDate = value[0].dateStr
-                break
-            case "waterBgDate":
-                this.waterBgDate = value[0].dateStr
-                break
-        }
-    }
-
     build() {
         NavDestination(){
 			CustomNavBar({title: this.title})
@@ -103,13 +72,15 @@ struct CalendarPage {
                                 IBestCell({
                                     title: '选择单个日期',
                                     value: this.selectDate,
+                                    isLink: true,
                                     onCellClick: () => {
                                         this.singleVisible = true
                                     }
                                 })
                                 IBestCell({
                                     title: '选择多个日期',
-                                    value: this.multipleDateRange,
+                                    value: this.multipleDateRange.join(","),
+                                    isLink: true,
                                     onCellClick: () => {
                                         this.multipleVisible = true
                                     }
@@ -117,7 +88,8 @@ struct CalendarPage {
                                 IBestCell({
                                     title: '选择日期区间',
                                     hasBorder: false,
-                                    value: this.rangeDateRange,
+                                    value: this.rangeDateRange.length ? this.rangeDateRange[0] + " - " + this.rangeDateRange[this.rangeDateRange.length-1] : "",
+                                    isLink: true,
                                     onCellClick: () => {
                                         this.rangeVisible = true
                                     }
@@ -132,7 +104,8 @@ struct CalendarPage {
                             Column() {
                                 IBestCell({
                                     title: '自定义颜色',
-                                    value: this.customColorDate,
+                                    value: this.customColorDate.join(","),
+                                    isLink: true,
                                     onCellClick: () => {
                                         this.customColorVisible = true
                                     }
@@ -140,20 +113,23 @@ struct CalendarPage {
                                 IBestCell({
                                     title: '显示农历',
                                     value: this.lunarDate,
+                                    isLink: true,
                                     onCellClick: () => {
                                         this.lunarVisible = true
                                     }
                                 })
                                 IBestCell({
                                     title: '自定义日期范围',
-                                    value: this.customRangeDate,
+                                    value: this.customRangeDate.join(","),
+                                    isLink: true,
                                     onCellClick: () => {
                                         this.customRangeVisible = true
                                     }
                                 })
                                 IBestCell({
                                     title: '日期区间最大范围',
-                                    value: this.rangeNumDate,
+                                    value: this.rangeNumDate.length ? this.rangeNumDate[0] + " - " + this.rangeNumDate[this.rangeNumDate.length-1] : "",
+                                    isLink: true,
                                     onCellClick: () => {
                                         this.rangeNumVisible = true
                                     }
@@ -161,6 +137,7 @@ struct CalendarPage {
                                 IBestCell({
                                     title: '自定义周起始日期',
                                     value: this.customWeekDate,
+                                    isLink: true,
                                     onCellClick: () => {
                                         this.customWeekVisible = true
                                     }
@@ -168,6 +145,7 @@ struct CalendarPage {
                                 IBestCell({
                                     title: '显示月份背景水印',
                                     value: this.waterBgDate,
+                                    isLink: true,
                                     hasBorder: false,
                                     onCellClick: () => {
                                         this.waterBgVisible = true
@@ -180,10 +158,10 @@ struct CalendarPage {
                 ListItem(){
                     ComponentShowContainer({ title: '平铺展示', titlePaddingLeft: SPACE.XS }) {
                         IBestCalendar({
+                            value: this.defaultSelectedDate!!,
                             isShowLunar: true,
 							selectType: "multiple",
                             isShowMark: true,
-                            defaultSelectedDate: this.defaultSelectedDate,
 							dayItemBuilder: this.itemBuilder
                         })
                     }
@@ -200,7 +178,7 @@ struct CalendarPage {
                             })
                             IBestCalendar({
                                 clock: true,
-                                defaultSelectedDate: this.clockDate
+                                value: this.clockDate!!
                             })
                         }
                     }
@@ -212,64 +190,67 @@ struct CalendarPage {
             // 单选
             IBestCalendarDialog({
                 visible: this.singleVisible!!,
+                value: this.selectDate!!,
                 type: "danger",
-                onConfirm: (value): void => this.onDialogConfirm("selectDate", value)
+                onConfirm: (value: IBestCalendarConfirmResult[]) => {
+                    IBestToast.show(value[0].dateStr)
+                }
             })
             // 多选
             IBestCalendarDialog({
                 visible: this.multipleVisible!!,
-                selectType: "multiple",
-                onConfirm: (value): void => this.onDialogConfirm("multipleDateRange", value)
+                value: this.multipleDateRange!!,
+                selectType: "multiple"
             })
             // 区间选
             IBestCalendarDialog({
                 visible: this.rangeVisible!!,
-                selectType: "range",
-                onConfirm: (value): void => this.onDialogConfirm("rangeDateRange", value)
+                value: this.rangeDateRange!!,
+                selectType: "range"
             })
             // 自定义颜色
             IBestCalendarDialog({
                 visible: this.customColorVisible!!,
+                value: this.customColorDate!!,
                 selectType: "multiple",
-                selectedColor: "#58DB6B",
-                onConfirm: (value): void => this.onDialogConfirm("customColorDate", value)
+                selectedColor: "#58DB6B"
             })
             // 显示农历
             IBestCalendarDialog({
                 visible: this.lunarVisible!!,
+                value: this.lunarDate!!,
                 isShowLunar: true,
-                cornerRadius: 20,
-                onConfirm: (value): void => this.onDialogConfirm("lunarDate", value)
+                cornerRadius: 20
             })
             // 自定义日期范围
             IBestCalendarDialog({
                 visible: this.customRangeVisible!!,
+                value: this.customRangeDate!!,
                 selectType: "multiple",
                 selectedStyleType: "circle",
-                minDate: new Date(),
-                maxDate: new Date("2099-12-13"),
-                confirmBtnColor: "#ed4040",
-                onConfirm: (value): void => this.onDialogConfirm("customRangeDate", value)
+                minDate: new Date('1991-01-01'),
+                maxDate: new Date(),
+                confirmBtnColor: "#ed4040"
             })
             // 日期区间最大范围
             IBestCalendarDialog({
                 visible: this.rangeNumVisible!!,
+                value: this.rangeNumDate!!,
                 type: "danger",
                 selectType: "range",
-                maxRange: 7,
-                onConfirm: (value): void => this.onDialogConfirm("rangeNumDate", value)
+                maxRange: 7
             })
             // 自定义周起始日期
             IBestCalendarDialog({
                 visible: this.customWeekVisible!!,
-                weekFirstDay: 0,
-                onConfirm: (value): void => this.onDialogConfirm("customWeekDate", value)
+                value: this.customWeekDate!!,
+                weekFirstDay: 0
             })
             // 显示月份背景水印
             IBestCalendarDialog({
                 visible: this.waterBgVisible!!,
-                isShowMark: true,
-                onConfirm: (value): void => this.onDialogConfirm("waterBgDate", value)
+                value: this.waterBgDate!!,
+                isShowMark: true
             })
         }
         .hideTitleBar(true)

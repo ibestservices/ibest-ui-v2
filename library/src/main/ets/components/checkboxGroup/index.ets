@@ -1,5 +1,7 @@
 import { emitter } from '../../utils/EventEmitter';
-import { convertDimensionsWidthUnit, getEventName, getSizeByUnit, sleep } from '../../utils/utils';
+import { convertDimensionsWidthUnit, getEventName, getSizeByUnit,
+	handleBeforeFunction,
+	sleep } from '../../utils/utils';
 import { CHECKBOX_GROUP_EVENT_NAME, COMPONENT_NAME, IBestCheckboxGroupController } from './index.type';
 import { IBestAwaitable, IBestStringNumber } from '../../model/Global.type';
 
@@ -83,17 +85,6 @@ export struct IBestCheckboxGroup {
 		this.initChildren()
 		this.handleMaxChange()
 	}
-	async handleBeforeClose(checkedNames: IBestStringNumber[]) {
-		let status = true
-		try {
-			if (this.beforeChange) {
-				status = await this.beforeChange(checkedNames)
-			}
-		} catch (e) {
-			status = false
-		}
-		return status
-	}
 	// 选项变化
 	async onItemChange(name: IBestStringNumber, checked: boolean) {
 		let checkedNames: IBestStringNumber[] = [...this.activeList]
@@ -105,7 +96,7 @@ export struct IBestCheckboxGroup {
 		}else {
 			checkedNames = checkedNames.filter(item => item !== name)
 		}
-		let status = await this.handleBeforeClose(checkedNames)
+		let status = await handleBeforeFunction(this.beforeChange, checkedNames)
 		if(!status){
 			this.$activeList([...this.activeList])
 			return

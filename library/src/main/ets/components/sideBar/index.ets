@@ -27,7 +27,7 @@ export struct IBestSideBar{
 	/**
 	 * 最大高度
      */
-	@Param maxHeight: IBestStringNumber = 0
+	@Param maxHeight: IBestStringNumber = Infinity
 	/**
 	 * 背景色
      */
@@ -117,6 +117,7 @@ export struct IBestSideBar{
 			.backgroundColor(this.bgColor)
 		}
 		.width(getSizeByUnit(this.sideWidth))
+		.constraintSize({maxHeight: getSizeByUnit(this.maxHeight)})
 		.scrollBar(BarState.Off)
 		.edgeEffect(EdgeEffect.None)
 		.align(Alignment.Start)

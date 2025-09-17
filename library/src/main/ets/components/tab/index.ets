@@ -6,6 +6,8 @@ import { debounce } from '../../utils/DebounceThrottle';
 import { IBestTabColor } from './color';
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type';
 import { AppStorageV2 } from '@kit.ArkUI';
+import { IBestIcon } from '../icon';
+
 @ComponentV2
 export struct IBestTabs{
     /**
@@ -408,13 +410,13 @@ struct IBestTab{
     }
     build() {
         Row() {
-            Row(){
-                if(this.item.icon) {
-                    Image(this.item.icon)
-                        .width(getSizeByUnit(this.fontSize))
-                        .aspectRatio(1)
-                        .margin({right: this.baseStyle.spaceBase})
-                        .fillColor(this.getFontColor())
+            Row({space: this.baseStyle.spaceBase}){
+                if(this.item.icon && (!this.item.iconPosition || this.item.iconPosition == "left")) {
+                    IBestIcon({
+                        name: this.item.icon,
+                        iconSize: this.fontSize,
+                        color: this.getFontColor()
+                    })
                 }
                 Text(){
                     Span(this.item.label)
@@ -428,6 +430,13 @@ struct IBestTab{
                 .maxLines(1)
                 .textOverflow({overflow: TextOverflow.Ellipsis})
 				.fontWeight(this.getIsActive() ? this.activeFontWeight : FontWeight.Normal)
+                if(this.item.icon && this.item.iconPosition == "right") {
+                    IBestIcon({
+                        name: this.item.icon,
+                        iconSize: this.fontSize,
+                        color: this.getFontColor()
+                    })
+                }
             }
             .id(`ibestTab_${this.uniId}_text_${this.item.name}`)
         }

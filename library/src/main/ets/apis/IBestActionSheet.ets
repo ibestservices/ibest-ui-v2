@@ -1,5 +1,6 @@
 import { AppStorageV2, ComponentContent, LengthMetrics, UIContext } from '@kit.ArkUI';
-import { convertDimensionsWidthUnit, generateId, getLengthUnit, getSizeByUnit } from '../utils/utils';
+import { convertDimensionsWidthUnit, generateId, getLengthUnit, getSizeByUnit,
+	handleBeforeFunction } from '../utils/utils';
 import CustomContent from '../common/components/CustomContent';
 import { GRAY_COLOR } from '../theme-chalk/src/color';
 import { CONTAINER_SIZE } from '../theme-chalk/src/container';
@@ -303,11 +304,7 @@ struct defaultContent{
 										.opacity(action.isDisabled ? 0.5 : 1)
 										.onClick(() => {
 											if (!(action.isDisabled || action.readonly)) {
-												if (action.value) {
-													this.option.onSelect?.(listIndex, index, action.value)
-												} else {
-													this.option.onSelect?.(listIndex, index)
-												}
+												this.option.onSelect?.(listIndex, index, action.value)
 												this.option.close(this.option.id)
 											}
 										})
@@ -409,17 +406,6 @@ interface contentNodeVal{
 	content: ComponentContent<IBestActionSheetParams>
 	params: IBestActionSheetParams
 }
-async function handleBeforeClose(params: IBestActionSheetParams) {
-	let status = true
-	try {
-		if (params.beforeClose) {
-			status = await params.beforeClose()
-		}
-	} catch (e) {
-		status = false
-	}
-	return status
-}
 
 class ActionSheet{
 	private contentNodeArr: contentNodeVal[] = []
@@ -485,7 +471,7 @@ class ActionSheet{
 			let index = this.contentNodeArr.findIndex(e => e.key == key)
 			let val = this.contentNodeArr[index]
 			if(val.params.beforeClose){
-				let status = await handleBeforeClose(val.params)
+				let status = await handleBeforeFunction(val.params.beforeClose)
 				if(!status){
 					return
 				}

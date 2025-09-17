@@ -113,6 +113,11 @@ export struct IBestSearch {
      */
 	@Param rightBtnPressBgColor: ResourceColor = IBestSearchColor.activeBg
 	/**
+	 * 外侧内边距
+	 * @since 1.0.3
+	 */
+	@Param outPadding: Padding | Length | LocalizedPadding = ''
+	/**
 	 * 自定义右侧按钮
 	 */
 	@BuilderParam customRightButton: CustomBuilder
@@ -250,7 +255,12 @@ export struct IBestSearch {
 			.height(getSizeByUnit(this.contentHeight))
 		}
 		.width(CONTAINER_SIZE.FULL)
-		.padding({ left: this.baseStyle.spaceSm, right: this.customRightButton || this.showRightButton ? 0 : this.baseStyle.spaceSm, top: convertDimensionsWidthUnit(10), bottom: convertDimensionsWidthUnit(10) })
+		.padding(this.outPadding ? getSizeByUnit(this.outPadding) : {
+			left: this.baseStyle.spaceSm,
+			right: this.customRightButton || this.showRightButton ? 0 : this.baseStyle.spaceSm,
+			top: convertDimensionsWidthUnit(10),
+			bottom: convertDimensionsWidthUnit(10)
+		})
 		.backgroundColor(this.outBgColor)
 		.enabled(!this.disabled)
 	}

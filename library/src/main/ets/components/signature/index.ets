@@ -1,7 +1,7 @@
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
-import { convertDimensions, convertDimensionsWidthUnit, getComponentSnapshot, getSizeByUnit } from '../../utils/utils'
+import { convertDimensionsWidthUnit, getComponentSnapshot, getSizeByUnit } from '../../utils/utils'
 import { IBestButton } from '../button'
 import { IBestSignatureColor } from './color'
 import { IBestSignatureController } from './index.type'
@@ -204,9 +204,9 @@ export struct IBestSignature{
 				Row({ space: this.baseStyle.spaceXs as string }){
 					IBestButton({
 						text: this.clearText,
-						btnWidth: convertDimensions(60),
-						btnHeight: convertDimensions(32),
-						btnFontSize: convertDimensions(12),
+						btnWidth: 60,
+						btnHeight: 32,
+						btnFontSize: 12,
 						onBtnClick: () => {
 							this.clearCanvas()
 						}
@@ -214,9 +214,9 @@ export struct IBestSignature{
 					IBestButton({
 						type: 'primary',
 						text: this.confirmText,
-						btnWidth: convertDimensions(60),
-						btnHeight: convertDimensions(32),
-						btnFontSize: convertDimensions(12),
+						btnWidth: 60,
+						btnHeight: 32,
+						btnFontSize: 12,
 						onBtnClick: () => {
 							this.confirm()
 						}

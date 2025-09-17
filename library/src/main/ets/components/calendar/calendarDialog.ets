@@ -17,6 +17,17 @@ export struct IBestCalendarDialog {
 	 */
 	@Param @Require visible: boolean
 	/**
+	 * 已选日期
+	 * @since 1.0.3
+	 */
+	@Param value: string | string[] = []
+	/**
+	 * 默认选中日期
+	 * @deprecated since 1.0.3
+	 * @useinstead value
+	 */
+	@Param defaultSelectedDate: string[] = []
+	/**
 	 * 底部偏移
 	 */
 	@Param offsetY: number = 0
@@ -28,10 +39,6 @@ export struct IBestCalendarDialog {
 	 * 弹框圆角半径
 	 */
 	@Param cornerRadius: Length | BorderRadiuses | LocalizedBorderRadiuses = convertDimensionsWidthUnit(10)
-	/**
-	 * 默认选中日期
-	 */
-	@Param defaultSelectedDate: string[] = []
 	/**
 	 * 单项宽度
 	 */
@@ -118,12 +125,14 @@ export struct IBestCalendarDialog {
 	 */
 	@Event onConfirm: (value: IBestCalendarConfirmResult[]) => void = () => {}
 	@Event $visible: (value: boolean) => void = () => {}
+	@Event $value: (value: string | string[]) => void = () => {}
 	// 已选日期
-	@Local selectedDate: IBestCalendarConfirmResult[] = []
+	@Local selectedValue: string | string[] = []
+	@Event $selectedValue: (value: string | string[]) => void = () => {}
 
 	@Builder baseBuilder() {
 		IBestCalendar({
-			defaultSelectedDate: this.selectedDate.length ? this.selectedDate.map(item => item.dateStr) : this.defaultSelectedDate,
+			value: this.selectedValue,
 			itemWidth: this.itemWidth,
 			isShowLunar: this.isShowLunar,
 			selectType: this.selectType,
@@ -145,16 +154,29 @@ export struct IBestCalendarDialog {
 			isShowUnClock: this.isShowUnClock,
 			unClockText: this.unClockText,
 			dayItemBuilder: this.dayItemBuilder,
+			$value: (value: string | string[]): void => this.$selectedValue(value),
 			onConfirm: (value): void => this.onGetCalendarResult(value)
 		})
 	}
-	/**
-	 * 获取日历选择结果 触发onConfirm回调函数 并关闭弹框
-	 */
+
+	aboutToAppear(): void {
+		this.selectedValue = this.value || this.defaultSelectedDate
+	}
+	@Monitor("value", "value.length")
+	valueChange(){
+		this.selectedValue = this.value
+	}
+	@Monitor("visible")
+	visibleChange(){
+		if(this.visible){
+			this.valueChange()
+		}
+	}
+	// 获取日历选择结果 触发onConfirm回调函数 并关闭弹框
 	onGetCalendarResult(value: IBestCalendarConfirmResult[]) {
 		if (value.length) {
-			this.selectedDate = value
-			this.onConfirm(this.selectedDate)
+			this.$value(value.length == 1 ? value[0].dateStr : value.map(item => item.dateStr))
+			this.onConfirm(value)
 			this.$visible(false)
 		}
 	}

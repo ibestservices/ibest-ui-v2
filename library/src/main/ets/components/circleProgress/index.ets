@@ -1,5 +1,5 @@
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
-import { convertDimensions, getSizeByUnit } from '../../utils/utils'
+import { getSizeByUnit } from '../../utils/utils'
 import { AppStorageV2, matrix4 } from '@kit.ArkUI'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestCircleProgressColor } from './color'
@@ -44,7 +44,7 @@ export struct IBestCircleProgress{
     /**
      * 进度条直径
      */
-    @Param diameter: number = convertDimensions(100)
+    @Param diameter: number = 100
     /**
      * 目标进度
      */
@@ -121,7 +121,7 @@ export struct IBestCircleProgress{
 		}
 	}
     getSize(){
-        return getSizeByUnit(this.diameter - this.strokeWidth)
+        return this.diameter - this.strokeWidth
     }
     getPosition(){
         let matrix1 = matrix4.identity()

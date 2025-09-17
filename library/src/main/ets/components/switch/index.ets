@@ -1,6 +1,6 @@
 import { IBestStorageKey, IBestAwaitable, IBestStringNumber } from '../../model/Global.type'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
-import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit } from '../../utils/utils'
+import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit, handleBeforeFunction } from '../../utils/utils'
 import { IBestLoading } from '../loading'
 import { IBestSwitchColor } from './color'
 import { AppStorageV2 } from '@kit.ArkUI'
@@ -67,26 +67,16 @@ export struct IBestSwitch {
 
 	aboutToAppear(): void {
 		this.uniId = this.getUniqueId()
+	}
+	initSize(){
 		setTimeout(() => {
 			this.switchBarSize = getComponentsInfo(this.uiContext, `ibest_switch_${this.uniId}`).width
-		}, 20)
-	}
-	// 结束前的动画
-	async handleBeforeClose(value: boolean) {
-		let status = true
-		try {
-			if (this.beforeChange) {
-				status = await this.beforeChange(value)
-			}
-		} catch (e) {
-			status = false
-		}
-		return status
+		}, 50)
 	}
 	// 改变的回调
 	async handleChange() {
 		const nextValue = !this.value
-		let status = await this.handleBeforeClose(nextValue)
+		let status = await handleBeforeFunction(this.beforeChange, nextValue)
 		if(!status){
 			return
 		}
@@ -142,6 +132,16 @@ export struct IBestSwitch {
 		.onClick(() => {
 			this.handleChange()
 			this.onSwitchClick()
+		})
+		.onAppear(() => {
+			setTimeout(() => {
+				this.initSize()
+			}, 20)
+		})
+		.onVisibleAreaChange([0,1], (isExpanding: boolean) => {
+			if(isExpanding && !this.switchBarSize){
+				this.initSize()
+			}
 		})
 	}
 }

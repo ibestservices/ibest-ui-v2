@@ -146,7 +146,7 @@ export struct IBestNavBar{
 	 */
 	@Param isShowStatusBar: boolean = false
 	/**
-	 * 状态栏背景色
+	 * 状态栏背景色, 仅isKeepBgColorSame为false时生效
 	 */
 	@Param statusBarBgColor: ResourceColor = ''
 	/**
@@ -195,9 +195,9 @@ export struct IBestNavBar{
 
 	aboutToAppear(): void {
 		this.uniId = this.getUniqueId()
-		this.getLeftRightWidth()
+		this.initSize()
 	}
-	getLeftRightWidth(){
+	initSize(){
 		setTimeout(() => {
 			let leftWidth = 0
 			let rightWidth = 0
@@ -216,7 +216,7 @@ export struct IBestNavBar{
 				this.leftWidth = this.titleBuilder || this.titleTextAlign == "left" ? leftWidth : maxPadding
 				this.rightWidth = maxPadding
 			}
-		}, 0)
+		}, 50)
 	}
 
 	build() {

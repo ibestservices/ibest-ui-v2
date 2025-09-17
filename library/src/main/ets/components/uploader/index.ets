@@ -8,7 +8,7 @@ import { photoAccessHelper } from '@kit.MediaLibraryKit'
 import { IBestLoading } from '../loading'
 import fs from '@ohos.file.fs'
 import { IBestIcon, IBestImagePreview } from '../../../../../Index'
-import { convertDimensions, convertDimensionsWidthUnit, getLengthUnit, getSizeByUnit } from '../../utils/utils'
+import { convertDimensionsWidthUnit, getLengthUnit, getSizeByUnit, handleBeforeFunction } from '../../utils/utils'
 import { IBestUploaderColor } from './color'
 import { IBestStorageKey, IBestAwaitable, IBestStringNumber } from '../../model/Global.type'
 
@@ -191,21 +191,9 @@ export struct IBestUploader {
 			this.onChange(arr, initList)
 		}
 	}
-	// 处理删除前回调
-	async handleBeforeRemove(file: IBestUploaderFile, index: number){
-		let status = true
-		if(this.beforeRemove){
-			try {
-				status = await this.beforeRemove(file, index)
-			} catch (e) {
-				status = false
-			}
-		}
-		return status
-	}
 	// 删除
 	async remove(file: IBestUploaderFile, index: number){
-		let status = await this.handleBeforeRemove(file, index)
+		let status = await handleBeforeFunction(this.beforeRemove, file, index)
 		if(status){
 			let initList = [...this.fileList]
 			initList.splice(index, 1)
@@ -226,8 +214,8 @@ export struct IBestUploader {
 
 	build() {
 		Flex({ wrap: FlexWrap.Wrap, space: {
-			main: new LengthMetrics(convertDimensions(8), getLengthUnit()),
-			cross: new LengthMetrics(convertDimensions(8), getLengthUnit())
+			main: new LengthMetrics(8, getLengthUnit()),
+			cross: new LengthMetrics(8, getLengthUnit())
 		}}){
 			if(this.showPreviewList && this.fileList.length){
 				ForEach(this.fileList, (item: IBestUploaderFile, index: number) => {

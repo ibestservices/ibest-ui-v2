@@ -1,4 +1,4 @@
-import { clamp, convertDimensions, getComponentsInfo, getSizeByUnit } from '../../utils/utils'
+import { clamp, getComponentsInfo, getSizeByUnit } from '../../utils/utils'
 import { GRAY_COLOR } from '../../theme-chalk/src/color'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
@@ -22,11 +22,11 @@ export struct IBestRate {
 	/**
 	 * 图标大小
 	 */
-	@Param iconSize: IBestStringNumber = convertDimensions(20)
+	@Param iconSize: IBestStringNumber = 20
 	/**
 	 * 间距
 	 */
-	@Param space: IBestStringNumber = convertDimensions(4)
+	@Param space: IBestStringNumber = 4
 	/**
 	 * 选中图标
 	 */
@@ -132,9 +132,6 @@ export struct IBestRate {
 			let val = value - i
 			return new RateOption(val > 1 ? 1 : val > 0 ? val : 0)
 		})
-		setTimeout(() => {
-			this.getContentWidth()
-		}, 10)
 	}
 	// 获取组件容器宽度
 	getContentWidth(){
@@ -179,6 +176,16 @@ export struct IBestRate {
 		}
 		.id(`ibest_rate_${this.uniId}`)
 		.enabled(!(this.disabled || this.readOnly))
+		.onAppear(() => {
+			setTimeout(() => {
+				this.getContentWidth()
+			}, 10)
+		})
+		.onVisibleAreaChange([0,1], (isExpanding: boolean) => {
+			if(isExpanding && !this.containerWidth){
+				this.getContentWidth()
+			}
+		})
 		.gesture(
 			PanGesture(this.panOption)
 				.onActionStart((event: GestureEvent) => {

@@ -1,6 +1,7 @@
 import { AppStorageV2, componentUtils, ComponentUtils, LengthUnit, MeasureOptions } from '@kit.ArkUI'
 import {
 	ComInfoType,
+	IBestAwaitable,
 	IBestBaseDataType,
 	IBestStorageKey,
 	IBestStringNumber
@@ -213,36 +214,27 @@ export function getSizeByUnit(val: AnyType, isFont?: boolean): string {
  */
 export function getLengthUnit(): LengthUnit {
 	let config: IBestGlobalConfig = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG)!
-	return config.unit == "lpx" ? LengthUnit.LPX : config.unit == "vp" ? LengthUnit.VP : LengthUnit.PX
+	return config.unit == "lpx" ? LengthUnit.LPX : config.unit == "px" ? LengthUnit.PX : LengthUnit.VP
 }
 /**
  * 根据单位转换尺寸 用于框架固定尺寸格式化 带单位
  */
 export function convertDimensionsWidthUnit(val: number, isFont?: boolean): string {
-	let config = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG)
-	let unit = "vp"
+	let config: IBestGlobalConfig = AppStorage.get(IBestStorageKey.GLOBAL_CONFIG)!
+	let unit = isFont ? "fp" : "vp"
+	let value = val
 	if (config) {
 		unit = (isFont ? config.fontUnit : config.unit) as string
-	}
-	return convertDimensions(val, isFont) + unit
-}
-/**
- * 根据单位转换尺寸
- */
-export function convertDimensions(val: number, isFont?: boolean): number {
-	let config = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG)
-	if (config) {
-		let unit = isFont ? config.fontUnit : config.unit
 		switch (unit) {
 			case "lpx":
-				return val * GlobalStore.screenWidth / (config.designWidth as number)
+				value = val * GlobalStore.screenWidth / (config.designWidth as number)
+				break
 			case "px":
-				return GlobalStore.vp2px(val)
-			default:
-				return val
+				value = GlobalStore.vp2px(val)
+				break
 		}
 	}
-	return val
+	return value + unit
 }
 /**
  * base64 转 pixelMap
@@ -274,4 +266,18 @@ export function saveAppStorage(key: string, value: boolean | IBestStringNumber) 
 	}else{
 		AppStorageV2.connect(IBestBaseDataType, key, () => new IBestBaseDataType(value))
 	}
+}
+/**
+ * 处理异步函数
+ */
+export async function handleBeforeFunction(fn?: (...funArgs: AnyType[]) => IBestAwaitable, ...args: AnyType[]) {
+	let status = true
+	try {
+		if (fn) {
+			status = await fn(...args)
+		}
+	} catch (e) {
+		status = false
+	}
+	return status
 }

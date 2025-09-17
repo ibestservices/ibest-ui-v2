@@ -1,4 +1,5 @@
 import { IBestStringNumber } from "../../../../../Index"
+import { IBestAwaitable } from "../../model/Global.type";
 
 /**
  * 组件名称
@@ -38,6 +39,11 @@ export interface IBestDropdownMenuOption {
      * 图标
      */
     icon?: ResourceStr
+    /**
+     * 图标位置
+     * @since 1.0.3
+     */
+    iconPosition?: 'left' | 'right'
 }
 export class MenuContentController{
     hide: () => void = () => {}
@@ -49,11 +55,13 @@ export class IBestDropdownMenuContentType{
     @Trace value?: IBestStringNumber = ''
     @Trace title?: ResourceStr = ''
     @Trace options?: IBestDropdownMenuOption[] = []
+    maxHeight?: IBestStringNumber = ''
     @Trace disabled?: boolean = false
     defaultBuilder?: CustomBuilder
     onOpen?: () => void = () => {}
     onClose?: () => void = () => {}
     onChange?: (value: IBestStringNumber) => void = () => {}
+    beforeOpen?: () => IBestAwaitable
 }
 export class IBestDropdownMenuContentParams extends IBestDropdownMenuContentType{
     dialogId?: IBestStringNumber = ''
@@ -63,11 +71,13 @@ export class IBestDropdownMenuContentParams extends IBestDropdownMenuContentType
             this.value = val.value
             this.title = val.title
             this.options = val.options
+            this.maxHeight = val.maxHeight
             this.disabled = val.disabled
             this.defaultBuilder = val.defaultBuilder
             this.onOpen = val.onOpen
             this.onClose = val.onClose
             this.onChange = val.onChange
+            this.beforeOpen = val.beforeOpen
         }
     }
 }

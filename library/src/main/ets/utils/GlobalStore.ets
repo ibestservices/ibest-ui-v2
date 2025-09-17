@@ -41,17 +41,15 @@ export default class GlobalStore {
      */
 	private static getScreenAndAvoidSize(){
 		try {
-			let mainWindow: window.Window = GlobalStore.getMainWindow()
-			let screenInfo: window.WindowProperties = mainWindow.getWindowProperties()
-			let avoidArea = mainWindow.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM)
-			let systemDht = mainWindow.getWindowAvoidArea(window.AvoidAreaType.TYPE_NAVIGATION_INDICATOR)
-			let topSize = GlobalStore.px2vp(avoidArea.topRect.height)
-			let navigationSize = GlobalStore.px2vp(systemDht.bottomRect.height)
-			let o = display.getDefaultDisplaySync().orientation
-			let screenWidth = screenInfo.windowRect.width
-			let screenHeight = screenInfo.windowRect.height
-			GlobalStore.screenWidth = screenWidth
-			GlobalStore.screenHeight = screenHeight
+			const mainWindow: window.Window = GlobalStore.getMainWindow()
+			const screenInfo: window.WindowProperties = mainWindow.getWindowProperties()
+			const avoidArea = mainWindow.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM)
+			const systemDht = mainWindow.getWindowAvoidArea(window.AvoidAreaType.TYPE_NAVIGATION_INDICATOR)
+			const topSize = GlobalStore.px2vp(avoidArea.topRect.height)
+			const navigationSize = GlobalStore.px2vp(systemDht.bottomRect.height)
+			const o = display.getDefaultDisplaySync().orientation
+			GlobalStore.screenWidth = GlobalStore.px2vp(screenInfo.windowRect.width)
+			GlobalStore.screenHeight = GlobalStore.px2vp(screenInfo.windowRect.height)
 			saveAppStorage(IBestStorageKey.IS_LANDSCAPE, o == 1 || o == 3)
 			saveAppStorage(IBestStorageKey.TOP_AVOID_HEIGHT, topSize)
 			saveAppStorage(IBestStorageKey.BOTTOM_BAR_HEIGHT, navigationSize)
