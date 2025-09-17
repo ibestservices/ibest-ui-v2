@@ -42,6 +42,7 @@ struct FloatBubblePage {
     @Local bubbleShow1: boolean = false
     @Local bubbleShow2: boolean = false
 
+    @Local isChecked: boolean = true
     @Local group: string = "bubbleGroup"
     @Local active: string = "1"
     @Local switchValue: boolean = true
@@ -75,8 +76,7 @@ struct FloatBubblePage {
             }
             ComponentShowContainer({ title: $r("app.string.component_checkbox") }) {
                 IBestCheckbox({
-                    value: true,
-                    name: '1',
+                    value: this.isChecked!!,
                     label: $r("app.string.content")
                 })
             }

@@ -105,7 +105,7 @@ export struct IBestTextEllipsis{
     getExpandText(){
         return getResourceStr(this.expandText)
     }
-    @Monitor("text, rows, omitPosition")
+    @Monitor("text", "rows", "omitPosition")
     formatText(){
         setTimeout(() => {
             let text = this.getTextString()
@@ -117,7 +117,7 @@ export struct IBestTextEllipsis{
             }else {
                 this.showText = this.getTextString()
             }
-        }, 0)
+        }, 20)
     }
     getTextByWidth(){
         let clipText = this.getTextString()

@@ -51,8 +51,16 @@ export struct IBestHighlight {
 	 * 超出隐藏
   	 */
 	@Param overflow: TextOverflow = TextOverflow.None
+	/**
+	 * 高亮词点击事件
+	 * @since 1.0.3
+	 */
+	@Event onKeywordClick: (text: string) => void = () => {}
 
 	highlightChunks(): Chunk[] {
+		if(!this.sourceString){
+			return []
+		}
 		const flags = this.caseSensitive ? 'g' : 'gi'
 		let sourceStr = this.getRealSourceString()
 		let _keywords: IBestHighlightKeywords[] = []
@@ -162,6 +170,9 @@ export struct IBestHighlight {
 					Span(this.getRealSourceString().slice(item.start, item.end))
 						.fontColor(item.color)
 						.fontSize(item.fontSize)
+						.onClick(() => {
+							this.onKeywordClick(this.getRealSourceString().slice(item.start, item.end))
+						})
 				} else {
 					Span(this.getRealSourceString().slice(item.start, item.end))
 				}

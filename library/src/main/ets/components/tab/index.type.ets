@@ -31,6 +31,11 @@ export class IBestTabItemType{
      */
     icon?: ResourceStr = ""
     /**
+     * 图标位置
+     * @since 1.0.3
+     */
+    iconPosition?: "left" | "right"
+    /**
      * 是否禁用
      */
     @Trace isDisable?: boolean = false
@@ -42,6 +47,7 @@ export class IBestTabItem extends IBestTabItemType{
         this.name = value.name
         this.number = value.number ?? undefined
         this.icon = value.icon ?? undefined
+        this.iconPosition = value.iconPosition ?? "left"
         this.isDisable = value.isDisable ?? false
     }
 }

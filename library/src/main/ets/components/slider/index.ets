@@ -1,7 +1,6 @@
 import {
 	addNumber,
 	clamp,
-	convertDimensions,
 	convertDimensionsWidthUnit,
 	getComponentsInfo,
 	getLengthUnit,
@@ -20,7 +19,6 @@ export struct IBestSlider{
 	 * 全局公共样式
 	 */
 	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
-	
 	/**
 	 * 当前进度值
 	 */
@@ -44,7 +42,7 @@ export struct IBestSlider{
 	/**
 	 * 滑块大小
 	 */
-	@Param buttonSize: number = convertDimensions(24)
+	@Param buttonSize: IBestStringNumber = convertDimensionsWidthUnit(24)
 	/**
 	 * 滑块背景色
      */
@@ -108,7 +106,7 @@ export struct IBestSlider{
 					.shadow({ radius: 2, color: "rgba(0,0,0,0.5)", offsetY: 1 })
 			}
 		}
-		.id(`buttonBox_${this.uniId}`)
+		.id(`ibest_slider_buttonBox_${this.uniId}`)
 		.position(this.getBarPosition(buttonIndex))
 	}
 
@@ -116,14 +114,11 @@ export struct IBestSlider{
 		this.uniId = this.getUniqueId()
 		this.updateValue(this.value)
 		this.calcMainAxis()
-		setTimeout(() => {
-			this.getButtonSize()
-		}, 50)
 	}
 
 	// 获取slider 内容容器尺寸
 	getButtonSize(){
-		let size = getComponentsInfo(this.uiContext, `buttonBox_${this.uniId}`)
+		let size = getComponentsInfo(this.uiContext, `ibest_slider_buttonBox_${this.uniId}`)
 		this.buttonWidth = size.width
 		this.buttonHeight = size.height
 	}
@@ -144,7 +139,7 @@ export struct IBestSlider{
 	}
 	getBarPosition(buttonIndex: 0 | 1): LocalizedEdges{
 		let value: LengthMetrics = {
-			value: -convertDimensions(this.buttonWidth/2),
+			value: -this.buttonWidth/2,
 			unit: getLengthUnit()
 		}
 		if(Array.isArray(this.value)){
@@ -187,8 +182,7 @@ export struct IBestSlider{
 		const max = +this.max
 		const step = +this.step
 		value = clamp(value, min, max)
-		const diff = Math.round((value - min) / step) * step
-		return addNumber(min, diff)
+		return addNumber(min, Math.round((value - min) / step) * step)
 	}
 	// 计算选中条的长度百分比
 	@Monitor("value")
@@ -215,9 +209,9 @@ export struct IBestSlider{
 		const x = touch.x
 		const y = touch.y
 		if(this.reverse){
-			value = (this.vertical ? Math.round((height - y) / height * scope) : Math.round((width - x) / width * scope)) + this.min
+			value = (this.vertical ? (height - y) / height * scope : (width - x) / width * scope) + this.min
 		}else{
-			value = (this.vertical ? Math.round(y / height * scope) : Math.round(x / width * scope)) + this.min
+			value = (this.vertical ? y / height * scope : x / width * scope) + this.min
 		}
 		switch (event.type){
 			case TouchType.Down:
@@ -233,9 +227,9 @@ export struct IBestSlider{
 						current = [left, value]
 						this.buttonIndex = 1
 					}
-					this.updateValue(current)
+					this.updateValue(current, true)
 				}else {
-					this.updateValue(value)
+					this.updateValue(value, true)
 				}
 				break
 			case TouchType.Move:
@@ -253,22 +247,19 @@ export struct IBestSlider{
 					}else{
 						current[index] = value
 					}
-					this.updateValue(current)
+					this.updateValue(current, true)
 				} else {
-					this.updateValue(value)
+					this.updateValue(value, true)
 				}
-				break
-			case TouchType.Up:
-				this.onChange(this.value)
 				break
 		}
 	}
 	// 更新值
-	updateValue(value: IBestSliderValue){
-		if (Array.isArray(value)) {
-			this.$value(value.map(e => this.format(e)) as IBestSliderValue)
-		} else {
-			this.$value(this.format(value))
+	updateValue(value: IBestSliderValue, emitChange: boolean = false){
+		let val = Array.isArray(value) ? value.map(e => this.format(e)) as IBestSliderValue : this.format(value)
+		this.$value(val)
+		if (emitChange) {
+			this.onChange(val)
 		}
 	}
 
@@ -298,8 +289,8 @@ export struct IBestSlider{
 							this.dragBar(1)
 						}
 					}
-					.width(this.vertical ? convertDimensionsWidthUnit(this.buttonWidth || this.buttonSize) : "")
-					.height(this.vertical ? "" : convertDimensionsWidthUnit(this.buttonHeight || this.buttonSize))
+					.width(this.vertical ? this.buttonWidth || getSizeByUnit(this.buttonSize) : "")
+					.height(this.vertical ? "" : this.buttonHeight || getSizeByUnit(this.buttonSize))
 					.justifyContent(FlexAlign.Center)
 					.position(this.getActiveLinePosition())
 				}
@@ -315,15 +306,25 @@ export struct IBestSlider{
 						this.onBgTouch(event)
 					})
 			}
-			.width(this.vertical ? convertDimensionsWidthUnit(this.buttonWidth) : CONTAINER_SIZE.FULL)
-			.height(this.vertical ? CONTAINER_SIZE.FULL : convertDimensionsWidthUnit(this.buttonHeight))
+			.width(this.vertical ? this.buttonWidth : CONTAINER_SIZE.FULL)
+			.height(this.vertical ? CONTAINER_SIZE.FULL : this.buttonHeight)
 		}
 		.padding({
-			left: this.vertical ? 0 : convertDimensionsWidthUnit(this.buttonWidth/2 + this.space),
-			right: this.vertical ? 0 : convertDimensionsWidthUnit(this.buttonWidth/2 + this.space),
-			top: this.vertical ? convertDimensionsWidthUnit(this.buttonHeight/2 + this.space) : convertDimensionsWidthUnit(this.space),
-			bottom: this.vertical ? convertDimensionsWidthUnit(this.buttonHeight/2 + this.space) : convertDimensionsWidthUnit(this.space)
+			left: this.vertical ? 0 : this.buttonWidth/2 + this.space,
+			right: this.vertical ? 0 : this.buttonWidth/2 + this.space,
+			top: this.vertical ? this.buttonHeight/2 + this.space : this.space,
+			bottom: this.vertical ? this.buttonHeight/2 + this.space : this.space
 		})
 		.enabled(!this.disabled)
+		.onAppear(() => {
+			setTimeout(() => {
+				this.getButtonSize()
+			}, 50)
+		})
+		.onVisibleAreaChange([0,1], (isExpanding: boolean) => {
+			if(isExpanding && !this.buttonWidth){
+				this.getButtonSize()
+			}
+		})
 	}
 }

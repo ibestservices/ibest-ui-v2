@@ -15,11 +15,16 @@ export default class EntryAbility extends UIAbility {
 		// hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onDestroy');
 	// }
 	onWindowStageCreate(windowStage: window.WindowStage): void {
-		windowStage.getMainWindowSync().setWindowLayoutFullScreen(true)
+		let mainWindow = windowStage.getMainWindowSync()
+		mainWindow.setWindowLayoutFullScreen(true)
 		windowStage.loadContent('pages/Splash', (err, data) => {
 			GlobalStore.init(windowStage, this.context)
 			// 组件库初始化
 			IBestInit(windowStage, this.context)
+			mainWindow.getUIContext().getFont().registerFont({
+				familyName: 'testFont',
+				familySrc: $rawfile('iconfont.woff')
+			})
 		})
 	}
 

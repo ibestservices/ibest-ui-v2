@@ -1,7 +1,7 @@
 import { IBestStorageKey, IBestStringNumber } from "../../model/Global.type"
 import { CONTAINER_SIZE } from "../../theme-chalk/src/container"
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from "../../theme-chalk/src/index.type"
-import { clamp, convertDimensions, getSizeByUnit } from "../../utils/utils"
+import { clamp, getSizeByUnit } from "../../utils/utils"
 import { IBestSectorProgressColor } from "./color"
 import { AppStorageV2, matrix4 } from "@kit.ArkUI"
 
@@ -18,7 +18,7 @@ export struct IBestSectorProgress {
     /**
      * 进度条直径
      */
-    @Param diameter: number = convertDimensions(100)
+    @Param diameter: number = 100
     /**
      * 目标进度
      */

@@ -1,7 +1,7 @@
 import { IBestDialogColor } from './color'
 import { GRAY_COLOR } from '../../theme-chalk/src/color'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
-import { convertDimensionsWidthUnit, getSizeByUnit, sleep } from '../../utils/utils'
+import { convertDimensionsWidthUnit, getSizeByUnit, handleBeforeFunction, sleep } from '../../utils/utils'
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { AppStorageV2, ImmersiveMode, LengthMetrics, LevelMode } from '@kit.ArkUI'
@@ -725,6 +725,47 @@ export struct IBestDialog {
 				return DialogAlignment.Center
 		}
 	}
+	// 点击取消的回调
+	async handleCancel() {
+		if (this.cancelButtonDisabled || this.cancelButtonLoading) {
+			return
+		}
+		if (this.beforeClose) {
+			this.$cancelButtonLoading(true)
+			const status = await handleBeforeFunction(this.beforeClose, 'cancel')
+			this.$cancelButtonLoading(false)
+			if (!status) {
+				return
+			}
+		}
+		this.$cancelButtonDisabled(true)
+		this.close()
+		this.onCancel()
+		// 等待动画结束
+		await sleep()
+		this.$cancelButtonDisabled(false)
+	}
+	// 点击确定的回调
+	async handleConfirm() {
+		if (this.confirmButtonDisabled || this.confirmButtonLoading) {
+			return
+		}
+		if (this.beforeClose) {
+			this.$confirmButtonLoading(true)
+			const status = await handleBeforeFunction(this.beforeClose, 'confirm')
+			this.$confirmButtonLoading(false)
+			if (!status) {
+				return
+			}
+		}
+		this.$confirmButtonDisabled(true)
+		this.close()
+		this.onConfirm()
+		// 等待动画结束
+		await sleep()
+		this.$confirmButtonDisabled(false)
+		this.$confirmButtonLoading(false)
+	}
 	async open() {
 		this.dialogId = await this.promptAction.openCustomDialog({
 			builder: () => {
@@ -763,59 +804,6 @@ export struct IBestDialog {
 	// 关闭弹框
 	close() {
 		this.$visible(false)
-	}
-	// 结束
-	async handleBeforeClose(action: 'cancel' | 'confirm') {
-		let status = true
-		try {
-			if (this.beforeClose) {
-				status = await this.beforeClose(action)
-			}
-		} catch (e) {
-			status = false
-		}
-		return status
-	}
-	// 点击取消的回调
-	async handleCancel() {
-		if (this.cancelButtonDisabled || this.cancelButtonLoading) {
-			return
-		}
-		if (this.beforeClose) {
-			this.$cancelButtonLoading(true)
-			const status = await this.handleBeforeClose('cancel')
-			this.$cancelButtonLoading(false)
-			if (!status) {
-				return
-			}
-		}
-		this.$cancelButtonDisabled(true)
-		this.close()
-		this.onCancel()
-		// 等待动画结束
-		await sleep()
-		this.$cancelButtonDisabled(false)
-	}
-	// 点击确定的回调
-	async handleConfirm() {
-		if (this.confirmButtonDisabled || this.confirmButtonLoading) {
-			return
-		}
-		if (this.beforeClose) {
-			this.$confirmButtonLoading(true)
-			const status = await this.handleBeforeClose('confirm')
-			this.$confirmButtonLoading(false)
-			if (!status) {
-				return
-			}
-		}
-		this.$confirmButtonDisabled(true)
-		this.close()
-		this.onConfirm()
-		// 等待动画结束
-		await sleep()
-		this.$confirmButtonDisabled(false)
-		this.$confirmButtonLoading(false)
 	}
 	build() {}
 }

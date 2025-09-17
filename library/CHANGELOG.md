@@ -1,5 +1,26 @@
 # 版本记录
 
+## 1.0.3
+#### 新增:
+1. IBestIcon 新增 fontName 属性,支持使用自定义图标;
+2. IBestCalendar 新增 value 属性, 支持双向绑定;
+3. IBestSearch 新增 outPadding 属性;
+4. IBestDropdownMenu 新增 dropDownIconSize 属性, IBestDropdownItem 新增 maxHeight beforeOpen 事件, IBestDropdownMenuOption 新增 iconPosition 属性;
+5. IBestHighlight 新增 onKeywordClick 事件;
+6. IBestImageCropper 新增 enableRotate maxAngle 属性, IBestImageCropperController 新增 setScale setAngle reset 方法;
+7. IBestTabItemType 新增 iconPosition 属性.
+
+#### 优化:
+1. IBestCollapseItem readOnly为true时不显示右侧箭头.
+
+#### bug修复:
+1. IBestSteps type为num类型时，activeColor 属性未生效问题;
+2. IBestColorPicker 滑动时色相滑块抖动问题;
+3. IBestSideBar maxHeight 无效问题;
+4. IBestCollapseItem isShowBorder 无效问题;
+5. IBestTable 高度问题;
+6. 部分组件 Monitor 传参问题.
+
 ## 1.0.2
 #### 新增：
 1. IBestCheckBox value值新增 string number 类型，新增 trueValue falseValue 属性;

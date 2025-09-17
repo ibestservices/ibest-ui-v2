@@ -614,6 +614,16 @@ export struct IBestField{
         .opacity(this.fieldDisabled ? 0.6 : 1)
         .clip(true)
 		.id(`ibest_field_${this.uniId}`)
+		.onAppear(() => {
+			setTimeout(() => {
+				this.initBorderSize()
+			}, 50)
+		})
+		.onVisibleAreaChange([0,1], (isExpanding: boolean) => {
+			if(isExpanding && this.borderLeft === undefined){
+				this.initBorderSize()
+			}
+		})
 		.onClick(() => {
 			this.fieldClick()
 		})
@@ -648,9 +658,6 @@ export struct IBestField{
         }else{
             this.init()
         }
-		setTimeout(() => {
-			this.initBorderSize()
-		}, 100)
     }
     aboutToDisappear(): void {
         if(this.formId && this.prop) {
@@ -874,6 +881,9 @@ export struct IBestField{
 	}
 	// 设置值
 	setValue(value: IBestFieldValueType) {
+		if (typeof value == "number" && !this.customRightContent) {
+			value = value.toString()
+		}
 		this.$value(value)
 	}
     build() {

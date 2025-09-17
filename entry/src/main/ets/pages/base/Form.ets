@@ -17,6 +17,7 @@ import {
 	IBestRadio,
 	IBestRadioGroup,
 	IBestStepper,
+	IBestSwipeCell,
 	IBestSwitch,
 	IBestToast,
 	IBestUploader,
@@ -34,11 +35,11 @@ export function FormBuilder(_: string, title: string){
 @ObservedV2
 class Form{
 	@Trace name: string = ''
-	@Trace phone: string = ''
+	@Trace phone: number | string = ""
 }
 @ObservedV2
 class Form1{
-	@Trace value1: number = 123.45
+	@Trace value1: string = "123"
 	@Trace value2: string = ""
 	@Trace value3: string = "abc"
 	@Trace value4: string = ""
@@ -336,6 +337,7 @@ struct FormPage {
 								})
 								IBestField({
 									formId: this.formId,
+									type: "number",
 									prop: 'phone',
 									value: this.form.phone!!,
 									label: "手机号",
@@ -346,6 +348,17 @@ struct FormPage {
 									]
 								})
 							}
+							IBestButton({
+								text: "设置值",
+								type: 'primary',
+								buttonSize: 'large',
+								onBtnClick: () => {
+									this.controller1.setFormValues({
+										"name": "测试",
+										"phone": 123456
+									})
+								}
+							})
 							IBestButton({
 								text: "验证姓名",
 								type: 'primary',
@@ -671,16 +684,8 @@ struct subjectItem{
 			}
 		})
 	}
-
-	build() {
-		IBestCellGroup({title: `学科${this.index+1}`, hasBorder: false}){
-			Text("删除")
-				.fontColor(modeColor.textColor4)
-				.fontSize(FONT_SIZE.SM)
-				.position({right: 0, top: 17})
-				.onClick(() => {
-					this.delete(this.index)
-				})
+	@Builder contentBuilder(){
+		IBestCellGroup({title: `学科${this.index+1}(左滑删除)`, hasBorder: false}){
 			IBestField({
 				formId: this.formId,
 				prop: `type.${this.index}`,
@@ -707,5 +712,22 @@ struct subjectItem{
 				contentBuilder: (): void => this.pickerBuilder()
 			})
 		}
+	}
+	@Builder delBuilder(){
+		IBestButton({
+			type: "danger",
+			round: true,
+			text: "删除",
+			onBtnClick: () => {
+				this.delete(this.index)
+			}
+		}).margin({left: SPACE.SM, right: SPACE.SM, top: 40})
+	}
+
+	build() {
+		IBestSwipeCell({
+			defaultContent: (): void => this.contentBuilder(),
+			rightContent: (): void => this.delBuilder()
+		})
 	}
 }

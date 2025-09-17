@@ -1,6 +1,6 @@
 import { IBestAwaitable } from '../../model/Global.type'
 import { emitter } from '../../utils/EventEmitter'
-import { clamp, getComponentsInfo, getEventName } from '../../utils/utils'
+import { clamp, getComponentsInfo, getEventName, handleBeforeFunction } from '../../utils/utils'
 import { COMPONENT_NAME, IBestSwipeCellSide, SWIPECELL_EVENT_NAME } from './index.type'
 
 @ComponentV2
@@ -31,6 +31,7 @@ export struct IBestSwipeCell{
 	@Local centerHeight: number = 0
 	@Local transX: number = 0
 	@Local isOpen: boolean = false
+	@Local lrOpacity: number = 0
 	private leftWidth: number = 0
 	private rightWidth: number = 0
 	private startTransX: number = 0
@@ -38,9 +39,6 @@ export struct IBestSwipeCell{
 
 	aboutToAppear(): void {
 		this.uniId = this.getUniqueId()
-		setTimeout(() => {
-			this.getContentWidth()
-		}, 0)
 		emitter.on(getEventName(COMPONENT_NAME, SWIPECELL_EVENT_NAME.SWIPECELL_TOUCH), this.uniId, (uniId: number): void => this.onSwipeCellTouch(uniId))
 	}
 	aboutToDisappear(): void {
@@ -61,6 +59,7 @@ export struct IBestSwipeCell{
 		this.leftWidth = leftInfo.width
 		this.rightWidth = rightInfo.width
 		this.centerHeight = centerInfo.height
+		this.lrOpacity = 1
 	}
 	onTouchStart(){
 		this.startTransX = this.transX
@@ -83,17 +82,6 @@ export struct IBestSwipeCell{
 			this.close("center")
 		}
 	}
-	async handleBeforeClose(position: IBestSwipeCellSide) {
-		let status = true
-		try {
-			if (this.beforeClose) {
-				status = await this.beforeClose(position)
-			}
-		} catch (e) {
-			status = false
-		}
-		return status
-	}
 	open (side: IBestSwipeCellSide) {
 		this.transX = side === 'left' ? this.leftWidth : -this.rightWidth
 		if (!this.isOpen) {
@@ -103,7 +91,7 @@ export struct IBestSwipeCell{
 	}
 	async close (position: IBestSwipeCellSide){
 		if (this.beforeClose) {
-			const status = await this.handleBeforeClose(position)
+			const status = await handleBeforeFunction(this.beforeClose, position)
 			if (!status) {
 				return
 			}
@@ -125,6 +113,7 @@ export struct IBestSwipeCell{
 					.id("ibest_swipe_left_" + this.uniId)
 					.position({ left: 0 })
 					.translate({ x: "-100%" })
+					.opacity(this.lrOpacity)
 					.parallelGesture(
 						TapGesture({fingers: 1})
 							.onAction(() => {
@@ -157,6 +146,7 @@ export struct IBestSwipeCell{
 					.id("ibest_swipe_right_" + this.uniId)
 					.position({ right: 0 })
 					.translate({ x: "100%" })
+					.opacity(this.lrOpacity)
 					.parallelGesture(
 						TapGesture({fingers: 1})
 							.onAction(() => {
@@ -183,5 +173,15 @@ export struct IBestSwipeCell{
 			)
 		}
 		.clip(true)
+		.onAppear(() => {
+			setTimeout(() => {
+				this.getContentWidth()
+			}, 50)
+		})
+		.onVisibleAreaChange([0,1], (isExpanding: boolean) => {
+			if(isExpanding && !this.centerHeight){
+				this.getContentWidth()
+			}
+		})
 	}
 }

@@ -194,9 +194,6 @@ export struct IBestCell {
 
 	aboutToAppear(){
 		this.uniId = this.getUniqueId()
-		setTimeout(() => {
-			this.init()
-		}, 100)
 	}
 	init(){
 		if(this.borderLeft === undefined){
@@ -258,9 +255,7 @@ export struct IBestCell {
 							}).margin({ right: getSizeByUnit(this.leftIconMarginRight) })
 						}
 						if (this.titleBuilder) {
-							Row() {
-								this.titleBuilder()
-							}
+							this.titleBuilder()
 						} else {
 							Text(this.title)
 								.layoutWeight(1)
@@ -270,19 +265,15 @@ export struct IBestCell {
 					}.width(CONTAINER_SIZE.FULL)
 					.alignItems(this.getAlignItems())
 					if (this.labelBuilder) {
-						Row() {
-							this.labelBuilder()
-						}
-					} else {
-						if (this.label) {
-							Text(this.label)
-								.width(CONTAINER_SIZE.FULL)
-								.fontSize(getSizeByUnit(this.computedCellSize.labelFontSize, true))
-								.margin({
-									top: this.baseStyle.spaceBase
-								})
-								.fontColor(this.labelColor)
-						}
+						this.labelBuilder()
+					} else if (this.label) {
+						Text(this.label)
+							.width(CONTAINER_SIZE.FULL)
+							.fontSize(getSizeByUnit(this.computedCellSize.labelFontSize, true))
+							.margin({
+								top: this.baseStyle.spaceBase
+							})
+							.fontColor(this.labelColor)
 					}
 				}
 				.layoutWeight(this.leftContentWidth ? 0 : 1)
@@ -362,6 +353,16 @@ export struct IBestCell {
 		.id(`ibest_cell_${this.uniId}`)
 		.onClick(() => {
 			this.onCellClick()
+		})
+		.onAppear(() => {
+			setTimeout(() => {
+				this.init()
+			}, 100)
+		})
+		.onVisibleAreaChange([0,1], (isExpanding: boolean) => {
+			if(isExpanding && this.borderLeft === undefined){
+				this.init()
+			}
 		})
 	}
 }

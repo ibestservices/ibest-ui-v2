@@ -1,4 +1,4 @@
-import { getEventName, getResourceStr, getSizeByUnit } from '../../utils/utils'
+import { getEventName, getResourceStr, getSizeByUnit, getComponentsInfo } from '../../utils/utils'
 import { AnyType } from '../../model/AnyType'
 import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
@@ -15,107 +15,110 @@ import {
 import { AppStorageV2 } from '@kit.ArkUI'
 
 @Extend(Scroll) function ibestTableFixScrollStyle(position: string){
-    .scrollBar(BarState.Off)
-    .enableScrollInteraction(false)
-    .edgeEffect(EdgeEffect.None)
-    .position(position == 'left' ? {left: 0, top: 0} : {right: 0, top: 0})
+	.scrollBar(BarState.Off)
+	.enableScrollInteraction(false)
+	.edgeEffect(EdgeEffect.None)
+	.position(position == 'left' ? {left: 0, top: 0} : {right: 0, top: 0})
 }
 
 @ComponentV2
 export struct IBestTable {
-    /**
-     * 全局公共样式
-     */
-    @Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
-    /**
-     * 表格id
-     */
-    @Param @Require tableId: IBestStringNumber
-    /**
-     * 表格数据
-     */
-    @Param @Require data: AnyType[]
-    /**
-     * 斑马纹
-     */
-    @Param stripe: boolean = false
-    /**
-     * 是否显示纵向边框
-     */
-    @Param showBorder: boolean = false
-    /**
-     * 高度
-     */
-    @Param fixHeight: IBestStringNumber = "auto"
-    /**
-     * 最大高度
-     */
-    @Param maxHeight: IBestStringNumber = "auto"
-    /**
-     * 表头背景色
-     */
-    @Param headerBgColor: ResourceColor = IBestTableColor.headerBgColor
-    /**
-     * 表头文字颜色
-     */
-    @Param headerTextColor: ResourceColor = IBestTableColor.headerTextColor
-    /**
-     * 表头文字大小
-     */
-    @Param headerFontSize: IBestStringNumber = this.baseStyle.fontSizeMd as string
-    /**
-     * 边框色
-     */
-    @Param bdColor: ResourceColor = IBestTableColor.borderColor
-    /**
-     * 单元格背景颜色
-     */
-    @Param cellBgColor: ResourceColor = IBestTableColor.cellBgColor
-    /**
-     * 斑马纹背景色
-     */
-    @Param stripeBgColor: ResourceColor = IBestTableColor.cellStripeColor
-    /**
-     * 单元格文字颜色
-     */
-    @Param cellTextColor: ResourceColor = IBestTableColor.cellTextColor
-    /**
-     * 单元格文字大小
-     */
-    @Param cellFontSize: IBestStringNumber = this.baseStyle.fontSizeMd as string
-    /**
-     * 单元格内边距
-     */
-    @Param cellPadding: Length | Padding | LocalizedPadding = { left: this.baseStyle.spaceX, right: this.baseStyle.spaceX, bottom: this.baseStyle.spaceXs, top: this.baseStyle.spaceXs }
-    /**
-     * 是否显示合计
-     */
-    @Param showSummary: boolean = false
-    /**
-     * 显示摘要行第一列的文本
-     */
-    @Param sumText: ResourceStr = $r("app.string.ibest_text_sum")
-    /**
-     * 自定义合计函数
-     */
-    @Event summaryMethod?: (data: AnyType[], column: IBestTableColumnData) => IBestStringNumber[] = undefined
-    /**
-     * 默认插槽
-     */
-    @BuilderParam defaultBuilder: CustomBuilder
+	/**
+	 * 全局公共样式
+	 */
+	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
+	/**
+	 * 表格id
+	 */
+	@Param @Require tableId: IBestStringNumber
+	/**
+	 * 表格数据
+	 */
+	@Param @Require data: AnyType[]
+	/**
+	 * 斑马纹
+	 */
+	@Param stripe: boolean = false
+	/**
+	 * 是否显示纵向边框
+	 */
+	@Param showBorder: boolean = false
+	/**
+	 * 高度
+	 */
+	@Param fixHeight: IBestStringNumber = ""
+	/**
+	 * 最大高度
+	 */
+	@Param maxHeight?: IBestStringNumber = undefined
+	/**
+	 * 表头背景色
+	 */
+	@Param headerBgColor: ResourceColor = IBestTableColor.headerBgColor
+	/**
+	 * 表头文字颜色
+	 */
+	@Param headerTextColor: ResourceColor = IBestTableColor.headerTextColor
+	/**
+	 * 表头文字大小
+	 */
+	@Param headerFontSize: IBestStringNumber = this.baseStyle.fontSizeMd as string
+	/**
+	 * 边框色
+	 */
+	@Param bdColor: ResourceColor = IBestTableColor.borderColor
+	/**
+	 * 单元格背景颜色
+	 */
+	@Param cellBgColor: ResourceColor = IBestTableColor.cellBgColor
+	/**
+	 * 斑马纹背景色
+	 */
+	@Param stripeBgColor: ResourceColor = IBestTableColor.cellStripeColor
+	/**
+	 * 单元格文字颜色
+	 */
+	@Param cellTextColor: ResourceColor = IBestTableColor.cellTextColor
+	/**
+	 * 单元格文字大小
+	 */
+	@Param cellFontSize: IBestStringNumber = this.baseStyle.fontSizeMd as string
+	/**
+	 * 单元格内边距
+	 */
+	@Param cellPadding: Length | Padding | LocalizedPadding = { left: this.baseStyle.spaceX, right: this.baseStyle.spaceX, bottom: this.baseStyle.spaceXs, top: this.baseStyle.spaceXs }
+	/**
+	 * 是否显示合计
+	 */
+	@Param showSummary: boolean = false
+	/**
+	 * 显示摘要行第一列的文本
+	 */
+	@Param sumText: ResourceStr = $r("app.string.ibest_text_sum")
+	/**
+	 * 自定义合计函数
+	 */
+	@Event summaryMethod?: (data: AnyType[], column: IBestTableColumnData) => IBestStringNumber[] = undefined
+	/**
+	 * 默认插槽
+	 */
+	@BuilderParam defaultBuilder: CustomBuilder
 
-    @Local uniId: number = 0
-    @Provider() columnList: IBestTableColumnInfo[] = []
-    @Provider() leftFixedColumnList: IBestTableColumnInfo[] = []
-    @Provider() rightFixedColumnList: IBestTableColumnInfo[] = []
-    private headerScroller: Scroller = new Scroller()
-    private bodyHorizontalScroller: Scroller = new Scroller()
-    private bodyVerticalScroller: Scroller = new Scroller()
-    private leftFixedBodyScroller: Scroller = new Scroller()
-    private rightFixedBodyScroller: Scroller = new Scroller()
-    private footerScroller: Scroller = new Scroller()
+	@Local uniId: number = 0
+	@Provider() columnList: IBestTableColumnInfo[] = []
+	@Provider() leftFixedColumnList: IBestTableColumnInfo[] = []
+	@Provider() rightFixedColumnList: IBestTableColumnInfo[] = []
+	@Local headerHeight: number = 0
+	@Local footerHeight: number = 0
+	private uiContext = this.getUIContext()
+	private headerScroller: Scroller = new Scroller()
+	private bodyHorizontalScroller: Scroller = new Scroller()
+	private bodyVerticalScroller: Scroller = new Scroller()
+	private leftFixedBodyScroller: Scroller = new Scroller()
+	private rightFixedBodyScroller: Scroller = new Scroller()
+	private footerScroller: Scroller = new Scroller()
 
-    @Builder headerFooterCellBuilder(cellType: 'header' | 'footer', position: IBestCellPosition){
+	@Builder headerFooterCellBuilder(cellType: 'header' | 'footer', position: IBestCellPosition){
 		HeaderFooterCellRow({
 			data: this.data,
 			cellType,
@@ -131,8 +134,8 @@ export struct IBestTable {
 			summaryMethod: this.summaryMethod,
 			sumText: this.sumText
 		})
-    }
-    @Builder cellBodyBuilder(position: IBestCellPosition){
+	}
+	@Builder cellBodyBuilder(position: IBestCellPosition){
 		Column(){
 			ForEach(this.data, (item: AnyType, index: number) => {
 				BodyCellRow({
@@ -153,150 +156,163 @@ export struct IBestTable {
 				})
 			}, (_: AnyType, index: number) => index.toString())
 		}
-    }
-    @Styles ibestTableFixBodyStyle(){
-        .height(getSizeByUnit(this.fixHeight))
-        .constraintSize({maxHeight: getSizeByUnit(this.maxHeight)})
-        .align(Alignment.Start)
-    }
+	}
+	@Styles ibestTableFixBodyStyle(){
+		.height(this.fixHeight ? CONTAINER_SIZE.FULL : '')
+		.constraintSize({maxHeight: this.maxHeight ? `calc(${this.maxHeight} - ${this.headerHeight}vp - ${this.footerHeight}vp)` : undefined})
+		.align(Alignment.Start)
+	}
 
-    aboutToAppear() {
-        this.uniId = this.getUniqueId()
+	aboutToAppear() {
+		this.uniId = this.getUniqueId()
 		emitter.on(getEventName(COMPONENT_NAME, TABLE_EVENT_NAME.SEND_COLUMN_ITEM, this.tableId), this.uniId, (column: IBestTableColumnInfo): void => this.getColumn(column))
 		emitter.on(getEventName(COMPONENT_NAME, TABLE_EVENT_NAME.COLUMN_ITEM_CHANGE, this.tableId), this.uniId, (column: IBestTableColumnInfo): void => this.updateColumn(column))
-    }
-    aboutToDisappear(): void {
-        emitter.off(getEventName(COMPONENT_NAME, TABLE_EVENT_NAME.SEND_COLUMN_ITEM, this.tableId), this.uniId)
-        emitter.off(getEventName(COMPONENT_NAME, TABLE_EVENT_NAME.COLUMN_ITEM_CHANGE, this.tableId), this.uniId)
-    }
-    getColumn(column: IBestTableColumnInfo){
-        this.columnList.push(new IBestTableColumnInfo(column))
-        if(column.fixed){
-            let fixed = column.fixed
-            if(typeof fixed == 'string' && fixed == 'right'){
-                this.rightFixedColumnList.push(new IBestTableColumnInfo(column))
-            }else{
-                this.leftFixedColumnList.push(new IBestTableColumnInfo(column))
-            }
-        }
-    }
-    // 更新列
-    updateColumn(column: IBestTableColumnInfo){
-        let item = this.columnList.find(e => e.prop == column.prop)
-        if(item){
-            item.show = column.show
-        }
-        if(this.leftFixedColumnList){
-            let leftItem = this.leftFixedColumnList.find(e => e.prop == column.prop)
-            if(leftItem){
-                leftItem.show = column.show
-            }
-        }
-        if(this.rightFixedColumnList){
-            let rightItem = this.rightFixedColumnList.find(e => e.prop == column.prop)
-            if(rightItem){
-                rightItem.show = column.show
-            }
-        }
-    }
-    build() {
-        Column(){
-            Row(){
-                Scroll(this.headerScroller){
+	}
+	aboutToDisappear(): void {
+		emitter.off(getEventName(COMPONENT_NAME, TABLE_EVENT_NAME.SEND_COLUMN_ITEM, this.tableId), this.uniId)
+		emitter.off(getEventName(COMPONENT_NAME, TABLE_EVENT_NAME.COLUMN_ITEM_CHANGE, this.tableId), this.uniId)
+	}
+	getColumn(column: IBestTableColumnInfo){
+		this.columnList.push(new IBestTableColumnInfo(column))
+		if(column.fixed){
+			let fixed = column.fixed
+			if(typeof fixed == 'string' && fixed == 'right'){
+				this.rightFixedColumnList.push(new IBestTableColumnInfo(column))
+			}else{
+				this.leftFixedColumnList.push(new IBestTableColumnInfo(column))
+			}
+		}
+	}
+	// 更新列
+	updateColumn(column: IBestTableColumnInfo){
+		let item = this.columnList.find(e => e.prop == column.prop)
+		if(item){
+			item.show = column.show
+		}
+		if(this.leftFixedColumnList){
+			let leftItem = this.leftFixedColumnList.find(e => e.prop == column.prop)
+			if(leftItem){
+				leftItem.show = column.show
+			}
+		}
+		if(this.rightFixedColumnList){
+			let rightItem = this.rightFixedColumnList.find(e => e.prop == column.prop)
+			if(rightItem){
+				rightItem.show = column.show
+			}
+		}
+	}
+	build() {
+		Column(){
+			Row(){
+				Scroll(this.headerScroller){
 					this.headerFooterCellBuilder('header', 'body')
-                }
-                .width(CONTAINER_SIZE.FULL)
-                .align(Alignment.Start)
-                .scrollable(ScrollDirection.Horizontal)
-                .scrollBar(BarState.Off)
-                .enableScrollInteraction(false)
-                .edgeEffect(EdgeEffect.None)
-                if(this.leftFixedColumnList){
+				}
+				.width(CONTAINER_SIZE.FULL)
+				.align(Alignment.Start)
+				.scrollable(ScrollDirection.Horizontal)
+				.scrollBar(BarState.Off)
+				.enableScrollInteraction(false)
+				.edgeEffect(EdgeEffect.None)
+				if(this.leftFixedColumnList.length){
 					this.headerFooterCellBuilder('header', 'left')
-                }
-                if(this.rightFixedColumnList.length){
+				}
+				if(this.rightFixedColumnList.length){
 					this.headerFooterCellBuilder('header', 'right')
-                }
-            }
-            Row(){
-                Scroll(this.bodyVerticalScroller){
-                    Scroll(this.bodyHorizontalScroller){
+				}
+			}
+			.width(CONTAINER_SIZE.FULL)
+			.id(`ibest_table_header_${this.uniId}`)
+			Row(){
+				Scroll(this.bodyVerticalScroller){
+					Scroll(this.bodyHorizontalScroller){
 						this.cellBodyBuilder("body")
-                    }
-                    .width(CONTAINER_SIZE.FULL)
-                    .align(Alignment.Start)
-                    .scrollable(ScrollDirection.Horizontal)
-                    .edgeEffect(EdgeEffect.None)
-                    .nestedScroll({
-                        scrollForward: NestedScrollMode.SELF_FIRST,
-                        scrollBackward: NestedScrollMode.SELF_FIRST
-                    })
-                    .onDidScroll(() => {
-                        let xOffset = this.bodyHorizontalScroller.currentOffset().xOffset
-                        this.headerScroller.scrollTo({xOffset, yOffset: 0})
-                        if(this.showSummary){
-                            this.footerScroller.scrollTo({xOffset, yOffset: 0})
-                        }
-                    })
-                }
-                .ibestTableFixBodyStyle()
-                .scrollable(this.fixHeight || this.maxHeight ? ScrollDirection.Vertical : ScrollDirection.None)
-                .edgeEffect(EdgeEffect.None)
-                .nestedScroll({
-                    scrollForward: NestedScrollMode.SELF_FIRST,
-                    scrollBackward: NestedScrollMode.SELF_FIRST
-                })
-                .onDidScroll(() => {
-                    let yOffset = this.bodyVerticalScroller.currentOffset().yOffset
-                    if(this.leftFixedColumnList.length){
-                        this.leftFixedBodyScroller.scrollTo({xOffset: 0, yOffset})
-                    }
-                    if(this.rightFixedColumnList.length){
-                        this.rightFixedBodyScroller.scrollTo({xOffset: 0, yOffset})
-                    }
-                })
-                if(this.leftFixedColumnList.length){
-                    Scroll(this.leftFixedBodyScroller){
+					}
+					.width(CONTAINER_SIZE.FULL)
+					.align(Alignment.Start)
+					.scrollable(ScrollDirection.Horizontal)
+					.edgeEffect(EdgeEffect.None)
+					.nestedScroll({
+						scrollForward: NestedScrollMode.SELF_FIRST,
+						scrollBackward: NestedScrollMode.SELF_FIRST
+					})
+					.onDidScroll(() => {
+						let xOffset = this.bodyHorizontalScroller.currentOffset().xOffset
+						this.headerScroller.scrollTo({xOffset, yOffset: 0})
+						if(this.showSummary){
+							this.footerScroller.scrollTo({xOffset, yOffset: 0})
+						}
+					})
+				}
+				.ibestTableFixBodyStyle()
+				.scrollable(this.fixHeight || this.maxHeight ? ScrollDirection.Vertical : ScrollDirection.None)
+				.edgeEffect(EdgeEffect.None)
+				.nestedScroll({
+					scrollForward: NestedScrollMode.SELF_FIRST,
+					scrollBackward: NestedScrollMode.SELF_FIRST
+				})
+				.onDidScroll(() => {
+					let yOffset = this.bodyVerticalScroller.currentOffset().yOffset
+					if(this.leftFixedColumnList.length){
+						this.leftFixedBodyScroller.scrollTo({xOffset: 0, yOffset})
+					}
+					if(this.rightFixedColumnList.length){
+						this.rightFixedBodyScroller.scrollTo({xOffset: 0, yOffset})
+					}
+				})
+				if(this.leftFixedColumnList.length){
+					Scroll(this.leftFixedBodyScroller){
 						this.cellBodyBuilder("left")
-                    }
-                    .ibestTableFixBodyStyle()
-                    .ibestTableFixScrollStyle('left')
-                }
-                if(this.rightFixedColumnList.length){
-                    Scroll(this.rightFixedBodyScroller) {
+					}
+					.ibestTableFixBodyStyle()
+					.ibestTableFixScrollStyle('left')
+				}
+				if(this.rightFixedColumnList.length){
+					Scroll(this.rightFixedBodyScroller) {
 						this.cellBodyBuilder("right")
-                    }
-                    .ibestTableFixBodyStyle()
-                    .ibestTableFixScrollStyle('right')
-                }
-            }
-            if(this.showSummary){
-                Row(){
-                    Scroll(this.footerScroller){
+					}
+					.ibestTableFixBodyStyle()
+					.ibestTableFixScrollStyle('right')
+				}
+			}
+			.width(CONTAINER_SIZE.FULL)
+			.layoutWeight(this.fixHeight ? 1 : undefined)
+			if(this.showSummary){
+				Row(){
+					Scroll(this.footerScroller){
 						this.headerFooterCellBuilder('footer', 'body')
-                    }
-                    .width(CONTAINER_SIZE.FULL)
-                    .align(Alignment.Start)
-                    .scrollable(ScrollDirection.Horizontal)
-                    .scrollBar(BarState.Off)
-                    .enableScrollInteraction(false)
-                    .edgeEffect(EdgeEffect.None)
-					if(this.leftFixedColumnList){
+					}
+					.width(CONTAINER_SIZE.FULL)
+					.align(Alignment.Start)
+					.scrollable(ScrollDirection.Horizontal)
+					.scrollBar(BarState.Off)
+					.enableScrollInteraction(false)
+					.edgeEffect(EdgeEffect.None)
+					if(this.leftFixedColumnList.length){
 						this.headerFooterCellBuilder('footer', 'left')
 					}
 					if(this.rightFixedColumnList.length){
 						this.headerFooterCellBuilder('header', 'right')
 					}
-                }
-            }
-            if(this.defaultBuilder){
-                this.defaultBuilder()
-            }
-        }
-        .width(CONTAINER_SIZE.FULL)
-        .border({width: {left: this.showBorder ? 1 : 0, top: 1}, color: this.bdColor})
-        .constraintSize({maxHeight: getSizeByUnit(this.maxHeight)})
-    }
+				}
+				.width(CONTAINER_SIZE.FULL)
+				.id(`ibest_table_footer_${this.uniId}`)
+			}
+			if(this.defaultBuilder){
+				this.defaultBuilder()
+			}
+		}
+		.width(CONTAINER_SIZE.FULL)
+		.height(getSizeByUnit(this.fixHeight))
+		.border({width: {left: this.showBorder ? 1 : 0, top: 1}, color: this.bdColor})
+		.constraintSize({maxHeight: getSizeByUnit(this.maxHeight)})
+		.onAreaChange(() => {
+			let height1 = getComponentsInfo(this.uiContext, `ibest_table_header_${this.uniId}`).height
+			let height2 = getComponentsInfo(this.uiContext, `ibest_table_footer_${this.uniId}`).height
+			this.headerHeight = height1
+			this.footerHeight = height2
+		})
+	}
 }
 
 @ComponentV2
@@ -506,56 +522,56 @@ struct TableCell{
 
 @ComponentV2
 export struct IBestTableColumn{
-    /**
-     * 表格id
-     */
-    @Param @Require tableId: IBestStringNumber
-    /**
-     * 列标题
-     */
-    @Param title: ResourceStr = ""
-    /**
-     * 属性
-     */
-    @Param prop: string = ""
-    /**
-     * 列宽度
-     */
-    @Param cellWidth: IBestStringNumber = ''
-    /**
-     * 列最小宽度
-     */
-    @Param minWidth: IBestStringNumber = ''
-    /**
-     * 列是否显示
-     */
-    @Param show: boolean = true
-    /**
-     * 单元格对齐方式
-     */
-    @Param cellAlign: 'left' | 'center' | 'right' = 'left'
-    /**
-     * 表头对齐方式, 若不设置该项，则使用单元格的对齐方式
-     */
-    @Param headerAlign: 'left' | 'center' | 'right' = this.cellAlign
-    /**
-     * 列是否固定在左侧或者右侧。 true 表示固定在左侧
-     */
-    @Param fixed: boolean | 'left' | 'right' = false
-    /**
-     * 格式化函数
-     */
-    @Event formatter?: (row: AnyType, column: IBestTableColumnData, rowIndex: number, columnIndex: number) => string = undefined
-    /**
-     * 自定义表头内容
-     */
-    @BuilderParam headerBuilder: (column: IBestTableColumnData, columnIndex: number) => void
-    /**
-     * 自定义单元格内容
-     */
-    @BuilderParam cellBuilder: (row: AnyType, column: IBestTableColumnData, rowIndex: number, columnIndex: number) => void
+	/**
+	 * 表格id
+	 */
+	@Param @Require tableId: IBestStringNumber
+	/**
+	 * 列标题
+	 */
+	@Param title: ResourceStr = ""
+	/**
+	 * 属性
+	 */
+	@Param prop: string = ""
+	/**
+	 * 列宽度
+	 */
+	@Param cellWidth: IBestStringNumber = ''
+	/**
+	 * 列最小宽度
+	 */
+	@Param minWidth: IBestStringNumber = ''
+	/**
+	 * 列是否显示
+	 */
+	@Param show: boolean = true
+	/**
+	 * 单元格对齐方式
+	 */
+	@Param cellAlign: 'left' | 'center' | 'right' = 'left'
+	/**
+	 * 表头对齐方式, 若不设置该项，则使用单元格的对齐方式
+	 */
+	@Param headerAlign: 'left' | 'center' | 'right' = this.cellAlign
+	/**
+	 * 列是否固定在左侧或者右侧。 true 表示固定在左侧
+	 */
+	@Param fixed: boolean | 'left' | 'right' = false
+	/**
+	 * 格式化函数
+	 */
+	@Event formatter?: (row: AnyType, column: IBestTableColumnData, rowIndex: number, columnIndex: number) => string = undefined
+	/**
+	 * 自定义表头内容
+	 */
+	@BuilderParam headerBuilder: (column: IBestTableColumnData, columnIndex: number) => void
+	/**
+	 * 自定义单元格内容
+	 */
+	@BuilderParam cellBuilder: (row: AnyType, column: IBestTableColumnData, rowIndex: number, columnIndex: number) => void
 
-    aboutToAppear(): void {
+	aboutToAppear(): void {
 		emitter.emit(getEventName(COMPONENT_NAME, TABLE_EVENT_NAME.SEND_COLUMN_ITEM, this.tableId), {
 			show: this.show,
 			title: this.title,
@@ -569,13 +585,13 @@ export struct IBestTableColumn{
 			headerBuilder: this.headerBuilder,
 			cellBuilder: this.cellBuilder
 		})
-    }
-    @Monitor("show")
-    showChange(){
+	}
+	@Monitor("show")
+	showChange(){
 		emitter.emit(getEventName(COMPONENT_NAME, TABLE_EVENT_NAME.COLUMN_ITEM_CHANGE, this.tableId), {
 			prop: this.prop,
 			show: this.show
 		})
-    }
-    build() {}
+	}
+	build() {}
 }

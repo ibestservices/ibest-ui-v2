@@ -82,7 +82,7 @@ export struct IBestCountTo{
         this.clearTimer()
     }
     // 开始滚动
-    @Monitor("start, end")
+    @Monitor("start", "end")
     startCountDown(){
         this.startTime = 0
         this.localDuration = this.duration

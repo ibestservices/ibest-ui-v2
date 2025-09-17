@@ -362,8 +362,7 @@ export struct IBestPopup{
 	@Event onClose: () => void = () => {}
 	@Event $visible: (visible: boolean) => void = () => {}
 	private baseController: PopupBaseController = new PopupBaseController()
-	private uiContext = this.getUIContext()
-	private promptAction = this.uiContext.getPromptAction()
+	private promptAction = this.getUIContext().getPromptAction()
 	private dialogId: number = 0
 	@Monitor("visible") async visibleChange(){
 		if(this.visible){
@@ -432,7 +431,7 @@ export struct IBestPopup{
 				this.defaultContentBuilder()
 			},
 			width: CONTAINER_SIZE.FULL,
-			height: this.uiContext.px2vp(GlobalStore.screenHeight),
+			height: GlobalStore.screenHeight,
 			backgroundBlurStyle: BlurStyle.NONE,
 			cornerRadius: 0,
 			alignment: this.getAlignment(),
