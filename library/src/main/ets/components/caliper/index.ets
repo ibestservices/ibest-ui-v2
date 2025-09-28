@@ -295,6 +295,7 @@ export struct IBestCaliper{
         .scrollable(ScrollDirection.None)
         .clip(true)
         .backgroundColor(this.bgColor)
+        .opacity(this.isReady ? 1 : 0)
         .onAreaChange((oldVal, newVal) => {
             this.contentWidth = newVal.width as number
         })
