@@ -9,7 +9,7 @@ import {
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { AppStorageV2, LengthUnit } from '@kit.ArkUI'
-import { IBestSliderValue } from './index.type'
+import { IBestSliderTicks, IBestSliderValue } from './index.type'
 import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { IBestSliderColor } from './color'
 
@@ -68,6 +68,11 @@ export struct IBestSlider{
 	 */
 	@Param reverse: boolean = false
 	/**
+	 * 是否显示刻度点
+	 * @since 1.0.4
+	 */
+	@Param ticks: boolean = false
+	/**
 	 * 自定义滑块
 	 */
 	@BuilderParam customButton: CustomBuilder
@@ -86,6 +91,7 @@ export struct IBestSlider{
 	@Local space: number = 2.5
 	@Local percentage: number = 0
 	@Local barOffset: number = 0
+	@Local realBarHeight: number = 0
 	@Local buttonIndex: 0 | 1 = 0
 	@Local buttonWidth: number = 0
 	@Local buttonHeight: number = 0
@@ -115,7 +121,21 @@ export struct IBestSlider{
 		this.updateValue(this.value)
 		this.calcMainAxis()
 	}
-
+	// 获取刻度值
+	getScalesList(){
+		let list = Array.from({length: (this.max - this.min) / this.step + 1}, (_: undefined, index: number) => this.min + index * this.step).map((item: number) => {
+			let obj: IBestSliderTicks = {
+				value: item,
+				percent: (item - this.min) * 100 / (this.max - this.min)
+			}
+			return obj
+		})
+		return list
+	}
+	// 获取刻度大小
+	getScaleSize(){
+		return this.realBarHeight + 4
+	}
 	// 获取slider 内容容器尺寸
 	getButtonSize(){
 		let size = getComponentsInfo(this.uiContext, `ibest_slider_buttonBox_${this.uniId}`)
@@ -227,9 +247,9 @@ export struct IBestSlider{
 						current = [left, value]
 						this.buttonIndex = 1
 					}
-					this.updateValue(current, true)
+					this.updateValue(current)
 				}else {
-					this.updateValue(value, true)
+					this.updateValue(value)
 				}
 				break
 			case TouchType.Move:
@@ -252,6 +272,9 @@ export struct IBestSlider{
 					this.updateValue(value, true)
 				}
 				break
+			case TouchType.Up:
+				this.onChange(this.value)
+				break
 		}
 	}
 	// 更新值
@@ -268,12 +291,31 @@ export struct IBestSlider{
 			Stack(){
 				Row(){
 					// 底层背景
-					Row()
-						.width(this.vertical ? getSizeByUnit(this.barHeight) : CONTAINER_SIZE.FULL)
-						.height(this.vertical ? CONTAINER_SIZE.FULL : getSizeByUnit(this.barHeight))
-						.backgroundColor(this.barBgColor)
-						.borderRadius(this.baseStyle.borderRadiusMax)
-						.opacity(this.disabled ? 0.5 : 1)
+					Row(){
+						// 刻度
+						if(this.ticks){
+							ForEach(this.getScalesList(), (item: IBestSliderTicks) => {
+								Row()
+									.width(this.vertical ? '' : this.getScaleSize())
+									.height(this.vertical ? this.getScaleSize() : '')
+									.aspectRatio(1)
+									.borderRadius(this.baseStyle.borderRadiusMax)
+									.backgroundColor((Array.isArray(this.value) ? item.value >= this.value[0] && item.value <= this.value[1] : this.value >= item.value) ? this.activeColor : this.barBgColor)
+									.margin(this.vertical ? this.reverse ? { bottom: -this.getScaleSize()/2 } : { top: -this.getScaleSize()/2 } : this.reverse ? { left: -this.getScaleSize()/2 } : { right: -this.getScaleSize()/2 })
+									.position(this.vertical ? this.reverse ? { bottom: `${item.percent}%`, left: this.realBarHeight/2 } : { top: `${item.percent}%`, left: this.realBarHeight/2 } : this.reverse ? { right: `${item.percent}%`, top: this.realBarHeight/2 } : { left: `${item.percent}%`, top: this.realBarHeight/2 })
+									.translate(this.vertical ? { x: "-50%", y: this.reverse ? "50%" : "-50%" } : { x: this.reverse ? "50%" : "-50%", y: "-50%" })
+							})
+						}
+					}
+					.width(this.vertical ? getSizeByUnit(this.barHeight) : CONTAINER_SIZE.FULL)
+					.height(this.vertical ? CONTAINER_SIZE.FULL : getSizeByUnit(this.barHeight))
+					.backgroundColor(this.barBgColor)
+					.borderRadius(this.baseStyle.borderRadiusMax)
+					.justifyContent(FlexAlign.SpaceBetween)
+					.opacity(this.disabled ? 0.5 : 1)
+					.onAreaChange((_, newVal) => {
+						this.realBarHeight = this.vertical ? newVal.width as number : newVal.height as number
+					})
 					// 激活条
 					Row(){
 						Row()

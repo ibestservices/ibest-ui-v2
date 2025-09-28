@@ -42,7 +42,6 @@ struct SliderPage {
 							IBestSlider({
 								value: this.value!!,
 								onChange: val => {
-									console.log(val.toString())
 									IBestToast.show(val.toString())
 								}
 							})
@@ -50,7 +49,6 @@ struct SliderPage {
 								value: this.value!!,
 								reverse: true,
 								onChange: val => {
-									console.log(val.toString())
 									IBestToast.show(val.toString())
 								}
 							})
@@ -63,7 +61,6 @@ struct SliderPage {
 							IBestSlider({
 								value: this.value1!!,
 								onChange: val => {
-									console.log(val.toString())
 									IBestToast.show(val.toString())
 								}
 							})
@@ -71,7 +68,6 @@ struct SliderPage {
 								value: this.value1!!,
 								reverse: true,
 								onChange: val => {
-									console.log(val.toString())
 									IBestToast.show(val.toString())
 								}
 							})
@@ -103,6 +99,7 @@ struct SliderPage {
 						IBestSlider({
 							value: this.value4!!,
 							step: 10,
+							ticks: true,
 							onChange: val => {
 								IBestToast.show(val.toString())
 							}
@@ -140,7 +137,6 @@ struct SliderPage {
 									value: this.value7!!,
 									vertical: true,
 									onChange: val => {
-										console.log(val.toString())
 										IBestToast.show(val.toString())
 									}
 								})
@@ -149,7 +145,6 @@ struct SliderPage {
 									vertical: true,
 									reverse: true,
 									onChange: val => {
-										console.log(val.toString())
 										IBestToast.show(val.toString())
 									}
 								})
@@ -159,7 +154,6 @@ struct SliderPage {
 									value: this.value8!!,
 									vertical: true,
 									onChange: val => {
-										console.log(val.toString())
 										IBestToast.show(val.toString())
 									}
 								})
@@ -168,7 +162,6 @@ struct SliderPage {
 									vertical: true,
 									reverse: true,
 									onChange: val => {
-										console.log(val.toString())
 										IBestToast.show(val.toString())
 									}
 								})
