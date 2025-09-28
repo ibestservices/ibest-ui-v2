@@ -34,11 +34,7 @@ struct UploaderPage {
 	@Local imgList4: IBestUploaderFile[] = []
 	@Local imgList5: IBestUploaderFile[] = []
 	@Local imgList6: IBestUploaderFile[] = []
-	@Local imgList7: IBestUploaderFile[] = [
-		new IBestUploaderFile({
-			url: "https://pic1.zhimg.com/80/v2-03cdb3bff2090e98885fe4951799a1f4_1440w.webp"
-		})
-	]
+	@Local imgList7: IBestUploaderFile[] = []
 	@Local imgList8: IBestUploaderFile[] = []
 	@Local imgList9: IBestUploaderFile[] = [
 		new IBestUploaderFile({
@@ -62,7 +58,6 @@ struct UploaderPage {
 				.width(CONTAINER_SIZE.FULL)
 			Text(file.name)
 				.width(CONTAINER_SIZE.FULL)
-				.fontColor("#fff")
 				.fontSize(14)
 				.textAlign(TextAlign.Center)
 				.maxLines(1)

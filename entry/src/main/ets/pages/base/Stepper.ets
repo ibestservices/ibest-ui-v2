@@ -21,7 +21,8 @@ struct StepperPage {
 	@Local value5: number = 10
 	@Local value6: number = 14
 	@Local value7: number = 1
-	
+	@Local value8: number = 1
+
 	build() {
 		NavDestination() {
 			CustomNavBar({title: this.title})
@@ -81,6 +82,20 @@ struct StepperPage {
 							value: this.value7!!,
 							inputWidth: 40,
 							buttonSize: 32
+						})
+					}
+				}
+				ListItem() {
+					ComponentShowContainer({ title: '自定义样式' }) {
+						IBestStepper({
+							value: this.value8!!,
+							buttonRadius: 999,
+							minusBtnBgColor: "#fff",
+							minusBtnIconColor: "#1989fa",
+							minusBtnBorderColor: "#1989fa",
+							plusBtnBgColor: "#1989fa",
+							plusBtnIconColor: "#fff",
+							inputBgColor: "transparent"
 						})
 					}
 				}

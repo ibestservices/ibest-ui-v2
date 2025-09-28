@@ -1,6 +1,5 @@
 import { AppStorageV2, ComponentContent, LengthMetrics, UIContext } from '@kit.ArkUI';
-import { convertDimensionsWidthUnit, generateId, getLengthUnit, getSizeByUnit,
-	handleBeforeFunction } from '../utils/utils';
+import { convertDimensionsWidthUnit, generateId, getLengthUnit, getResourceStr, getSizeByUnit, handleBeforeFunction } from '../utils/utils';
 import CustomContent from '../common/components/CustomContent';
 import { GRAY_COLOR } from '../theme-chalk/src/color';
 import { CONTAINER_SIZE } from '../theme-chalk/src/container';
@@ -115,8 +114,9 @@ class IBestActionSheetOption {
 	onOpen?: () => void
 	/**
 	 * 选择后回调
+	 * @since 1.0.4 新增name
 	 */
-	onSelect?: (index1: number, index2?: IBestStringNumber, value?: IBestStringNumber) => void
+	onSelect?: (index1: number, index2?: IBestStringNumber, value?: IBestStringNumber, name?: string) => void
 	/**
 	 * 点击取消回调
 	 */
@@ -304,7 +304,7 @@ struct defaultContent{
 										.opacity(action.isDisabled ? 0.5 : 1)
 										.onClick(() => {
 											if (!(action.isDisabled || action.readonly)) {
-												this.option.onSelect?.(listIndex, index, action.value)
+												this.option.onSelect?.(listIndex, index, action.value, getResourceStr(action.name))
 												this.option.close(this.option.id)
 											}
 										})
@@ -356,10 +356,10 @@ struct defaultContent{
 							.stateEffect(typeof action == "string" || !(action.isDisabled || action.readonly))
 							.onClick(() => {
 								if(typeof action == "string" || !(action.isDisabled || action.readonly)){
-									if(typeof action == "object" && action.value){
-										this.option.onSelect?.(index, action.value)
+									if(typeof action == "object" && action.value !== undefined){
+										this.option.onSelect?.(index, action.value, getResourceStr(action.name))
 									}else{
-										this.option.onSelect?.(index)
+										this.option.onSelect?.(index, getResourceStr(typeof action == "object" ? action.name : action as string))
 									}
 									this.option.close(this.option.id)
 								}

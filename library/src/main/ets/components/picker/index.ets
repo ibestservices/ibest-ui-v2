@@ -27,14 +27,12 @@ import { AppStorageV2 } from '@kit.ArkUI';
 	.textOverflow({ overflow: TextOverflow.Ellipsis })
 }
 
-
 // 惯性滑动思路:
 // 在手指离开屏幕时，如果和上一次 move 时的间隔小于 `MOMENTUM_TIME` 且 move
 // 距离大于 `MOMENTUM_DISTANCE` 时，执行惯性滑动
 const MOMENTUM_TIME = 300
 const MOMENTUM_DISTANCE = 30
 const swipeDuration = 150
-
 
 @ComponentV2
 export struct IBestPicker{
@@ -522,7 +520,7 @@ export struct IBestPicker{
 	}
 	// 根据索引设置value
 	setValueByIndex(){
-		this.$value(this.getColumns().map((item, index) => item[this.indexArr[index]]?.value || ''))
+		this.$value(this.getColumns().map((item, index) => item[this.indexArr[index]]?.value ?? ''))
 	}
 	// 根据索引获取值 文字
 	getTextByIndex(): string[]{
@@ -530,7 +528,7 @@ export struct IBestPicker{
 	}
 	// 根据索引获取值
 	getValueByIndex(): IBestStringNumber[]{
-		return this.getColumns().map((item, index) => item[this.indexArr[index]]?.value || "")
+		return this.getColumns().map((item, index) => item[this.indexArr[index]]?.value ?? "")
 	}
 
 	build() {

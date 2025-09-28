@@ -27,6 +27,11 @@ export struct IBestIcon {
 	 */
 	@Param fontName: ResourceStr = ""
 	/**
+	 * 动画
+	 * @since 1.0.4
+	 */
+	@Param iconAnimation: AnimateParam = {}
+	/**
 	 * 点击回调
 	 */
 	@Event onIconClick: (event: TouchEvent) => void = () => {}
@@ -38,8 +43,9 @@ export struct IBestIcon {
 			Text(this.fontName ? this.name : Object(IBestIconData)[this.name as string])
 				.fontFamily(this.fontName || "ibestFont")
 				.fontColor(this.color)
-				.fontSize(getSizeByUnit(this.iconSize))
+				.fontSize(getSizeByUnit(this.iconSize, true))
 				.borderRadius(getSizeByUnit(this.iconRadius))
+				.animation(this.iconAnimation)
 				.onTouch(event => {
 					event.type == TouchType.Up && this.onIconClick(event)
 				})
@@ -49,6 +55,7 @@ export struct IBestIcon {
 				.fillColor(this.color)
 				.borderRadius(getSizeByUnit(this.iconRadius))
 				.draggable(false)
+				.animation(this.iconAnimation)
 				.onTouch(event => {
 					event.type == TouchType.Up && this.onIconClick(event)
 				})

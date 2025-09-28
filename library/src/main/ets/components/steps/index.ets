@@ -11,6 +11,10 @@ import { IBestStorageKey } from '../../model/Global.type'
 @ComponentV2
 export struct IBestSteps{
 	/**
+	 * 全局公共样式
+	 */
+	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
+	/**
 	 * 分组id
      */
 	@Param @Require groupId: IBestStringNumber
@@ -54,7 +58,7 @@ export struct IBestSteps{
 	/**
 	 * 激活颜色
      */
-	@Param activeColor: ResourceColor = ""
+	@Param activeColor: ResourceColor = this.baseStyle.primary
 	/**
 	 * 自定义内容
      */
@@ -122,10 +126,6 @@ export struct IBestSteps{
 			emitter.emit(getEventName(COMPONENT_NAME, STEPS_EVENT_NAME.ACTIVE_CHANGE, this.groupId), this.active)
 		}, percent > oldPercent ? 280 : 0)
 	}
-	// 获取激活颜色
-	getActiveColor(){
-		return this.activeColor || IBestStepsColor.activeColor
-	}
 	build() {
 		if(this.placeDirection == Axis.Vertical){
 			Stack({alignContent: Alignment.TopStart}){
@@ -135,7 +135,7 @@ export struct IBestSteps{
 							value: this.percent!!,
 							lineWidth: 2,
 							bgColor: IBestStepsColor.borderColor,
-							color: this.getActiveColor(),
+							color: this.activeColor,
 							showText: false
 						})
 					}
@@ -163,7 +163,7 @@ export struct IBestSteps{
 						value: this.percent!!,
 						lineWidth: 2,
 						bgColor: IBestStepsColor.borderColor,
-						color: this.getActiveColor(),
+						color: this.activeColor,
 						showText: false
 					})
 				}
@@ -351,7 +351,7 @@ export struct IBestStep{
 	}
 	// 获取激活颜色
 	getActiveColor(){
-		return this.isActive() ? (this.config.activeColor || IBestStepsColor.activeColor) : this.config.inactiveColor
+		return this.isActive() ? this.config.activeColor : this.config.inactiveColor
 	}
 	// 生成id
 	getMarkId(){

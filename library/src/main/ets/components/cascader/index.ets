@@ -58,7 +58,7 @@ export struct IBestCascaderContent{
 	@Local tabList: IBestTabItem[] = [
 		new IBestTabItem({
 			label: $r("app.string.ibest_please_select"),
-			name: "0"
+			name: 0
 		})
 	]
 	// 当前激活tab name
@@ -116,14 +116,18 @@ export struct IBestCascaderContent{
 			this.createAllOptionsInstance(array, children[i].children, index + 1)
 		}else{
 			this.optionsInstance = array
-			this.tabList = this.value.map((item: IBestStringNumber, j: number) => {
+			let value = this.value
+			if(value.length > array.length){
+				value = value.slice(0, array.length)
+			}
+			this.tabList = value.map((item: IBestStringNumber, j: number) => {
 				let a = array[j].find((e: IBestCascaderOptionInstance) => e.value == item)
 				return new IBestTabItem({
 					label: a?.text ?? "",
-					name: `${j}`
+					name: j
 				})
 			})
-			this.currentTabName = this.swiperIndex = this.value.length - 1
+			this.currentTabName = this.swiperIndex = value.length - 1
 		}
 	}
 	// 选项变化
@@ -184,12 +188,21 @@ export struct IBestCascaderContent{
 	}
 	// 创建下一个选项的数据实例
 	async createNextSwiperData(children: IBestCascaderOption[], index: number){
-		await sleep(50)
-		this.tabList.push(new IBestTabItem({
+		await sleep(30)
+		let tab = new IBestTabItem({
 			label: $r("app.string.ibest_please_select"),
 			name: index
-		}))
-		this.optionsInstance.push(this.createOptionsInstance(children))
+		})
+		let optionsInstance = this.createOptionsInstance(children)
+		if(this.value[index] !== undefined){
+			let i = optionsInstance.findIndex((e: IBestCascaderOptionInstance) => e.value == this.value[index])
+			if(i > -1){
+				optionsInstance[i].actived = true
+				tab.label = optionsInstance[i].text
+			}
+		}
+		this.optionsInstance.push(optionsInstance)
+		this.tabList.push(tab)
 		await sleep(30)
 		this.tabChange(index)
 	}
@@ -312,8 +325,6 @@ export struct IBestCascader{
 	 * 是否开启动态加载
 	 */
 	@Param lazy: boolean = false
-	@Event $visible: (visible: boolean) => void = () => {}
-	@Event $value: (value: IBestStringNumber[]) => void = () => {}
 	/**
 	 * 动态加载函数
 	 */
@@ -326,24 +337,12 @@ export struct IBestCascader{
 	 * 全部选择完回调
 	 */
 	@Event onConfirm: (value: IBestCascaderOption[]) => void = () => {}
-	@Local popupVisible: boolean = false
-	@Local popupValue: IBestStringNumber[] = []
-	@Monitor("value") valueChange(){
-		this.popupValue = this.value
-	}
-	@Monitor("visible") visibleChange(){
-		this.popupVisible = this.visible
-	}
-	@Monitor("popupVisible") popupVisibleChange(){
-		this.$visible(this.popupVisible)
-	}
-	@Monitor("popupValue") popupValueChange(){
-		this.$value(this.popupValue)
-	}
+	@Event $visible: (visible: boolean) => void = () => {}
+	@Event $value: (value: IBestStringNumber[]) => void = () => {}
 
 	@Builder baseBuilder() {
 		IBestCascaderContent({
-			value: this.popupValue!!,
+			value: this.value,
 			options: this.options,
 			activeColor: this.activeColor,
 			listHeight: this.listHeight,
@@ -351,26 +350,26 @@ export struct IBestCascader{
 			lazy: this.lazy,
 			lazyLoad: this.lazyLoad,
 			onChange: this.onChange,
-			onConfirm: (value: IBestCascaderOption[]): void => this.onGetResult(value)
+			onConfirm: (value: IBestCascaderOption[]): void => this.onGetResult(value),
+			$value: (value: IBestStringNumber[]): void => this.$value(value)
 		})
 	}
-	aboutToAppear(): void {
-		this.popupValue = this.value
-	}
+
 	onGetResult(value: IBestCascaderOption[]){
 		this.onConfirm(value)
 		this.$visible(false)
 	}
 	build() {
 		IBestPopup({
-			visible: this.popupVisible!!,
+			visible: this.visible,
 			title: this.title,
 			isShowHeader: true,
 			popupAlign: "bottom",
 			popupHeight: "auto",
 			safeAreaInsetBottom: true,
 			closeOnBackPress: true,
-			contentBuilder: ():void => this.baseBuilder()
+			contentBuilder: ():void => this.baseBuilder(),
+			$visible: (visible: boolean): void => this.$visible(visible)
 		})
 	}
 }

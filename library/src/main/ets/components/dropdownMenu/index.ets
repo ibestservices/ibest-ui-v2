@@ -67,7 +67,7 @@ export struct IBestDropdownMenu{
 	/**
 	 * 菜单标题和下拉选项的选中态颜色
 	 */
-	@Param activeColor: ResourceColor = IBestDropdownMenuColor.activeColor
+	@Param activeColor: ResourceColor = this.baseStyle.primary
     /**
      * 下拉选项文字大小
      */

@@ -149,9 +149,6 @@ export struct IBestTabs{
 	@Local tabBoxTranslateX: number = 0
     @Local swiperIndex: number = 0
     @Local startTransX: number = 0
-    @Local startX: number = 0
-    @Local touchOffsetX: number = 0
-    @Local startTime: number = 0
 	private scroller: Scroller = new Scroller()
 	private context = this.getUIContext()
 	private swiperController: SwiperController = new SwiperController()
@@ -213,7 +210,7 @@ export struct IBestTabs{
 					})
 				}, (_: IBestTabItem, index: number) => index+'')
 			}
-			.width(this.tabWidthType == "flex" ? "100%" : "")
+			.width(this.tabWidthType == "flex" ? CONTAINER_SIZE.FULL : "")
 			.height(getSizeByUnit(this.tabHeight))
 			.borderRadius(this.outerRadius || this.baseStyle.borderRadiusSm)
 			.border({ width: this.type == "card" ? 1 : 0, color: this.getLineColor() })
@@ -264,8 +261,8 @@ export struct IBestTabs{
         let translateXList: number[] = []
         let tabContentInfo = getComponentsInfo(this.context, `ibest_tabContent_${this.uniId}`)
         this.tabsList.forEach((item: IBestTabItem) => {
-            let boxInfo = getComponentsInfo(this.context, `ibestTab_${this.uniId}_box_${item.name}`)
-            let textInfo = getComponentsInfo(this.context, `ibestTab_${this.uniId}_text_${item.name}`)
+            let boxInfo = getComponentsInfo(this.context, `ibest_tab_box_${this.uniId}_${item.name}`)
+            let textInfo = getComponentsInfo(this.context, `ibest_tab_text_${this.uniId}_${item.name}`)
             let tabLineWidth = this.isTabLineWidthFixed ? this.getTabLineWidth() : textInfo.width
             tabWidthList.push({
                 boxWidth: boxInfo.width,
@@ -438,7 +435,7 @@ struct IBestTab{
                     })
                 }
             }
-            .id(`ibestTab_${this.uniId}_text_${this.item.name}`)
+            .id(`ibest_tab_text_${this.uniId}_${this.item.name}`)
         }
         .backgroundColor(this.type == "line" && this.isShowActiveBg ? this.getIsActive() ? this.activeBgColor : this.inactiveBgColor : "")
         .justifyContent(FlexAlign.Center)
@@ -448,7 +445,7 @@ struct IBestTab{
         .clip(true)
         .enabled(!this.item.isDisable)
         .opacity(this.item.isDisable ? 0.3 : 1)
-        .id(`ibestTab_${this.uniId}_box_${this.item.name}`)
+        .id(`ibest_tab_box_${this.uniId}_${this.item.name}`)
         .onClick(() => {
             this.changeName(this.item.name)
         })

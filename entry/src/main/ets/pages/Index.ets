@@ -70,6 +70,10 @@ struct Index {
 					path: "Calendar"
 				},
 				{
+					name: $r("app.string.component_caliper"),
+					path: "Caliper"
+				},
+				{
 					name: $r("app.string.component_carInput"),
 					path: "CarInput"
 				},
@@ -130,12 +134,12 @@ struct Index {
 					path: "Search"
 				},
 				{
-					name: $r("app.string.component_slider"),
-					path: "Slider"
-				},
-				{
 					name: $r("app.string.component_signature"),
 					path: "Signature"
+				},
+				{
+					name: $r("app.string.component_slider"),
+					path: "Slider"
 				},
 				{
 					name: $r("app.string.component_stepper"),
@@ -252,8 +256,16 @@ struct Index {
 					path: "Progress"
 				},
 				{
+					name: $r("app.string.component_readmore"),
+					path: "ReadMore"
+				},
+				{
 					name: $r("app.string.component_sectorprogress"),
 					path: "SectorProgress"
+				},
+				{
+					name: $r("app.string.component_segmented"),
+					path: "Segmented"
 				},
 				{
 					name: $r("app.string.component_skeleton"),
@@ -506,9 +518,7 @@ struct Index {
 			Image($r("app.media.title_back"))
 				.width(CONTAINER_SIZE.FOURTEEN)
 				.fillColor($r("app.color.doc_text_color_3"))
-				.margin({
-					right: SPACE.SM
-				})
+				.margin({ right: SPACE.SM })
 				.rotate({ angle: 180 })
 		}
 		.width(CONTAINER_SIZE.FULL)
@@ -527,9 +537,9 @@ struct Index {
 		RouterUtil.navPathStackList.push(this.navPathStack)
 		this.checkUpdate()
 		this.getUiVersion()
-		setTimeout(() => {
+		// setTimeout(() => {
             // RouterUtil.push("DropdownMenu")
-		}, 300)
+		// }, 300)
 	}
 	getTitleOpacity(){
 		// let scrollY = this.scrollTop < 50 ? this.scrollTop : 50
