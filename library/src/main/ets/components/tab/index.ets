@@ -2,7 +2,7 @@ import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit, sleep } f
 import { IBestTabItem, IBestTabItemType, TabWidthType } from './index.type';
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type';
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container';
-import { debounce } from '../../utils/DebounceThrottle';
+import { debounce } from '../../utils/debounceThrottle';
 import { IBestTabColor } from './color';
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type';
 import { AppStorageV2 } from '@kit.ArkUI';
@@ -338,7 +338,6 @@ export struct IBestTabs{
                 .duration(200)
                 .effectMode(EdgeEffect.None)
                 .index($$this.swiperIndex)
-                .monopolizeEvents(true)
                 .onGestureSwipe((index: number, extraInfo: SwiperAnimationEvent) => {
                     let curOffset = extraInfo.currentOffset
                     let transX = curOffset > 0 ? this.translateXList[index] - this.translateXList[index-1] : this.translateXList[index+1] - this.translateXList[index]

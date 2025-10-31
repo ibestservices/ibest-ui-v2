@@ -54,7 +54,7 @@ export struct IBestCountDown{
      */
 	@Param autoStart: boolean = true
 	/**
-	 * 实例
+	 * 控制器
      */
 	@Param controller: IBestCountDownController = new IBestCountDownController()
 	/**

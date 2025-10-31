@@ -66,7 +66,7 @@ export struct IBestTextEllipsis{
     /**
      * 操作文字颜色
      */
-    @Param actionColor: ResourceColor = this.baseStyle.primary
+    @Param actionColor: ResourceColor = ""
     /**
      * 省略位置
      */
@@ -186,7 +186,7 @@ export struct IBestTextEllipsis{
             }
             if(this.showAction && this.textHeight > this.maxLineHeight){
                 Span(this.isExpand ? this.collapseText : this.expandText)
-                    .fontColor(this.actionColor)
+                    .fontColor(this.actionColor || this.baseStyle.primary)
                     .fontSize(getSizeByUnit(this.textFontSize, true))
 					.fontWeight(this.actionFontWeight)
                     .onClick(() => {

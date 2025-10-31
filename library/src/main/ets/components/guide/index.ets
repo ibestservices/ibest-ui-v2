@@ -1,7 +1,7 @@
 import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type';
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container';
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type';
-import GlobalStore from '../../utils/GlobalStore';
+import GlobalStore from '../../utils/globalStore';
 import { convertDimensionsWidthUnit, getSizeByUnit } from '../../utils/utils';
 import { IBestButton } from '../button';
 import { IBestGuideColor } from './color';

@@ -2,7 +2,7 @@ import { ComponentContent, ImmersiveMode, LengthMetrics, LevelMode, PromptAction
 import { generateId, handleBeforeFunction } from '../utils/utils'
 import { IBestDialogView } from '../components/dialog/index'
 import { IBestAwaitable, IBestStringNumber } from '../model/Global.type'
-import GlobalStore from '../utils/GlobalStore'
+import GlobalStore from '../utils/globalStore'
 @ObservedV2
 class IBestDialogOption {
 	/**

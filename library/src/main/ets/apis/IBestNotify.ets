@@ -4,8 +4,8 @@ import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../theme-chalk/src/in
 import CustomContent from '../common/components/CustomContent'
 import { convertDimensionsWidthUnit, getEventName, getSizeByUnit, sleep } from '../utils/utils'
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../model/Global.type'
-import { emitter } from '../utils/EventEmitter'
-import GlobalStore from '../utils/GlobalStore'
+import { emitter } from '../utils/eventEmitter'
+import GlobalStore from '../utils/globalStore'
 class IBestNotifyOption{
 	/**
 	 * 展示类型

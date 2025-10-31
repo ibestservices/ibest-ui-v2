@@ -1,9 +1,11 @@
 import { IBestStorageKey, IBestAwaitable, IBestStringNumber } from '../../model/Global.type'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
-import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit, handleBeforeFunction } from '../../utils/utils'
+import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
+import { convertDimensionsWidthUnit, getSizeByUnit, handleBeforeFunction } from '../../utils/utils'
 import { IBestLoading } from '../loading'
 import { IBestSwitchColor } from './color'
 import { AppStorageV2 } from '@kit.ArkUI'
+import { IBestIcon } from '../icon/index'
 
 @ComponentV2
 export struct IBestSwitch {
@@ -13,8 +15,9 @@ export struct IBestSwitch {
 	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	/**
 	 * 开关默认选中的状态
+	 * @since 1.0.5 开始支持string number类型
 	 */
-	@Param @Require value: boolean
+	@Param @Require value: boolean | IBestStringNumber
 	/**
 	 * 开关按钮的尺寸
 	 */
@@ -44,13 +47,68 @@ export struct IBestSwitch {
 	 */
 	@Param loadingInactiveColor: ResourceColor = ''
 	/**
+	 * 组件宽度
+	 * @since 2.2.0
+	 */
+	@Param componentWidth: IBestStringNumber = ""
+	/**
+	 * 组件内边距
+	 * @since 2.2.0
+	 */
+	@Param componentPadding: Length | Padding | LocalizedPadding = 2
+	/**
+	 * 打开时的文字
+	 * @since 2.2.0
+	 */
+	@Param activeText: ResourceStr = ""
+	/**
+	 * 关闭时的文字
+	 * @since 2.2.0
+	 */
+	@Param inactiveText: ResourceStr = ""
+	/**
+	 * 打开时的图标, 优先级高于activeText
+	 * @since 2.2.0
+	 */
+	@Param activeIcon: ResourceStr = ""
+	/**
+	 * 关闭时的图标, 优先级高于inactiveText
+	 * @since 2.2.0
+	 */
+	@Param inactiveIcon: ResourceStr = ""
+	/**
+	 * 文字/图标大小
+	 * @since 2.2.0
+	 */
+	@Param textFontSize: IBestStringNumber = convertDimensionsWidthUnit(14)
+	/**
+	 * 打开时文字/图标颜色
+	 * @since 2.2.0
+	 */
+	@Param activeTextColor: ResourceColor = this.baseStyle.default
+	/**
+	 * 关闭时文字/图标颜色
+	 * @since 2.2.0
+	 */
+	@Param inactiveTextColor: ResourceColor = this.baseStyle.default
+	/**
+	 * 打开时的值
+	 * @since 2.2.0
+	 */
+	@Param activeValue: boolean | IBestStringNumber = true
+	/**
+	 * 关闭时的值
+	 * @since 2.2.0
+	 */
+	@Param inactiveValue: boolean | IBestStringNumber = false
+	/**
 	 * 自定义按钮的内容
 	 */
 	@BuilderParam buttonBuilder: CustomBuilder
 	/**
 	 * 改变的回调
 	 */
-	@Event onChange: (value: boolean) => void = () => {}
+	@Event onChange: (value: boolean | IBestStringNumber) => void = () => {}
 	/**
 	 * 改变前的回调
 	 */
@@ -59,89 +117,113 @@ export struct IBestSwitch {
 	 * 点击的回调
 	 */
 	@Event onSwitchClick: () => void = () => {}
-	@Event $value: (value: boolean) => void = () => {}
+	@Event $value: (value: boolean | IBestStringNumber) => void = () => {}
 
-	@Local uniId: number = 0
+	@Local realWidth: number = 0
 	@Local switchBarSize: number = 0
-	private uiContext = this.getUIContext()
 
-	aboutToAppear(): void {
-		this.uniId = this.getUniqueId()
-	}
-	initSize(){
-		setTimeout(() => {
-			this.switchBarSize = getComponentsInfo(this.uiContext, `ibest_switch_${this.uniId}`).width
-		}, 50)
+	// 获取值
+	getBooleanValue(){
+		return this.value === this.activeValue
 	}
 	// 改变的回调
 	async handleChange() {
-		const nextValue = !this.value
-		let status = await handleBeforeFunction(this.beforeChange, nextValue)
+		let value = this.value
+		let booleanValue = this.getBooleanValue() ? value === this.inactiveValue : value === this.activeValue
+		let status = await handleBeforeFunction(this.beforeChange, booleanValue)
 		if(!status){
 			return
 		}
-		this.$value(nextValue)
-		this.onChange(nextValue)
+		let changedValue = this.getBooleanValue() ? this.inactiveValue : this.activeValue
+		this.$value(changedValue)
+		this.onChange(changedValue)
 	}
 	// 获取激活的颜色
 	getActiveColor() {
 		return this.activeColor || this.baseStyle.primary as string
 	}
+	// 获取移动距离
+	@Computed
+	get transDistance(){
+		return this.realWidth - this.switchBarSize
+	}
 	build() {
-		Column() {
-			Column() {
-				if (this.buttonBuilder) {
-					this.buttonBuilder()
-				} else if (this.loading && this.switchBarSize) {
-					IBestLoading({
-						loadingSize: this.switchBarSize / 1.5,
-						loadingColor: this.value ? this.loadingActiveColor || this.getActiveColor() : this.loadingInactiveColor || this.activeColor
+		Row() {
+			Row(){
+				Column() {
+					if (this.buttonBuilder) {
+						this.buttonBuilder()
+					} else if (this.loading && this.switchBarSize) {
+						IBestLoading({
+							loadingSize: this.switchBarSize / 1.5,
+							loadingColor: this.value ? this.loadingActiveColor || this.getActiveColor() : this.loadingInactiveColor || this.getActiveColor()
+						})
+					}
+				}
+				.width(getSizeByUnit(this.switchSize))
+				.height(getSizeByUnit(this.switchSize))
+				.alignItems(HorizontalAlign.Center)
+				.justifyContent(FlexAlign.Center)
+				.borderRadius(this.baseStyle.borderRadiusMax)
+				.shadow({
+					color: 'rgba(0, 0, 0, 0.1)',
+					offsetY: 1,
+					radius: 1
+				})
+				.backgroundColor(IBestSwitchColor.white)
+				.translate({
+					x: this.value ? this.transDistance : 0
+				})
+				.animation({
+					duration: this.baseStyle.animationDuration as number
+				})
+				.onAreaChange((_, newVal) => {
+					this.switchBarSize = newVal.width as number
+				})
+				if(this.activeIcon || this.activeText){
+					Row(){
+						if(this.activeIcon){
+							IBestIcon({
+								name: this.getBooleanValue() ? this.activeIcon : this.inactiveIcon,
+								color: this.getBooleanValue() ? this.activeTextColor : this.inactiveTextColor,
+								iconSize: this.textFontSize
+							})
+						}else{
+							Text(this.getBooleanValue() ? this.activeText : this.inactiveText)
+								.fontSize(getSizeByUnit(this.textFontSize, true))
+								.fontColor(this.getBooleanValue() ? this.activeTextColor : this.inactiveTextColor)
+								.maxLines(1)
+								.textOverflow({overflow: TextOverflow.Ellipsis})
+						}
+					}
+					.layoutWeight(1)
+					.padding({left: 2, right: 2})
+					.justifyContent(FlexAlign.Center)
+					.translate({
+						x: this.getBooleanValue() ? -this.switchBarSize : 0
+					})
+					.animation({
+						duration: this.baseStyle.animationDuration as number
 					})
 				}
 			}
-			.width(getSizeByUnit(this.switchSize))
-			.height(getSizeByUnit(this.switchSize))
-			.alignItems(HorizontalAlign.Center)
-			.justifyContent(FlexAlign.Center)
-			.borderRadius(this.baseStyle.borderRadiusMax)
-			.shadow({
-				color: 'rgba(0, 0, 0, 0.1)',
-				offsetY: this.uiContext.px2vp(3),
-				radius: 1
-			})
-			.backgroundColor(IBestSwitchColor.white)
-			.translate({
-				x: this.value ? this.switchBarSize - 4 : 0
-			})
-			.id(`ibest_switch_${this.uniId}`)
-			.animation({
-				duration: this.baseStyle.animationDuration as number,
+			.width(CONTAINER_SIZE.FULL)
+			.onAreaChange((_, newVal) => {
+				this.realWidth = newVal.width as number
 			})
 		}
-		.alignItems(HorizontalAlign.Start)
-		.justifyContent(FlexAlign.Center)
-		.width(this.switchBarSize * 2)
-		.padding(2)
-		.backgroundColor(this.value ? this.getActiveColor() : this.inactiveColor)
-		.borderRadius(this.baseStyle.borderRadiusMax)
-		.enabled(!this.disabled && !this.loading)
-		.opacity(this.disabled ? 0.5 : 1)
+		.backgroundColor(this.getBooleanValue() ? this.getActiveColor() : this.inactiveColor)
 		.animation({
 			duration: this.baseStyle.animationDuration as number
 		})
+		.width(this.componentWidth ? getSizeByUnit(this.componentWidth) : this.switchBarSize * 2)
+		.padding(getSizeByUnit(this.componentPadding))
+		.borderRadius(this.baseStyle.borderRadiusMax)
+		.enabled(!this.disabled && !this.loading)
+		.opacity(this.disabled ? 0.6 : 1)
 		.onClick(() => {
 			this.handleChange()
 			this.onSwitchClick()
-		})
-		.onAppear(() => {
-			setTimeout(() => {
-				this.initSize()
-			}, 20)
-		})
-		.onVisibleAreaChange([0,1], (isExpanding: boolean) => {
-			if(isExpanding && !this.switchBarSize){
-				this.initSize()
-			}
 		})
 	}
 }

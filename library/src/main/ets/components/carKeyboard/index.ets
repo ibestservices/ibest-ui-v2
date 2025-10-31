@@ -301,7 +301,7 @@ export struct IBestCarKeyboard{
             maskColor: "transparent",
             closeOnBackPress: true,
             safeAreaInsetBottom: false,
-            contentBuilder: ():void => this.baseBuilder(),
+            contentBuilder: (): void => this.baseBuilder(),
 			$visible: (value: boolean): void => this.$visible(value)
         })
     }
