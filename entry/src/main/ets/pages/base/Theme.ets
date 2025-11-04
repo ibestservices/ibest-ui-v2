@@ -94,7 +94,7 @@ struct ThemePage {
 					}
 				}
 				ListItem() {
-					ComponentShowContainer({ title: $r("app.string.component_circleprogress") }) {
+					ComponentShowContainer({ title: $r("app.string.component_circleProgress") }) {
 						IBestCircleProgress({
 							value: this.progressValue!!,
 							text: `50%`
@@ -151,6 +151,6 @@ struct ThemePage {
 			.padding({ left: SPACE.SM, right: SPACE.SM })
 		}
 		.hideTitleBar(true)
-		.backgroundColor(modeColor.bg)
+		.backgroundColor(modeColor.bg2)
 	}
 }

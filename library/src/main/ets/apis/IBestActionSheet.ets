@@ -7,7 +7,7 @@ import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../theme-chalk/src/in
 import { IBestActionSheetColor } from './color';
 import { IBestIcon } from '../components/icon';
 import { IBestBaseDataType, IBestStorageKey, IBestAwaitable, IBestStringNumber } from '../model/Global.type';
-import GlobalStore from '../utils/GlobalStore';
+import GlobalStore from '../utils/globalStore';
 
 // 选项类型
 export class IBestActionType {

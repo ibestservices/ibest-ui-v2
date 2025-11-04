@@ -15,11 +15,14 @@ struct SwitchPage {
 	@Local value: boolean = false
 	@Local value1: boolean = true
 	@Local value2: boolean = false
+	@Local stringValue: string = 'off'
+	@Local numberValue: number = 1
 	@Local value3: boolean = true
 	@Local value4: boolean = false
 	@Local value5: boolean = true
-	@Local value6: boolean = true
+	@Local value6: boolean = false
 	@Local value7: boolean = true
+	@Local value8: boolean = true
 
 	@Local arrowDirection: 'left' | 'right' = 'left'
 	@Builder Arrow() {
@@ -46,46 +49,96 @@ struct SwitchPage {
 					}
 				}
 				ListItem() {
-					ComponentShowContainer({ title: '禁用状态' }) {
-						Column({space: SPACE.MD}){
+					ComponentShowContainer({ title: '自定义尺寸' }) {
+						IBestSwitch({
+							value: this.value1!!,
+							switchSize: 20,
+							componentWidth: 60
+						}).margin({
+							bottom: SPACE.SM
+						})
+						IBestSwitch({
+							value: this.value1!!,
+							componentPadding: 4
+						})
+					}
+				}
+				ListItem() {
+					ComponentShowContainer({ title: '文字图标' }) {
+						IBestSwitch({
+							value: this.value2!!,
+							inactiveText: "OFF",
+							activeText: "ON",
+							componentWidth: 70
+						}).margin({
+							bottom: SPACE.SM
+						})
+						IBestSwitch({
+							value: this.value2!!,
+							inactiveIcon: $r("app.media.icon_dark"),
+							activeIcon: $r("app.media.icon_light"),
+							activeTextColor: "#f0ff86"
+						})
+					}
+				}
+				ListItem() {
+					ComponentShowContainer({ title: '扩展value类型' }) {
+						Row({space: SPACE.SM}){
+							Text("string")
 							IBestSwitch({
-								value: this.value1!!,
-								disabled: true
+								value: this.stringValue!!,
+								inactiveValue: "off",
+								activeValue: "on"
 							})
-							IBestSwitch({
-								value: this.value2!!,
-								disabled: true
-							})
+							Text(this.stringValue)
 						}
+						.margin({
+							bottom: SPACE.SM
+						})
+						Row({space: SPACE.SM}){
+							Text("number")
+							IBestSwitch({
+								value: this.numberValue!!,
+								inactiveValue: 0,
+								activeValue: 1
+							})
+							Text(this.numberValue.toString())
+						}
+					}
+				}
+				ListItem() {
+					ComponentShowContainer({ title: '禁用状态' }) {
+						IBestSwitch({
+							value: this.value3!!,
+							disabled: true
+						}).margin({
+							bottom: SPACE.SM
+						})
+						IBestSwitch({
+							value: this.value4!!,
+							disabled: true
+						})
 					}
 				}
 				ListItem() {
 					ComponentShowContainer({ title: '加载状态' }) {
-						Column({space: SPACE.MD}) {
-							IBestSwitch({
-								value: this.value3!!,
-								loading: true,
-							})
-							IBestSwitch({
-								value: this.value4!!,
-								loading: true,
-								activeColor: '#07c160'
-							})
-						}
-					}
-				}
-				ListItem() {
-					ComponentShowContainer({ title: '自定义大小' }) {
 						IBestSwitch({
 							value: this.value5!!,
-							switchSize: 20
+							loading: true,
+						}).margin({
+							bottom: SPACE.SM
+						})
+						IBestSwitch({
+							value: this.value6!!,
+							loading: true,
+							activeColor: '#07c160'
 						})
 					}
 				}
 				ListItem() {
 					ComponentShowContainer({ title: '自定义按钮' }) {
 						IBestSwitch({
-							value: this.value6!!,
+							value: this.value7!!,
 							activeColor: '#db3131',
 							buttonBuilder: () => this.Arrow(),
 							onChange: (value) => {
@@ -97,7 +150,7 @@ struct SwitchPage {
 				ListItem() {
 					ComponentShowContainer({ title: '异步控制' }) {
 						IBestSwitch({
-							value: this.value7!!,
+							value: this.value8!!,
 							beforeChange: () => {
 								return new Promise((resolve, reject) => {
 									IBestDialogUtil.open({
@@ -116,6 +169,7 @@ struct SwitchPage {
 						})
 					}
 				}
+				ListItem().height(50)
 			}
 			.layoutWeight(1)
 			.padding({ left: SPACE.SM, right: SPACE.SM })

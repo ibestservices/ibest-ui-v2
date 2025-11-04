@@ -32,7 +32,7 @@ export struct IBestContactAddressForm {
 	/**
 	 * 识别输入框顶部标签的背景色
 	 */
-	@Param identifyTagBgColor: ResourceColor = this.baseStyle.primary
+	@Param identifyTagBgColor: ResourceColor = ""
 	/**
 	 * 识别输入框顶部的提示文字颜色
      */
@@ -164,7 +164,7 @@ export struct IBestContactAddressForm {
 						})
 					}
 					.width(CONTAINER_SIZE.FULL)
-					.backgroundColor(this.identifyTagBgColor)
+					.backgroundColor(this.identifyTagBgColor || this.baseStyle.primary)
 					.padding({top: this.baseStyle.spaceX, bottom: this.baseStyle.spaceX, left: this.baseStyle.spaceSm, right: this.baseStyle.spaceSm})
 					Column({ space: this.baseStyle.spaceXs as string }) {
 						TextArea({ text: $$this.addressText, placeholder: this.identifyPlaceholder })
@@ -202,8 +202,8 @@ export struct IBestContactAddressForm {
 								btnWidth: 60,
 								btnHeight: 28,
 								disabled: this.addressText.length < 5,
-								color: this.identifyTagBgColor,
-								btnBorderColor: this.identifyTagBgColor,
+								color: this.identifyTagBgColor || this.baseStyle.primary,
+								btnBorderColor: this.identifyTagBgColor || this.baseStyle.primary,
 								onBtnClick: () => {
 									this.setFormValues(addressParse(this.addressText))
 								}

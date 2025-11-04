@@ -28,6 +28,18 @@ interface TableData1{
 	amount4: number
 	amount5: number
 }
+@ObservedV2
+class TableData2Type{
+	@Trace name: string = ""
+	@Trace number: number = 0
+}
+class TableData2 extends TableData2Type{
+	constructor(value: TableData2Type) {
+		super()
+		this.name = value.name
+		this.number = value.number
+	}
+}
 
 @Entry
 @ComponentV2
@@ -55,6 +67,10 @@ struct TablePage {
 		{ name: "数据4", amount1: 87, amount2: 97, amount3: 78.8, amount4: 76.3, amount5: 98.54 },
 		{ name: "数据5", amount1: 88, amount2: 97, amount3: 85.9, amount4: 68.3, amount5: 76.9 }
 	]
+	@Local data3: TableData2[] = [
+		new TableData2({ name: "数据", number: 10 }),
+		new TableData2({ name: "数据", number: 20 })
+	]
 
 	@Local tableId1: string = "table1"
 	@Local tableId2: string = "table2"
@@ -64,6 +80,7 @@ struct TablePage {
 	@Local tableId5: string = "table5"
 	@Local tableId6: string = "table6"
 	@Local tableId7: string = "table7"
+	@Local tableId8: string = "table8"
 	@Builder headerBuilder(column: IBestTableColumnData, columnIndex: number){
 		Row({space: SPACE.BASE}){
 			Text(column.title).fontSize(14)
@@ -201,7 +218,36 @@ struct TablePage {
 						}
 					}
 				}
-				ListItem().height(50)
+				ListItem() {
+					ComponentShowContainer({ title: '动态修改数据' }) {
+						IBestTable({ tableId: this.tableId8, data: this.data3 }){
+							IBestTableColumn({ tableId: this.tableId8, title: "名称", prop: "name", cellWidth: 70 })
+							IBestTableColumn({ tableId: this.tableId8, title: "数量", prop: "number" })
+						}
+						Row({space: SPACE.SM}){
+							IBestButton({
+								type: "primary",
+								text: "修改数据",
+								onBtnClick: () => {
+									this.data3[0].number += 10
+									this.data3[1].number += 10
+								}
+							})
+							IBestButton({
+								type: "primary",
+								text: "修改整个数据",
+								onBtnClick: () => {
+									this.data3 = [
+										new TableData2({ name: "数据", number: 30 }),
+										new TableData2({ name: "数据", number: 40 })
+									]
+								}
+							})
+						}
+						.margin({top: SPACE.SM})
+					}
+				}
+				ListItem().height(100)
 			}
 			.layoutWeight(1)
 			.padding({ left: SPACE.SM, right: SPACE.SM })

@@ -25,7 +25,6 @@ interface Tab {
 @Extend(List) function listStyle(){
 	.width(CONTAINER_SIZE.FULL)
 	.height(CONTAINER_SIZE.FULL)
-	.edgeEffect(EdgeEffect.None)
 	.padding({ left: SPACE.MD, right: SPACE.MD })
 }
 
@@ -175,7 +174,7 @@ struct Index {
 					path: "DropdownMenu"
 				},
 				{
-					name: $r("app.string.component_float_bubble"),
+					name: $r("app.string.component_floatBubble"),
 					path: "FloatBubble"
 				},
 				{
@@ -212,7 +211,7 @@ struct Index {
 					path: "Badge"
 				},
 				{
-					name: $r("app.string.component_circleprogress"),
+					name: $r("app.string.component_circleProgress"),
 					path: "CircleProgress"
 				},
 				{
@@ -236,15 +235,15 @@ struct Index {
 					path: "Empty"
 				},
 				{
-					name: $r("app.string.component_highlight"),
+					name: $r("app.string.component_highLight"),
 					path: "Highlight"
 				},
 				{
-					name: $r("app.string.component_imagepreview"),
+					name: $r("app.string.component_imagePreview"),
 					path: "ImagePreview"
 				},
 				{
-					name: $r("app.string.component_noticebar"),
+					name: $r("app.string.component_noticeBar"),
 					path: "NoticeBar"
 				},
 				{
@@ -252,15 +251,23 @@ struct Index {
 					path: "Popover"
 				},
 				{
+					name: $r("app.string.component_price"),
+					path: "Price"
+				},
+				{
 					name: $r("app.string.component_progress"),
 					path: "Progress"
 				},
 				{
-					name: $r("app.string.component_readmore"),
+					name: $r("app.string.component_readMore"),
 					path: "ReadMore"
 				},
 				{
-					name: $r("app.string.component_sectorprogress"),
+					name: $r("app.string.component_rollingText"),
+					path: "RollingText"
+				},
+				{
+					name: $r("app.string.component_sectorProgress"),
 					path: "SectorProgress"
 				},
 				{
@@ -284,7 +291,7 @@ struct Index {
 					path: "Tag"
 				},
 				{
-					name: $r("app.string.component_textellipsis"),
+					name: $r("app.string.component_textEllipsis"),
 					path: "TextEllipsis"
 				},
 				{
@@ -410,6 +417,7 @@ struct Index {
 		.width(CONTAINER_SIZE.FULL)
 		.alignItems(HorizontalAlign.Start)
 		.padding({ left: 10, top: GlobalStore.topAvoidHeight })
+		.transition(TransitionEffect.OPACITY.animation({ duration: 2000, curve: Curve.Ease }))
 	}
 	@Builder tabContentBuilder(index: number){
 		if (index == 0) {
@@ -423,12 +431,14 @@ struct Index {
 							title: `${getResourceStr(part.title)}(${part.list.length})`,
 							titlePaddingLeft: SPACE.XS
 						}) {
-							ForEach(part.list, (item: ComponentItem) => {
-								this.componentItem(item)
+							ForEach(part.list, (item: ComponentItem, i) => {
+								this.componentItem(item, i)
 							})
 						}
 					}
+					.transition(TransitionEffect.move(TransitionEdge.BOTTOM).animation({ duration: 1000, curve: Curve.Ease, delay: 500*index }))
 				})
+				ListItem().height(80)
 			}
 			.listStyle()
 			.onDidScroll(() => {
@@ -439,11 +449,12 @@ struct Index {
 				ListItem() {
 					this.listTop(index)
 				}
-				ForEach(this.extendComponentList, (item: ComponentItem) => {
+				ForEach(this.extendComponentList, (item: ComponentItem, i) => {
 					ListItem() {
-						this.componentItem(item)
+						this.componentItem(item, i)
 					}
 				})
+				ListItem().height(80)
 			}
 			.listStyle()
 			.onDidScroll(() => {
@@ -451,63 +462,74 @@ struct Index {
 			})
 		}else{
 			Column() {
-				Column({ space: SPACE.MD }) {
-					Image($r("app.media.app_icon")).width(100).borderRadius(BORDER_RADIUS.BASE)
-					Text($r("app.string.app_name"))
-						.fontSize(32)
-						.fontColor(modeColor.textColor2)
-					Text($r("app.string.ibest_ui_desc"))
-						.width("80%")
-						.textAlign(TextAlign.Center)
-						.fontSize(FONT_SIZE.MD)
-						.fontColor(modeColor.textColor4)
-					IBestCellGroup({inset: true}){
-						IBestCell({
-							title: $r("app.string.app_version"),
-							value: `v${getAppVersion()}`
-						})
-						IBestCell({
-							title: $r("app.string.ui_version"),
-							value: this.uiVersion ? `v${this.uiVersion}` : ""
-						})
-						IBestCell({
-							title: $r("app.string.ui_doc"),
-							isLink: true,
-							onCellClick: () => {
-								this.viewUrl("doc")
-							}
-						})
-						IBestCell({
-							title: $r("app.string.company_official_website"),
-							isLink: true,
-							onCellClick: () => {
-								this.viewUrl("company")
-							}
-						})
-						IBestCell({
-							title: $r("app.string.privacy_policy"),
-							isLink: true,
-							hasBorder: false,
-							onCellClick: () => {
-								this.router.pushUrl({
-									url: "pages/PrivacyPolicy"
+				Scroll() {
+					Column({ space: SPACE.MD }) {
+						Image($r("app.media.app_icon")).width(100).borderRadius(BORDER_RADIUS.BASE)
+							.transition(TransitionEffect.move(TransitionEdge.BOTTOM).animation({ duration: 1000, curve: Curve.Ease }))
+						Text($r("app.string.app_name"))
+							.fontSize(32)
+							.fontColor(modeColor.textColor2)
+							.transition(TransitionEffect.move(TransitionEdge.BOTTOM).animation({ duration: 1000, curve: Curve.Ease, delay: 100 }))
+						Text($r("app.string.ibest_ui_desc"))
+							.width("80%")
+							.textAlign(TextAlign.Center)
+							.fontSize(FONT_SIZE.MD)
+							.fontColor(modeColor.textColor4)
+							.transition(TransitionEffect.move(TransitionEdge.BOTTOM).animation({ duration: 1000, curve: Curve.Ease, delay: 200 }))
+						Column() {
+							IBestCellGroup({ inset: true }) {
+								IBestCell({
+									title: $r("app.string.app_version"),
+									value: `v${getAppVersion()}`
+								})
+								IBestCell({
+									title: $r("app.string.ui_version"),
+									value: this.uiVersion ? `v${this.uiVersion}` : ""
+								})
+								IBestCell({
+									title: $r("app.string.ui_doc"),
+									isLink: true,
+									onCellClick: () => {
+										this.viewUrl("doc")
+									}
+								})
+								IBestCell({
+									title: $r("app.string.company_official_website"),
+									isLink: true,
+									onCellClick: () => {
+										this.viewUrl("company")
+									}
+								})
+								IBestCell({
+									title: $r("app.string.privacy_policy"),
+									isLink: true,
+									hasBorder: false,
+									onCellClick: () => {
+										this.router.pushUrl({
+											url: "pages/PrivacyPolicy"
+										})
+									}
 								})
 							}
-						})
-					}
+						}
+						.transition(TransitionEffect.move(TransitionEdge.BOTTOM).animation({ duration: 1000, curve: Curve.Ease, delay: 300 }))
+					}.padding({top: 80})
 				}
+				.layoutWeight(1)
+				.align(Alignment.Top)
 				Column({ space: SPACE.BASE }){
 					Text("皖ICP备16012151号-7A").fontColor(modeColor.primaryColor).fontSize(FONT_SIZE.XS)
 					Text($r("app.string.copy_right")).fontSize(FONT_SIZE.XS).textAlign(TextAlign.Center)
-				}.padding({left: SPACE.BASE, right: SPACE.BASE})
+				}
+				.height(36)
+				.transition(TransitionEffect.move(TransitionEdge.BOTTOM).animation({ duration: 1500, curve: Curve.Ease }))
+				Column().height(70)
 			}
 			.width(CONTAINER_SIZE.FULL)
 			.height(CONTAINER_SIZE.FULL)
-			.justifyContent(FlexAlign.SpaceBetween)
-			.padding({ top: 80, bottom: SPACE.MD })
 		}
 	}
-	@Builder componentItem(item: ComponentItem) {
+	@Builder componentItem(item: ComponentItem, index: number) {
 		Row() {
 			Text(item.name)
 				.fontSize(FONT_SIZE.MD)
@@ -528,6 +550,7 @@ struct Index {
 		.margin({ top: SPACE.SM })
 		.backgroundColor(modeColor.bg3)
 		.clickEffect({level:ClickEffectLevel.LIGHT, scale: 0.9})
+		.transition(TransitionEffect.move(TransitionEdge.BOTTOM).animation({ duration: 800, curve: Curve.Ease, delay: 100*index }))
 		.onClick(() => {
 			RouterUtil.push(item.path, item.name)
 		})
@@ -539,7 +562,7 @@ struct Index {
 		this.getUiVersion()
 		// setTimeout(() => {
             // RouterUtil.push("DropdownMenu")
-		// }, 300)
+		// }, 100)
 	}
 	getTitleOpacity(){
 		// let scrollY = this.scrollTop < 50 ? this.scrollTop : 50
@@ -619,10 +642,10 @@ struct Index {
 				}.tabBar(this.tabBuilder(2))
 			}
 			.width(CONTAINER_SIZE.FULL)
-			.height(CONTAINER_SIZE.FULL)
 			.barHeight(70)
-			.barBackgroundColor(modeColor.bg2)
 			.divider({strokeWidth: 1, color: modeColor.borderColor})
+			.barOverlap(true)
+			.barBackgroundBlurStyle(BlurStyle.Thin)
 			.onChange(() => {
 				this.getScrollTop()
 			})

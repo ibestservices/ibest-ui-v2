@@ -1,7 +1,7 @@
 import { IBestCell, IBestIcon, IBestStringNumber } from "../../../../../Index"
 import { CONTAINER_SIZE } from "../../theme-chalk/src/container"
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from "../../theme-chalk/src/index.type"
-import { emitter } from "../../utils/EventEmitter"
+import { emitter } from "../../utils/eventEmitter"
 import { convertDimensionsWidthUnit, getComponentsInfo, getEventName, getSizeByUnit, handleBeforeFunction } from "../../utils/utils"
 import { IBestDropdownMenuColor } from "./color"
 import { COMPONENT_NAME, DROPDOWN_MENU_EVENT_NAME, IBestDropdownMenuContentParams,
@@ -12,7 +12,7 @@ import { COMPONENT_NAME, DROPDOWN_MENU_EVENT_NAME, IBestDropdownMenuContentParam
 } from "./index.type"
 import { AppStorageV2 } from "@kit.ArkUI"
 import { IBestAwaitable, IBestBaseDataType, IBestStorageKey } from "../../model/Global.type"
-import GlobalStore from "../../utils/GlobalStore"
+import GlobalStore from "../../utils/globalStore"
 
 const popupDuration = 150
 const hideDuration = 180

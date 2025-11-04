@@ -2,7 +2,7 @@ import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../mod
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { IBestWatermarkColor } from './color'
 import { AppStorageV2 } from '@kit.ArkUI'
-import GlobalStore from '../../utils/GlobalStore'
+import GlobalStore from '../../utils/globalStore'
 import { base64ToPixelMap, getResourceStr } from '../../utils/utils'
 import { IBestDrawCanvasItemArgs, IBestWatermarkCountData } from './index.type'
 

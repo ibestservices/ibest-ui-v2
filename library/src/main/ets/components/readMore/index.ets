@@ -36,7 +36,7 @@ export struct IBestReadMore{
     /**
      * 操作文字颜色
      */
-    @Param actionColor: ResourceColor = this.baseStyle.primary
+    @Param actionColor: ResourceColor = ""
     /**
      * 文字大小
      */
@@ -138,11 +138,11 @@ export struct IBestReadMore{
             if(!(this.value && this.once)){
                 Row({space: this.baseStyle.spaceX}){
                     Text(this.value ? this.collapseText : this.expandText)
-                        .fontColor(this.actionColor)
+                        .fontColor(this.actionColor || this.baseStyle.primary)
                         .fontSize(this.actionFontSize)
                     IBestIcon({
                         name: this.value ? this.collapseIcon : this.expandIcon,
-                        color: this.actionColor,
+                        color: this.actionColor || this.baseStyle.primary,
                         iconSize: this.actionFontSize
                     })
                 }

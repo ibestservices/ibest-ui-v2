@@ -112,7 +112,7 @@ struct CheckboxPage {
 								label: '自定义颜色'
 							})
 							IBestCheckbox({
-								value: false,
+								value: this.isChecked!!,
 								bdColor: '#ee0a24',
 								bgColor: "#fff",
 								label: '自定义背景色'

@@ -1,4 +1,4 @@
-import { emitter } from '../../utils/EventEmitter';
+import { emitter } from '../../utils/eventEmitter';
 import { convertDimensionsWidthUnit, getEventName, getSizeByUnit,
 	handleBeforeFunction,
 	sleep } from '../../utils/utils';

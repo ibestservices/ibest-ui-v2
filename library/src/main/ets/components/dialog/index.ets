@@ -649,6 +649,8 @@ export struct IBestDialog {
 	@Event $confirmButtonDisabled: (value: boolean) => void = () => {}
 	@Event $cancelButtonDisabled: (value: boolean) => void = () => {}
 
+	private promptAction = this.getUIContext().getPromptAction()
+	private dialogId: number = 0
 	@Builder dialogBuilder(){
 		IBestDialogView({
 			dialogWidth: this.dialogWidth,
@@ -703,9 +705,10 @@ export struct IBestDialog {
 			}
 		})
 	}
-
-	private promptAction = this.getUIContext().getPromptAction()
-	private dialogId: number = 0
+	aboutToAppear() {
+		this.visibleChange()
+	}
+	// visible 变化
 	@Monitor("visible") visibleChange(){
 		if(this.visible){
 			this.open()

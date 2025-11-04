@@ -5,7 +5,7 @@ import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit } from '..
 import { IBestIcon } from '../icon'
 import { IBestNavbarColor } from './color'
 import { AppStorageV2 } from '@kit.ArkUI'
-import GlobalStore from '../../utils/GlobalStore'
+import GlobalStore from '../../utils/globalStore'
 @ComponentV2
 export struct IBestNavBar{
 	/**
@@ -195,8 +195,8 @@ export struct IBestNavBar{
 
 	aboutToAppear(): void {
 		this.uniId = this.getUniqueId()
-		this.initSize()
 	}
+	@Monitor("isShowLeft", "isShowRight")
 	initSize(){
 		setTimeout(() => {
 			let leftWidth = 0
@@ -343,5 +343,15 @@ export struct IBestNavBar{
 		}
 		.backgroundColor(this.navBarBgColor)
 		.expandSafeArea(this.expandSafeAreaType, [SafeAreaEdge.TOP])
+		.onAppear(() => {
+			setTimeout(() => {
+				this.initSize()
+			}, 50)
+		})
+		.onVisibleAreaChange([0,1], (isExpanding: boolean) => {
+			if(isExpanding && (this.isShowLeft && !this.leftWidth || this.isShowRight && !this.rightWidth)){
+				this.initSize()
+			}
+		})
 	}
 }

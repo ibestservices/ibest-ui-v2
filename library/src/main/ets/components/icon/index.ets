@@ -30,7 +30,7 @@ export struct IBestIcon {
 	 * 动画
 	 * @since 1.0.4
 	 */
-	@Param iconAnimation: AnimateParam = {}
+	@Param iconAnimation?: AnimateParam = undefined
 	/**
 	 * 点击回调
 	 */

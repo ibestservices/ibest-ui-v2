@@ -6,7 +6,7 @@ import { IBestIcon } from '../icon'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { AppStorageV2, ImmersiveMode, LengthMetrics, LevelMode } from '@kit.ArkUI'
-import GlobalStore from '../../utils/GlobalStore'
+import GlobalStore from '../../utils/globalStore'
 
 const popupDuration = 200
 const hideDuration = 220

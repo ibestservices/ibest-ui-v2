@@ -27,7 +27,7 @@ export struct IBestCascaderContent{
 	/**
 	 * 选中颜色
 	 */
-	@Param activeColor: ResourceColor = this.baseStyle.primary
+	@Param activeColor: ResourceColor = ""
 	/**
 	 * 列表区域高度
 	 */
@@ -227,7 +227,7 @@ export struct IBestCascaderContent{
 				IBestTabs({
 					tabsList: this.tabList,
 					tabWidthType: "auto",
-					tabLineColor: this.activeColor,
+					tabLineColor: this.activeColor || this.baseStyle.primary,
 					currentName: this.currentTabName!!,
 					onChange: name => {
 						this.tabChange(Number(name))
@@ -242,12 +242,12 @@ export struct IBestCascaderContent{
 							ForEach(item, (item1: IBestCascaderOptionInstance, index1: number) => {
 								Row(){
 									Text(item1.text)
-										.fontColor(item1.actived ? this.activeColor : IBestCascaderColor.textColor)
+										.fontColor(item1.actived ? this.activeColor || this.baseStyle.primary : IBestCascaderColor.textColor)
 										.fontSize(this.baseStyle.fontSizeMd)
 									IBestIcon({
 										name: "success",
 										iconSize: convertDimensionsWidthUnit(18),
-										color: this.activeColor
+										color: this.activeColor || this.baseStyle.primary
 									})
 										.visibility(item1.actived ? Visibility.Visible : Visibility.Hidden)
 								}
@@ -312,7 +312,7 @@ export struct IBestCascader{
 	/**
 	 * 选中颜色
 	 */
-	@Param activeColor: ResourceColor = this.baseStyle.primary
+	@Param activeColor: ResourceColor = ""
 	/**
 	 * 列表区域高度
 	 */

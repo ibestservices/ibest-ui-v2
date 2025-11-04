@@ -52,7 +52,7 @@ export struct IBestCountTo{
      */
     @Param fontWeight: FontWeight = FontWeight.Normal
     /**
-     * 实例
+     * 控制器
      */
     @Param controller: IBestCountToController = new IBestCountToController()
 	/**

@@ -224,7 +224,7 @@ export struct IBestStepper {
 		if(trigger != 'valueChange'){
 			this.inputValueChange()
 			if(trigger != 'init'){
-				this.onChange(this.value)
+				this.onChange(Number(val))
 			}
 		}
 	}

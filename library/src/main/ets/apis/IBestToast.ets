@@ -3,7 +3,7 @@ import { IBestIcon } from '../components/icon'
 import { IBestLoading } from '../components/loading'
 import { IBestStorageKey, IBestStringNumber, LoadingIconType, WordBreakType } from '../model/Global.type'
 import { IBestUIBaseStyle } from '../theme-chalk/src/index.type'
-import GlobalStore from '../utils/GlobalStore'
+import GlobalStore from '../utils/globalStore'
 import { convertDimensionsWidthUnit, getSizeByUnit } from '../utils/utils'
 
 @ObservedV2

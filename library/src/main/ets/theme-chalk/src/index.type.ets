@@ -50,6 +50,7 @@ export class IBestUIBaseStyle implements IBestUIBaseStyleType {
 	@Trace borderRadiusLg: string
 	@Trace borderRadiusMax: string
 	@Trace lineHeightXs: string
+	@Trace lineHeightXsm: string
 	@Trace lineHeightSm: string
 	@Trace lineHeightMd: string
 	@Trace lineHeightLg: string
@@ -84,6 +85,7 @@ export class IBestUIBaseStyle implements IBestUIBaseStyleType {
 		this.borderRadiusLg = value.borderRadiusLg ?? convertDimensionsWidthUnit(BORDER_RADIUS.LG)
 		this.borderRadiusMax = value.borderRadiusMax ?? convertDimensionsWidthUnit(BORDER_RADIUS.MAX)
 		this.lineHeightXs = value.lineHeightXs ?? convertDimensionsWidthUnit(LINE_HEIGHT.XS)
+		this.lineHeightXsm = value.lineHeightXsm ?? convertDimensionsWidthUnit(LINE_HEIGHT.XSM)
 		this.lineHeightSm = value.lineHeightSm ?? convertDimensionsWidthUnit(LINE_HEIGHT.SM)
 		this.lineHeightMd = value.lineHeightMd ?? convertDimensionsWidthUnit(LINE_HEIGHT.MD)
 		this.lineHeightLg = value.lineHeightLg ?? convertDimensionsWidthUnit(LINE_HEIGHT.LG)
@@ -93,5 +95,5 @@ export class IBestUIBaseStyle implements IBestUIBaseStyleType {
 	}
 }
 
-export type IbestUIBaseStyleValue = ResourceColor | EdgeEffect
-export type IBestUIBaseStyleObjType = Record<keyof IBestUIBaseStyleType, IbestUIBaseStyleValue>
+export type IBestUIBaseStyleValue = ResourceColor | EdgeEffect
+export type IBestUIBaseStyleObjType = Record<keyof IBestUIBaseStyleType, IBestUIBaseStyleValue>
