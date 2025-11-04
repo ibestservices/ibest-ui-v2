@@ -104,7 +104,7 @@ export struct IBestCircleProgress{
     @Local strokeDashArray: Point = new Point(0,0)
 
     aboutToAppear() {
-        this.maxPerimeter = Math.floor(Math.PI * this.diameter)
+        this.maxPerimeter = Math.PI * (this.diameter - this.strokeWidth)
         this.isShow = this.value > 0
         this.valueChange()
     }

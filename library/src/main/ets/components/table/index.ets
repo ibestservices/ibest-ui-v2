@@ -1,4 +1,4 @@
-import { getEventName, getResourceStr, getSizeByUnit, getComponentsInfo } from '../../utils/utils'
+import { getEventName, getResourceStr, getSizeByUnit, getComponentsInfo, generateId } from '../../utils/utils'
 import { AnyType } from '../../model/AnyType'
 import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
@@ -117,6 +117,7 @@ export struct IBestTable {
 	private leftFixedBodyScroller: Scroller = new Scroller()
 	private rightFixedBodyScroller: Scroller = new Scroller()
 	private footerScroller: Scroller = new Scroller()
+	// private gen
 
 	@Builder headerFooterCellBuilder(cellType: 'header' | 'footer', position: IBestCellPosition){
 		HeaderFooterCellRow({
@@ -154,7 +155,7 @@ export struct IBestTable {
 					stripe: this.stripe,
 					stripeBgColor: this.stripeBgColor
 				})
-			}, (_: AnyType, index: number) => index.toString())
+			}, (_: AnyType, index: number) => `${generateId()}_${index}`)
 		}
 	}
 	@Styles ibestTableFixBodyStyle(){
@@ -168,7 +169,7 @@ export struct IBestTable {
 		emitter.on(getEventName(COMPONENT_NAME, TABLE_EVENT_NAME.SEND_COLUMN_ITEM, this.tableId), this.uniId, (column: IBestTableColumnInfo): void => this.getColumn(column))
 		emitter.on(getEventName(COMPONENT_NAME, TABLE_EVENT_NAME.COLUMN_ITEM_CHANGE, this.tableId), this.uniId, (column: IBestTableColumnInfo): void => this.updateColumn(column))
 	}
-	aboutToDisappear(): void {
+	aboutToDisappear() {
 		emitter.off(getEventName(COMPONENT_NAME, TABLE_EVENT_NAME.SEND_COLUMN_ITEM, this.tableId), this.uniId)
 		emitter.off(getEventName(COMPONENT_NAME, TABLE_EVENT_NAME.COLUMN_ITEM_CHANGE, this.tableId), this.uniId)
 	}
@@ -393,7 +394,7 @@ struct HeaderFooterCellRow{
 					headerBuilder: column.headerBuilder,
 					cellBuilder: column.cellBuilder
 				})
-			}, (_: IBestTableColumnInfo, index: number) => index.toString())
+			})
 		}
 		.border({width: {bottom: 1}, color: this.bdColor})
 		.backgroundColor(this.cellType == 'header' ? this.headerBgColor : IBestTableColor.footerBgColor)
@@ -450,7 +451,7 @@ struct BodyCellRow{
 					headerBuilder: column.headerBuilder,
 					cellBuilder: column.cellBuilder
 				})
-			}, (_: IBestTableColumnInfo, index1: number) => index1.toString())
+			})
 		}
 		.border({width: {bottom: 1}, color: this.bdColor})
 		.backgroundColor(this.stripe && this.rowIndex % 2 == 0 ? this.stripeBgColor : this.cellBgColor)

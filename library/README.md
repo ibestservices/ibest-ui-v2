@@ -23,7 +23,7 @@
 
 目前 <a style="color:#0366d6;" onclick="openPage('https://www.ibestservices.com)" title="安徽百得思维信息科技有限公司">ibestservices 官方</a> 提供了 <a style="color:#0366d6;" onclick="openPage('https://ohpm.openharmony.cn/#/cn/detail/@ibestservices%2Fibest-ui')">V1</a> 和 <a style="color:#0366d6;" onclick="openPage('https://ohpm.openharmony.cn/#/cn/detail/@ibestservices%2Fibest-ui-v2')">V2</a> 版本，当前为状态管理 **V2** 版本，开发者可根据自己项目使用的**状态管理版本**选择对应的版本进行开发，官方推荐使用V2。
 
-如果觉得还不错，请帮忙右上角点个赞~ 感谢支持！
+欢迎加入下方微信群交流提供想法与建议，如果觉得还不错，请帮忙右上角点个赞~ 感谢支持！
 
 <div>
 	<img src="https://ibestservices.github.io/ibest-ui/screenshot/IBest-UI-Light.png" width="48%">
@@ -50,6 +50,12 @@ ohpm install @ibestservices/ibest-ui-v2
 ```
 
 OpenHarmony ohpm 环境配置等更多内容，请参考[如何安装 OpenHarmony ohpm 包](https://gitee.com/openharmony-tpc/docs/blob/master/OpenHarmony_har_usage.md)
+
+## 组件库版本与api版本对应关系
+| 组件库版本     | api版本      |
+|:----------|:-----------|
+| v0.0.9及以上 | `api17` 以上 |
+| v0.0.4及以上 | `api15` 以上 |
 
 ## 组件介绍
 
