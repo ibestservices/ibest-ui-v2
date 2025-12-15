@@ -84,7 +84,7 @@ export struct IBestCheckbox {
 	@Param falseValue: IBestStringNumber = '0'
 	/**
 	 * 圆角，仅shape为square时生效
-	 * @since 2.2.1
+	 * @since 1.0.6
 	 */
 	@Param radius: IBestStringNumber = 0
 	/**
