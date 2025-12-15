@@ -167,7 +167,7 @@ export struct IBestWatermark {
 				imgModel = new ImageBitmap(this.imageUrl)
 			}
 		} else {	// Resource
-			imgModel = await base64ToPixelMap(this.resourceManager.getMediaContentBase64Sync(this.imageUrl))
+			imgModel = await base64ToPixelMap(this.resourceManager.getMediaContentBase64Sync(this.imageUrl.id))
 		}
 		this.drawCanvasItem({
 			width: this.waterMarkWidth,

@@ -19,7 +19,7 @@ struct PickerPage {
 		{ text: '扬州', value: 3 },
 		{ text: '镇江', value: 4 }
 	]
-	@Local selectValue: number[] = [0]
+	@Local selectValue: number[] = []
 	@Local selectValue1: string[] = []
 	@Local selectValue2: string[] = ["Suzhou"]
 	@Builder pickerBuilder(){
@@ -222,9 +222,9 @@ struct PickerPage {
 						})
 					}
 				}
+				ListItem().height(50)
 			}
 			.layoutWeight(1)
-			.padding({ bottom: SPACE.LG })
 			// 弹出层
 			IBestPopup({
 				visible: this.visible!!,

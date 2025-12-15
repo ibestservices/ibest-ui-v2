@@ -40,13 +40,18 @@ export struct IBestField{
      */
     @Param prop: string = ""
     /**
-     * 验证规则
-     */
-    @Param rules: IBestFormRuleItem[] = []
-    /**
      * 组件绑定的值
      */
     @Param @Require value: IBestFieldValueType = ''
+	/**
+	 * 是否为必填项，如不设置，则会根据校验规则确认
+	 * 如果设为false，则rules中带有required: true的规则不会触发验证
+	 */
+	@Param required?: boolean = undefined
+    /**
+     * 验证规则，优先级大于form的rules中对应的规则
+     */
+    @Param rules: IBestFormRuleItem[] = []
 	/**
 	 * 是否显示label
 	 */
@@ -119,10 +124,6 @@ export struct IBestField{
      * 输入框文字对齐方式
      */
     @Param inputAlign: FieldTextAlign = "left"
-    /**
-     * 是否必填, 仅控制*显隐
-     */
-    @Param required?: boolean = undefined
     /**
      * 星号的位置
      */
@@ -346,23 +347,18 @@ export struct IBestField{
      */
 	@Event onRightIconClick: () => void = () => {}
 	@Event $value: (value: IBestFieldValueType) => void = () => {}
-	@Event $required: (required: boolean) => void = () => {}
-	@Event $rules: (rules: IBestFormRuleItem[]) => void = () => {}
-	@Event $disabled: (disabled: boolean) => void = () => {}
 
 	@Local uniId: number = 0
 	@Local isFocus: boolean = false
 	@Local fieldRequired: boolean = this.required ?? false
 	@Local fieldDisabled: boolean = this.disabled ?? false
 	@Local fieldRules: IBestFormRuleItem[] = this.rules
-	// 验证状态
 	@Local status: 'passed' | 'failed' | 'unvalidated' = 'unvalidated'
-	// 验证信息
 	@Local validateMessage: ResourceStr = ""
 	@Local borderRight: number = 0
     private uiContext = this.getUIContext()
 
-	@Builder asterisk(){
+	@Builder fieldLabelAsterisk(){
 		Text("*")
 			.margin({
 				left: this.requireAsteriskPosition == "right" ? this.baseStyle.spaceMini : 0,
@@ -383,10 +379,10 @@ export struct IBestField{
 						onIconClick: () => {
 							this.onLeftIconClick()
 						}
-					}).margin({left: this.baseStyle.spaceBase})
+					}).margin({ right: this.baseStyle.spaceBase })
 				}
 				if(this.requireAsteriskPosition == "left"){
-					this.asterisk()
+					this.fieldLabelAsterisk()
 				}
 				Text(){
 					Span(this.label)
@@ -399,11 +395,10 @@ export struct IBestField{
 				.constraintSize({ minHeight: convertDimensionsWidthUnit(20) })
 				.lineHeight(this.baseStyle.lineHeightMd)
 				if(this.requireAsteriskPosition == "right"){
-					this.asterisk()
+					this.fieldLabelAsterisk()
 				}
 			}
 			.width(this.labelPosition == "left" ? getSizeByUnit(this.labelWidth) : CONTAINER_SIZE.FULL)
-			.margin({right: this.baseStyle.spaceSm})
 			.alignItems(VerticalAlign.Center)
 			.justifyContent(this.labelAlign == "left" ? FlexAlign.Start : this.labelAlign == "center" ? FlexAlign.Center : FlexAlign.End)
 			.id(`ibest_field_label_${this.uniId}`)
@@ -424,7 +419,7 @@ export struct IBestField{
 			.position({ left: this.borderSizeType == "full" ? 0 : this.borderLeft, bottom: 0 })
 	}
 	@Builder fieldContent(){
-		Column(){
+		Column({space: this.baseStyle.spaceBase}){
 			Row() {
 				if (this.prefixIcon) {
 					IBestIcon({
@@ -437,7 +432,7 @@ export struct IBestField{
 						.fontSize(getSizeByUnit(this.prefixSize, true))
 						.fontColor(this.prefixFontColor)
 						.fontWeight(this.inputFontWeight)
-						.margin({right: this.baseStyle.spaceBase})
+						.margin({ right: this.baseStyle.spaceBase })
 				}
 				if (this.customRightContent) {
 					this.customRightContent()
@@ -587,7 +582,6 @@ export struct IBestField{
 					.textAlign(TextAlign.End)
 					.fontSize(this.baseStyle.fontSizeXs)
 					.fontColor(GRAY_COLOR.GRAY_5)
-					.margin({top: this.baseStyle.spaceBase})
 			}
 			// 验证信息
 			if(this.showMessage && this.validateMessage){
@@ -595,7 +589,6 @@ export struct IBestField{
 					.width(CONTAINER_SIZE.FULL)
 					.fontSize(this.baseStyle.fontSizeSm)
 					.fontColor(this.baseStyle.danger)
-					.margin({top: this.baseStyle.spaceBase})
 					.textAlign(this.getMessageAlign())
 			}
 		}
@@ -647,13 +640,6 @@ export struct IBestField{
 		})
 	}
 
-	@Monitor("required") requiredChange(){
-		this.fieldRequired = this.required || false
-	}
-	@Monitor("disabled") disabledChange(){
-		this.fieldDisabled = this.disabled || false
-	}
-
     aboutToAppear(): void {
         this.uniId = this.getUniqueId()
         this.initValue()
@@ -680,16 +666,48 @@ export struct IBestField{
 		let rightInfo = getComponentsInfo(this.uiContext, `ibest_field_content_${this.uniId}`)
 		this.borderRight = fullWidth - rightInfo.width - rightInfo.localLeft
 	}
-	@Monitor("rules")
-    rulesChange(){
-		let required = this.rules.length > 0 && this.rules.some((item: IBestFormRuleItem) => item.required)
-		this.fieldRequired = required
-		this.$required(required)
+	// 发送表单子项信息
+	sendFormItemData(){
+		emitter.emit(getEventName(COMPONENT_NAME, FORM_EVENT_NAME.SEND_FIELD, this.formId), {
+			uniId: this.uniId,
+			prop: this.prop,
+			validate: (): Promise<void | IBestFieldValidateInfo> => this.validate(),
+			getValue: (): IBestFieldValueType => this.value,
+			resetValidation: (): void => this.resetValidation(),
+			setValue: (value: IBestFieldValueType): void => this.setValue(value)
+		}, (result: IBestFormSendFieldCallResult): void => this.init(result))
+	}
+	// 初始化参数
+	init(results?: IBestFormSendFieldCallResult){
+		this.fieldRules = this.rules.length ? this.rules : results?.rules || []
+		this.fieldRequired = this.required ?? this.fieldRules.some((item: IBestFormRuleItem) => item.required)
+		this.labelWidth = this.labelWidth || results?.labelWidth || convertDimensionsWidthUnit(80)
+		this.labelPosition = this.labelPosition || results?.labelPosition || 'left'
+		this.labelAlign = this.labelAlign || results?.labelAlign || 'left'
+		this.colon = this.colon ?? results?.colon ?? false
+		this.requireAsteriskPosition = this.requireAsteriskPosition || results?.requireAsteriskPosition || 'left'
+		this.showMessage = this.showMessage ?? results?.showMessage ?? true
+		this.fieldDisabled = this.disabled ?? results?.disabled ?? false
+	}
+	@Monitor("required") requiredChange(){
+		this.fieldRequired = this.required ?? false
+		if (!this.fieldRequired) {
+			this.resetValidation()
+		}
+	}
+	@Monitor("rules") rulesChange(){
 		this.fieldRules = this.rules
-        if(!required){
+		this.fieldRequired = this.required ?? this.fieldRules.some((item: IBestFormRuleItem) => item.required)
+        if(!this.fieldRequired){
             this.resetValidation()
         }
     }
+	@Monitor("disabled") disabledChange(){
+		this.fieldDisabled = this.disabled ?? false
+		if(!this.disabled){
+			this.resetValidation()
+		}
+	}
     initValue(){
 		if (typeof this.value == "number" && !this.customRightContent) {
 			this.setValue(this.value.toString())
@@ -698,48 +716,17 @@ export struct IBestField{
             this.setValue("")
         }
     }
-    // 发送表单子项信息
-    sendFormItemData(){
-        emitter.emit(getEventName(COMPONENT_NAME, FORM_EVENT_NAME.SEND_FIELD, this.formId), {
-            uniId: this.uniId,
-            prop: this.prop,
-            validate: (rules: IBestFormRuleItem[]): Promise<void | IBestFieldValidateInfo> => this.validate(rules),
-            getValue: (): IBestFieldValueType => this.value,
-            resetValidation: (): void => this.resetValidation(),
-			setValue: (value: IBestFieldValueType): void => this.setValue(value)
-        }, (result: IBestFormSendFieldCallResult): void => this.init(result))
-    }
-    // 初始化参数
-    init(results?: IBestFormSendFieldCallResult){
-        if(results?.rules && !this.rules.length){
-			this.fieldRules = results.rules
-        }
-		let required = this.required ?? (this.fieldRules.length > 0 && this.fieldRules.some((item: IBestFormRuleItem) => item.required))
-		this.fieldRequired = required
-		this.$required(required)
-        this.labelWidth = this.labelWidth || results?.labelWidth || convertDimensionsWidthUnit(80)
-        this.labelPosition = this.labelPosition || results?.labelPosition || 'left'
-        this.labelAlign = this.labelAlign || results?.labelAlign || 'left'
-        this.colon = this.colon ?? (results?.colon || false)
-        this.requireAsteriskPosition = this.requireAsteriskPosition || results?.requireAsteriskPosition || 'left'
-        this.showMessage = this.showMessage ?? (results?.showMessage || true)
-		let disabled = this.disabled ?? (results?.disabled || false)
-		this.fieldDisabled = disabled
-        this.$disabled(disabled)
-    }
     // 重置验证
     resetValidation(){
         this.status = 'unvalidated'
         this.validateMessage = ""
     }
     // 验证
-    validate(rules: IBestFormRuleItem[]): Promise<IBestFieldValidateInfo | void> {
+    validate(): Promise<IBestFieldValidateInfo | void> {
         return new Promise<IBestFieldValidateInfo | void>((resolve) => {
             this.resetValidation()
-            rules = rules || this.fieldRules
-            if (rules.length) {
-                let value = this.value
-                this.runRules(value, rules).then(() => {
+            if (this.fieldRules.length) {
+                this.runRules(this.value).then(() => {
                     if (this.status === 'failed') {
                         resolve({
                             label: getResourceStr(this.label),
@@ -757,8 +744,11 @@ export struct IBestField{
         })
     }
     // 执行规则
-    async runRules(value: IBestFieldValueType, rules: IBestFormRuleItem[]){
-        for (let rule of rules) {
+    async runRules(value: IBestFieldValueType){
+        for (const rule of this.fieldRules) {
+			if(rule.required && this.required === false){
+				continue
+			}
             if (!runSyncRule(value, rule)) {
                 this.status = 'failed'
                 this.validateMessage = rule.message || ''
@@ -781,10 +771,12 @@ export struct IBestField{
     }
     // 通过trigger 判断rules中是否有可触发项
     getFilteredRule(trigger: 'blur' | 'change') {
-        return this.fieldRules ? this.fieldRules.filter((rule) => {
-            if (!rule.trigger) return true
+        return this.fieldRules.filter((rule) => {
+			if (!rule.trigger) {
+				return true
+			}
             return rule.trigger === trigger
-        }) : []
+        })
     }
     // value  change变化 执行验证
 	@Monitor("value")
@@ -894,7 +886,7 @@ export struct IBestField{
     build() {
         if(this.labelPosition == "left"){
             Row(){
-                Row(){
+                Row({space: this.baseStyle.spaceSm}){
 					this.fieldLabel()
                     this.fieldContent()
                 }

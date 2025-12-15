@@ -72,7 +72,6 @@ export struct IBestForm {
 	@BuilderParam defaultBuilder: CustomBuilder
 
 	@Local uniId: number = 0
-	// 表单子项信息
 	@Local formItems: IBestFieldItem[] = []
 
 	aboutToAppear(): void {
@@ -120,7 +119,7 @@ export struct IBestForm {
 	// 验证表单
 	validateForm(callBack?: (valid: boolean, field: IBestFieldValidateInfo[]) => void): Promise<IBestFormValidateResult> {
 		return new Promise((resolve) => {
-			Promise.all(this.formItems.map((item: IBestFieldItem) => item.validate(this.rules[item.prop.split(".")[0]]))).then((errors) => {
+			Promise.all(this.formItems.map((item: IBestFieldItem) => item.validate())).then((errors) => {
 				errors = errors.filter(Boolean)
 				if(callBack){
 					callBack(!errors.length, errors)
@@ -137,7 +136,7 @@ export struct IBestForm {
 	validateField(prop: string, callBack?: (valid: boolean, field?: IBestFieldValidateInfo) => void): Promise<IBestFieldValidateResult>{
 		return new Promise((resolve) => {
 			const item = this.formItems.find((item: IBestFieldItem) => item.prop === prop)
-			item && item.validate(this.rules[prop]).then((res: IBestFieldValidateInfo) => {
+			item && item.validate().then((res: IBestFieldValidateInfo) => {
 				if(callBack){
 					callBack(res === undefined, res)
 				}else{

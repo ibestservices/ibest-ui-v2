@@ -1,7 +1,7 @@
 import { GRAY_COLOR } from '../../theme-chalk/src/color';
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container';
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type';
-import { NumberKeyboard } from '../numberKeyboard';
+import { IBestNumberKeyboardContent } from '../numberKeyboard';
 import { IBestInputHighlightType, IBestPasswordInputModel, NumberKeyboardConfig } from './index.type';
 import { FocusController } from '@ohos.arkui.UIContext';
 import { convertDimensionsWidthUnit, getSizeByUnit } from '../../utils/utils';
@@ -139,7 +139,7 @@ export struct IBestPasswordInput {
 	private focusController: FocusController = this.getUIContext().getFocusController()
 
 	@Builder numberKeyboardBuilder(){
-		NumberKeyboard({
+		IBestNumberKeyboardContent({
 			value: this.value,
 			title: this.numberKeyboardConfig?.title || '',
 			extraKey: this.numberKeyboardConfig?.extraKey || '',

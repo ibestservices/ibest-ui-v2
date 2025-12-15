@@ -48,57 +48,57 @@ export struct IBestSwitch {
 	@Param loadingInactiveColor: ResourceColor = ''
 	/**
 	 * 组件宽度
-	 * @since 2.2.0
+	 * @since 1.0.5
 	 */
 	@Param componentWidth: IBestStringNumber = ""
 	/**
 	 * 组件内边距
-	 * @since 2.2.0
+	 * @since 1.0.5
 	 */
 	@Param componentPadding: Length | Padding | LocalizedPadding = 2
 	/**
 	 * 打开时的文字
-	 * @since 2.2.0
+	 * @since 1.0.5
 	 */
 	@Param activeText: ResourceStr = ""
 	/**
 	 * 关闭时的文字
-	 * @since 2.2.0
+	 * @since 1.0.5
 	 */
 	@Param inactiveText: ResourceStr = ""
 	/**
 	 * 打开时的图标, 优先级高于activeText
-	 * @since 2.2.0
+	 * @since 1.0.5
 	 */
 	@Param activeIcon: ResourceStr = ""
 	/**
 	 * 关闭时的图标, 优先级高于inactiveText
-	 * @since 2.2.0
+	 * @since 1.0.5
 	 */
 	@Param inactiveIcon: ResourceStr = ""
 	/**
 	 * 文字/图标大小
-	 * @since 2.2.0
+	 * @since 1.0.5
 	 */
 	@Param textFontSize: IBestStringNumber = convertDimensionsWidthUnit(14)
 	/**
 	 * 打开时文字/图标颜色
-	 * @since 2.2.0
+	 * @since 1.0.5
 	 */
 	@Param activeTextColor: ResourceColor = this.baseStyle.default
 	/**
 	 * 关闭时文字/图标颜色
-	 * @since 2.2.0
+	 * @since 1.0.5
 	 */
 	@Param inactiveTextColor: ResourceColor = this.baseStyle.default
 	/**
 	 * 打开时的值
-	 * @since 2.2.0
+	 * @since 1.0.5
 	 */
 	@Param activeValue: boolean | IBestStringNumber = true
 	/**
 	 * 关闭时的值
-	 * @since 2.2.0
+	 * @since 1.0.5
 	 */
 	@Param inactiveValue: boolean | IBestStringNumber = false
 	/**

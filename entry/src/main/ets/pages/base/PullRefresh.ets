@@ -117,6 +117,7 @@ struct PullRefreshPage {
 	}
 
 	onRefresh(direction: string){
+		console.log('下拉刷新', direction)
 		IBestToast.show(direction == 'pull' ? '下拉' : '上滑')
 		// 此处模拟请求 延时关闭
 		setTimeout(() => {
