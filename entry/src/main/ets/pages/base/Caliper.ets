@@ -16,8 +16,9 @@ struct CaliperPage {
     @Local value1: number = 50
     @Local value2: number = 0
     @Local value3: number = 0
-    @Local value4: number = 0
+    @Local value4: number = 0.5
     @Local value5: number = 0
+    @Local value6: number = 0
 
     build() {
         NavDestination() {
@@ -59,15 +60,20 @@ struct CaliperPage {
                                 scales: 5,
                                 scaleSize: 2
                             })
+                            Text(this.value4.toString())
+                            IBestCaliper({
+                                value: this.value4!!,
+                                scaleSize: 0.1
+                            })
                         }.alignItems(HorizontalAlign.Start)
                     }
                 }
                 ListItem() {
                     ComponentShowContainer({ title: '自定义样式' }){
                         Column({space: SPACE.BASE}){
-                            Text(this.value4.toString())
+                            Text(this.value5.toString())
                             IBestCaliper({
-                                value: this.value4!!,
+                                value: this.value5!!,
                                 bgColor: "#d8e9f6",
                                 fontColor: "#038cfd",
                                 bigScaleHeight: 50,
@@ -81,13 +87,13 @@ struct CaliperPage {
                 ListItem() {
                     ComponentShowContainer({ title: '刻度对齐方式' }){
                         Column({space: SPACE.SM}){
-                            Text(this.value5.toString())
+                            Text(this.value6.toString())
                             IBestCaliper({
-                                value: this.value5!!,
+                                value: this.value6!!,
                                 scaleAlign: "center"
                             })
                             IBestCaliper({
-                                value: this.value5!!,
+                                value: this.value6!!,
                                 scaleAlign: "bottom"
                             })
                         }.alignItems(HorizontalAlign.Start)

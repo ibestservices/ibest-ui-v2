@@ -17,6 +17,7 @@ export {
 	init as IBestInit,
 	setIBestUIBaseStyle as IBestSetUIBaseStyle,
 	setGlobalConfig as IBestSetGlobalConfig,
+	setGlobalConfig as IBestSetUIGlobalConfig,
 	IBestToast,
 	IBestActionSheet,
 	IBestActionType,
@@ -116,7 +117,7 @@ export { IBestGuideController, IBestGuideItemType } from './src/main/ets/compone
 
 export { IBestLoading } from './src/main/ets/components/loading/index'
 
-export { IBestPullRefresh } from './src/main/ets/components/pullRefresh'
+export { IBestPullRefresh } from './src/main/ets/components/pullRefresh/index'
 export { IBestRefreshContentParams } from './src/main/ets/components/pullRefresh/index.type'
 
 export { IBestSwipeCell } from './src/main/ets/components/swipeCell/index'
@@ -175,6 +176,9 @@ export { IBestTableColumnData } from './src/main/ets/components/table/index.type
 export { IBestTag } from './src/main/ets/components/tag/index'
 
 export { IBestTextEllipsis } from './src/main/ets/components/textEllipsis/index'
+
+export { IBestTree } from './src/main/ets/components/tree/index'
+export { IBestTreeData, IBestTreeNodeData, IBestTreeController } from './src/main/ets/components/tree/index.type'
 
 export { IBestWatermark } from './src/main/ets/components/waterMark/index'
 

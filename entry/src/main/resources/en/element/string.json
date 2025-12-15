@@ -317,6 +317,10 @@
 			"value": "TextEllipsis"
 		},
 		{
+			"name": "component_tree",
+			"value": "Tree"
+		},
+		{
 			"name": "component_watermark",
 			"value": "Watermark"
 		},

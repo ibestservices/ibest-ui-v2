@@ -2,7 +2,7 @@ import AbilityConstant from '@ohos.app.ability.AbilityConstant';
 import UIAbility from '@ohos.app.ability.UIAbility';
 import Want from '@ohos.app.ability.Want';
 import window from '@ohos.window';
-import { IBestInit } from '@ibestservices/ibest-ui-v2';
+import { IBestInit, IBestSetUIGlobalConfig } from '@ibestservices/ibest-ui-v2';
 import { ConfigurationConstant } from '@kit.AbilityKit';
 import GlobalStore from '../utils/global';
 
@@ -21,9 +21,13 @@ export default class EntryAbility extends UIAbility {
 			GlobalStore.init(windowStage, this.context)
 			// 组件库初始化
 			IBestInit(windowStage, this.context)
+			// 注册自定义字体图标
 			mainWindow.getUIContext().getFont().registerFont({
 				familyName: 'testFont',
 				familySrc: $rawfile('iconfont.woff')
+			})
+			IBestSetUIGlobalConfig({
+				fontNames: ['testFont']
 			})
 		})
 	}

@@ -106,7 +106,7 @@ export struct IBestReadMore{
     }
 
     build() {
-        Column(){
+        Column({space: this.baseStyle.spaceXs}){
             Column(){
                 Column(){
                     if(this.defaultBuilder){
@@ -148,7 +148,6 @@ export struct IBestReadMore{
                 }
                 .width(CONTAINER_SIZE.FULL)
                 .justifyContent(FlexAlign.Center)
-                .margin({ top: this.baseStyle.spaceXs })
                 .opacity(this.inactive ? 0.5 : 1)
                 .onClick(() => {
                     this.changeExpand()

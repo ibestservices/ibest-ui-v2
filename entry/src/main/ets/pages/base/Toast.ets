@@ -56,7 +56,7 @@ struct ToastPage {
 									title: $r("app.string.basic_usage"),
 									isLink: true,
 									onCellClick: () => {
-										IBestToast.show(getResourceStr($r("app.string.content")))
+										IBestToast.show($r("app.string.content"))
 									}
 								})
 								IBestCell({
@@ -65,7 +65,7 @@ struct ToastPage {
 									onCellClick: () => {
 										IBestToast.show({
 											type: "success",
-											message: getResourceStr($r("app.string.content"))
+											message: $r("app.string.content")
 										})
 									}
 								})
@@ -75,7 +75,7 @@ struct ToastPage {
 									onCellClick: () => {
 										IBestToast.show({
 											type: "warning",
-											message: getResourceStr($r("app.string.content"))
+											message: $r("app.string.content")
 										})
 									}
 								})
@@ -85,7 +85,7 @@ struct ToastPage {
 									onCellClick: () => {
 										IBestToast.show({
 											type: "fail",
-											message: getResourceStr($r("app.string.content"))
+											message: $r("app.string.content")
 										})
 									}
 								})
@@ -152,7 +152,7 @@ struct ToastPage {
 										IBestToast.show({
 											position: "top",
 											offsetY: "20%",
-											message: getResourceStr($r("app.string.content"))
+											message: $r("app.string.content")
 										})
 									}
 								})
@@ -164,7 +164,7 @@ struct ToastPage {
 										IBestToast.show({
 											position: "bottom",
 											offsetY: "-20%",
-											message: getResourceStr($r("app.string.content"))
+											message: $r("app.string.content")
 										})
 									}
 								})

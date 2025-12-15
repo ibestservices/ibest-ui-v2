@@ -135,7 +135,7 @@ export struct IBestPopover{
                 Column(){
                     ForEach(this.actions, (item: IBestPopoverAction, index: number) => {
                         Row(){
-                            Row({space: this.baseStyle.spaceXs as string}){
+                            Row({space: this.baseStyle.spaceXs}){
                                 if(item.icon){
                                     IBestIcon({
                                         name: item.icon,

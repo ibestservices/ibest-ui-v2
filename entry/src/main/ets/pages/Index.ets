@@ -14,7 +14,7 @@ interface ComponentPart {
 	list: ComponentItem[]
 }
 interface ComponentItem {
-	name: ResourceStr,
+	name: ResourceStr
 	path: string
 }
 interface Tab {
@@ -295,6 +295,10 @@ struct Index {
 					path: "TextEllipsis"
 				},
 				{
+					name: $r("app.string.component_tree"),
+					path: "Tree"
+				},
+				{
 					name: $r("app.string.component_watermark"),
 					path: "Watermark"
 				}
@@ -558,10 +562,9 @@ struct Index {
 
 	aboutToAppear(): void {
 		RouterUtil.navPathStackList.push(this.navPathStack)
-		this.checkUpdate()
-		this.getUiVersion()
+		// this.getUiVersion()
 		// setTimeout(() => {
-            // RouterUtil.push("DropdownMenu")
+        //     RouterUtil.push("Tree")
 		// }, 100)
 	}
 	getTitleOpacity(){
@@ -617,14 +620,6 @@ struct Index {
 		if(res){
 			this.uiVersion = res[0].slice(1, -1)
 		}
-	}
-	// 检查新版本
-	checkUpdate(){
-		updateManager.checkAppUpdate(this.context).then((checkResult: updateManager.CheckUpdateResult) => {
-			if(checkResult.updateAvailable == 1){
-				updateManager.showUpdateDialog(this.context)
-			}
-		})
 	}
 	build() {
 		Navigation(this.navPathStack){

@@ -121,7 +121,7 @@ export struct IBestDivider{
 				.margin({left: getSizeByUnit(this.leftRightMargin), right: getSizeByUnit(this.leftRightMargin)})
 		}else{
 			Row(){
-				Row()
+				Row({space: getSizeByUnit(this.textLineSpace)})
 					.width(this.leftLineWidth)
 					.height(1)
 					.layoutWeight(this.leftLineWidth ? "" : 1)
@@ -143,7 +143,6 @@ export struct IBestDivider{
 								.fontSize(getSizeByUnit(this.texFontSize, true))
 						}
 					}
-					.margin({left: getSizeByUnit(this.textLineSpace), right: getSizeByUnit(this.textLineSpace)})
 					Row()
 						.width(this.rightLineWidth)
 						.height(1)

@@ -28,7 +28,7 @@ const keyWidth = 0.09
 }
 
 @ComponentV2
-export struct CarKeyboard{
+export struct IBestCarKeyboardContent{
 	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	@Local bottomBarHeight: IBestBaseDataType = AppStorageV2.connect(IBestBaseDataType, IBestStorageKey.BOTTOM_BAR_HEIGHT)!
     @Param @Require value: string
@@ -180,7 +180,7 @@ export struct CarKeyboard{
 			.width(CONTAINER_SIZE.FULL)
 			.height(convertDimensionsWidthUnit(40))
 			Column(){
-				Column({ space: this.baseStyle.spaceXs as string }){
+				Column({ space: this.baseStyle.spaceXs }){
 					ForEach(this.provinceKeysList, (item: IBestCarKeyboardKey[], index: number) => {
 						Row({space: this.space}){
 							ForEach(item, (e: IBestCarKeyboardKey) => {
@@ -272,7 +272,7 @@ export struct IBestCarKeyboard{
 	@Event $visible: (value: boolean) => void = () => {}
 
     @Builder baseBuilder() {
-        CarKeyboard({
+		IBestCarKeyboardContent({
             value: this.value,
 			maxLength: this.maxLength,
 			title: this.title,

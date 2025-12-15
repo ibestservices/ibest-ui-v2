@@ -317,23 +317,18 @@ export struct IBestDialogView {
 						// 取消按钮
 						if (this.showCancelButton) {
 							Button({ type: ButtonType.Normal }) {
-								Row() {
-									if (this.cancelButtonLoading) {
-										LoadingProgress()
-											.width(getSizeByUnit(this.buttonFontSize ?? this.baseStyle.fontSizeLg as string))
-											.color(this.getCancelBtnFontColor())
-											.margin({
-												right: this.baseStyle.spaceMini
-											})
-											.transition({ type: TransitionType.Insert, opacity: 1 })
-											.transition({ type: TransitionType.Delete, opacity: 0 })
-									} else {
-										Text(this.cancelButtonText ?? $r("app.string.ibest_text_cancel"))
-											.fontColor(this.getCancelBtnFontColor())
-											.fontSize(getSizeByUnit(this.buttonFontSize ?? this.baseStyle.fontSizeLg as string, true))
-											.transition({ type: TransitionType.Insert, opacity: 1 })
-											.transition({ type: TransitionType.Delete, opacity: 0 })
-									}
+								if (this.cancelButtonLoading) {
+									LoadingProgress()
+										.width(getSizeByUnit(this.buttonFontSize ?? this.baseStyle.fontSizeLg as string))
+										.color(this.getCancelBtnFontColor())
+										.transition({ type: TransitionType.Insert, opacity: 1 })
+										.transition({ type: TransitionType.Delete, opacity: 0 })
+								} else {
+									Text(this.cancelButtonText ?? $r("app.string.ibest_text_cancel"))
+										.fontColor(this.getCancelBtnFontColor())
+										.fontSize(getSizeByUnit(this.buttonFontSize ?? this.baseStyle.fontSizeLg as string, true))
+										.transition({ type: TransitionType.Insert, opacity: 1 })
+										.transition({ type: TransitionType.Delete, opacity: 0 })
 								}
 							}
 							.border({
@@ -356,24 +351,19 @@ export struct IBestDialogView {
 						// 确认按钮
 						if (this.showConfirmButton) {
 							Button({ type: ButtonType.Normal }) {
-								Row() {
-									if (this.confirmButtonLoading) {
-										LoadingProgress()
-											.width(getSizeByUnit(this.buttonFontSize ?? this.baseStyle.fontSizeLg as string))
-											.color(this.getConfirmBtnFontColor())
-											.margin({
-												right: this.baseStyle.spaceMini
-											})
-											.transition({ type: TransitionType.Insert, opacity: 1 })
-											.transition({ type: TransitionType.Delete, opacity: 0 })
-									} else {
-										Text(this.confirmButtonText ?? $r("app.string.ibest_text_confirm"))
-											.fontColor(this.getConfirmBtnFontColor())
-											.fontSize(getSizeByUnit(this.buttonFontSize ?? this.baseStyle.fontSizeLg as string, true))
-											.fontWeight(this.confirmButtonFontWeight ?? FontWeight.Normal)
-											.transition({ type: TransitionType.Insert, opacity: 1 })
-											.transition({ type: TransitionType.Delete, opacity: 0 })
-									}
+								if (this.confirmButtonLoading) {
+									LoadingProgress()
+										.width(getSizeByUnit(this.buttonFontSize ?? this.baseStyle.fontSizeLg as string))
+										.color(this.getConfirmBtnFontColor())
+										.transition({ type: TransitionType.Insert, opacity: 1 })
+										.transition({ type: TransitionType.Delete, opacity: 0 })
+								} else {
+									Text(this.confirmButtonText ?? $r("app.string.ibest_text_confirm"))
+										.fontColor(this.getConfirmBtnFontColor())
+										.fontSize(getSizeByUnit(this.buttonFontSize ?? this.baseStyle.fontSizeLg as string, true))
+										.fontWeight(this.confirmButtonFontWeight ?? FontWeight.Normal)
+										.transition({ type: TransitionType.Insert, opacity: 1 })
+										.transition({ type: TransitionType.Delete, opacity: 0 })
 								}
 							}
 							.enabled(!this.confirmButtonDisabled || !this.confirmButtonLoading)

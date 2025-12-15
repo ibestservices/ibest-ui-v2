@@ -83,6 +83,11 @@ export struct IBestCheckbox {
 	 */
 	@Param falseValue: IBestStringNumber = '0'
 	/**
+	 * 圆角，仅shape为square时生效
+	 * @since 1.0.6
+	 */
+	@Param radius: IBestStringNumber = 0
+	/**
 	 * 改变的回调
 	 */
 	@Event onChange: (checked: IBestStringNumber | boolean) => void = () => {}
@@ -122,10 +127,6 @@ export struct IBestCheckbox {
 						.fontSize(getSizeByUnit(this.labelFontSize, true))
 				}
 			}
-			.margin({
-				left: this.isLeftLabel() ? 0 : this.baseStyle.spaceXs,
-				right: this.isLeftLabel() ? this.baseStyle.spaceXs : 0
-			})
 			.onClick(() => {
 				!this.labelDisabled && this.handleCheckedChange()
 			})
@@ -249,7 +250,7 @@ export struct IBestCheckbox {
 		this.isShowIndeterminateImg = this.indeterminate
 	}
 	build() {
-		Row() {
+		Row({space: this.baseStyle.spaceXs}) {
 			if (this.labelPosition === 'left') {
 				this.LabelContain()
 			}
@@ -272,7 +273,7 @@ export struct IBestCheckbox {
 			.justifyContent(FlexAlign.Center)
 			.alignItems(HorizontalAlign.Center)
 			.border({ color: this.getBorderColor(), width: 1 })
-			.borderRadius(this.shape === 'round' ? this.baseStyle.borderRadiusMax : 0)
+			.borderRadius(this.shape === 'round' ? this.baseStyle.borderRadiusMax : getSizeByUnit(this.radius))
 			.backgroundColor(this.getBackgroundColor())
 			.clip(true)
 			.animation({

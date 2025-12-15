@@ -24,8 +24,9 @@ import {
 	IBestUploaderFile
 } from '@ibestservices/ibest-ui-v2'
 import ComponentShowContainer from '../../components/ComponentShowContainer'
-import { FONT_SIZE, modeColor, SPACE } from '../../assets/styles/BaseStyle'
+import { modeColor, SPACE } from '../../assets/styles/BaseStyle'
 import CustomNavBar from '../../components/CustomNavBar'
+import { LengthMetrics } from '@kit.ArkUI'
 
 @Builder
 export function FormBuilder(_: string, title: string){
@@ -120,7 +121,8 @@ struct FormPage {
 	private formId2: string = 'form2'
 	private rules2: IBestFormRule = {
 		"value3": [
-			{ required: true, message: '请选择至少一项' }
+			{ required: true, message: '请选择' },
+			{ min: 2, message: '请选择至少两项' }
 		],
 		"value4": [
 			{ required: true, message: "请选择" }
@@ -246,18 +248,32 @@ struct FormPage {
 			activeList: this.form2.value3!!,
 			placeDirection: Axis.Horizontal
 		}){
-			IBestCheckbox({
-				group: "group1",
-				shape: "square",
-				label: "复选框1",
-				name: "1"
-			})
-			IBestCheckbox({
-				group: "group1",
-				shape: "square",
-				label: "复选框2",
-				name: "2"
-			})
+			Flex({wrap: FlexWrap.Wrap, space: { main: LengthMetrics.vp(10), cross: LengthMetrics.vp(5) }}){
+				IBestCheckbox({
+					group: "group1",
+					shape: "square",
+					label: "复选框1",
+					name: "1"
+				})
+				IBestCheckbox({
+					group: "group1",
+					shape: "square",
+					label: "复选框2",
+					name: "2"
+				})
+				IBestCheckbox({
+					group: "group1",
+					shape: "square",
+					label: "复选框3",
+					name: "3"
+				})
+				IBestCheckbox({
+					group: "group1",
+					shape: "square",
+					label: "复选框4",
+					name: "4"
+				})
+			}
 		}
 	}
 	@Builder radioContent() {
@@ -476,6 +492,7 @@ struct FormPage {
 									prop: 'value3',
 									value: this.form2.value3!!,
 									label: "复选框组",
+									required: this.form2.value1,
 									customRightContent: (): void => this.checkboxGroupContent()
 								})
 								IBestField({
@@ -535,7 +552,7 @@ struct FormPage {
 										"value3": ['1'],
 										"value4": true,
 										"value6": ["320000","320500","320583"],
-										"value9": '2025-08-25'
+										"value7": '2025-08-25'
 									})
 									this.selectValue = "江苏省,苏州市,昆山市"
 								}
@@ -549,7 +566,7 @@ struct FormPage {
 										if (valid) {
 											IBestDialogUtil.open({
 												title: "表单值",
-												message: JSON.stringify(this.form2)
+												message: JSON.stringify(this.controller2.getFormValues())
 											})
 										}
 									})
@@ -619,7 +636,7 @@ struct FormPage {
 										if (valid) {
 											IBestDialogUtil.open({
 												title: "表单值",
-												message: JSON.stringify(this.form3)
+												message: JSON.stringify(this.controller3.getFormValues())
 											})
 										}
 									})

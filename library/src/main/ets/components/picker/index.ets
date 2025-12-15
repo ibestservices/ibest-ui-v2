@@ -112,7 +112,6 @@ export struct IBestPicker{
 	@Event onChange: (selectedValues: IBestStringNumber[], selectTexts: string[], columnIndex: number) => void = () => {}
 	@Event $value: (value: IBestStringNumber[]) => void = () => {}
 
-	@Local uniId: number = 0
 	// 列表类型
 	@Local columnType: ColumnType = "multiple"
 	// 每列选中索引
@@ -129,7 +128,6 @@ export struct IBestPicker{
 	@Local itemCalcWidth: number = 0
 	@Local leftWidth: number = 0
 	@Local isReady: boolean = false
-	private uiContext = this.getUIContext()
 
 	@Styles ibestPickerColumnItemStyle(){
 		.height(CONTAINER_SIZE.FULL)
@@ -181,7 +179,12 @@ export struct IBestPicker{
 						ForEach(item, (e: IBestPickerOption, index1: number) => {
 							Text(e.text)
 								.ibestPickerItemStyle(this.itemHeight, this.optionFontSize)
-								.id(`ibest_picker_text_${this.uniId}_${index1}`)
+								.onAreaChange((_: Area, newVal: Area) => {
+									if(index1 == 0 && !this.itemCalcHeight){
+										this.itemCalcHeight = newVal.height as number
+										this.initOffset()
+									}
+								})
 						})
 					}
 					.translate({ y: this.offsetList[index] + this.getBaseOffset() })
@@ -250,7 +253,12 @@ export struct IBestPicker{
 						ForEach(item, (e: IBestPickerOption, index1: number) => {
 							Text(e.text)
 								.ibestHorizontalPickerItemStyle(this.itemWidth, this.optionFontSize)
-								.id(`ibest_picker_text_${this.uniId}_${index1}`)
+								.onAreaChange((_: Area, newVal: Area) => {
+									if(index1 == 0 && !this.itemCalcWidth){
+										this.itemCalcWidth = newVal.width as number
+										this.initOffset()
+									}
+								})
 						})
 					}
 					.translate({ x: this.offsetList[index] + this.getBaseOffset() })
@@ -272,7 +280,11 @@ export struct IBestPicker{
 						colors: this.colorMode.value === 0 ? [["rgba(0,0,0,0.9)", 0.1], [ "rgba(0,0,0,0.5)", 1]] : [["rgba(255,255,255,0.9)", 0.1], [ "rgba(255,255,255,0.5)", 1]]
 					})
 					.border({ width: { right: 1 }, color: IBestPickerColor.borderColor })
-					.id(`ibest_picker_left_${this.uniId}`)
+					.onAreaChange((oldVal: Area, newVal: Area) => {
+						if(newVal.width != oldVal.width){
+							this.leftWidth = newVal.width as number
+						}
+					})
 				Row()
 					.width(`calc(50% - ${this.itemCalcWidth/2}vp)`)
 					.height(CONTAINER_SIZE.FULL)
@@ -316,7 +328,6 @@ export struct IBestPicker{
 	}
 
 	aboutToAppear(): void {
-		this.uniId = this.getUniqueId()
 		this.init()
 	}
 	// 获取列表类型
@@ -340,25 +351,7 @@ export struct IBestPicker{
 			}else{
 				this.initWidthMultiple()
 			}
-			this.initSize()
 		}
-	}
-	initSize(){
-		this.isReady = false
-		setTimeout(() => {
-			if(this.horizontal){
-				this.itemCalcWidth = getComponentsInfo(this.uiContext, `ibest_picker_text_${this.uniId}_0`).width
-				setTimeout(() => {
-					this.leftWidth = getComponentsInfo(this.uiContext, `ibest_picker_left_${this.uniId}`).width
-				}, 50)
-			}else{
-				this.itemCalcHeight = getComponentsInfo(this.uiContext, `ibest_picker_text_${this.uniId}_0`).height
-			}
-			this.initOffset()
-			setTimeout(() => {
-				this.isReady = true
-			}, swipeDuration)
-		}, 50)
 	}
 	// 根据已选值 初始化索引位置
 	initWithSelectValue(index: number, children: IBestPickerOption[]){
@@ -402,6 +395,7 @@ export struct IBestPicker{
 	// 初始化多列位置
 	initOffset(){
 		if(this.value.length) {
+			this.isReady = false
 			this.columnType = this.getColumnType()
 			if (this.columnType == "cascade") {
 				this.initCascadeOffset(0, this.options as IBestPickerOption[])
@@ -415,6 +409,9 @@ export struct IBestPicker{
 					this.updateOffsetByIndex(index, i > -1 ? i : 0)
 				})
 			}
+			setTimeout(() => {
+				this.isReady = true
+			}, swipeDuration)
 		}
 	}
 	// 根据已选值 初始化索引位置
@@ -547,10 +544,5 @@ export struct IBestPicker{
 		.backgroundColor(IBestPickerColor.bgColor)
 		.borderRadius(getSizeByUnit(this.radius))
 		.clip(true)
-		.onVisibleAreaChange([0, 1], (isExpanding: boolean) => {
-			if(isExpanding && !this.itemCalcHeight){
-				this.initSize()
-			}
-		})
 	}
 }

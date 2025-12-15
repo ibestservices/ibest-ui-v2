@@ -219,8 +219,8 @@ export struct IBestPullRefresh {
 				case "end":
 					if(this.refreshStatus == "loosing"){
 						this.setRefreshStatus(this.transY > 0 ? this.headSize : -this.bottomSize, true)
-						this.$loading(true)
 						this.flag = true
+						this.$loading(true)
 						setTimeout(() => {
 							this.onRefresh(this.actionType)
 						}, 50)

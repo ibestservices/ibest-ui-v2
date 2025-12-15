@@ -96,7 +96,7 @@ export default class GlobalStore {
 	/**
 	 * 设置全局配置
 	 */
-	public static setGlobalConfig(option?: IBestGlobalConfigType){
+	public static setGlobalConfig(option?: Partial<IBestGlobalConfigType>){
 		AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG, () => new IBestGlobalConfig(option))
 		setIBestUIBaseStyle()
 	}

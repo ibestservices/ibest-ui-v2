@@ -125,7 +125,7 @@ export struct IBestTag {
 	}
 	build() {
 		if (this.show) {
-			Row() {
+			Row({space: this.baseStyle.spaceMini}) {
 				Text(this.text)
 					.fontSize(this.getTagSize().fontSize)
 					.fontColor(this.getTextColor())
@@ -141,7 +141,6 @@ export struct IBestTag {
 								this.onClose()
 							})
 						})
-						.margin({ left: this.baseStyle.spaceMini })
 				}
 			}
 			.ibestTagSizeStyle(this.getTagSize())
@@ -152,8 +151,8 @@ export struct IBestTag {
 			.borderColor(this.getBorderColor())
 			.transition({ type: TransitionType.Insert, opacity: 1 })
 			.transition({ type: TransitionType.Delete, opacity: 0 })
-			.onTouch(event => {
-				event.type == TouchType.Up && this.onTagClick()
+			.onClick(() => {
+				this.onTagClick()
 			})
 		}
 	}

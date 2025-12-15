@@ -45,7 +45,7 @@ import { IBestBaseDataType, IBestStorageKey } from '../../model/Global.type'
 }
 
 @ComponentV2
-export struct NumberKeyboard{
+export struct IBestNumberKeyboardContent{
 	/**
 	 * 全局公共样式
 	 */
@@ -328,7 +328,7 @@ export struct IBestNumberKeyboard{
 	@Event $value: (value: string) => void = () => {}
 
 	@Builder baseBuilder() {
-		NumberKeyboard({
+		IBestNumberKeyboardContent({
 			value: this.value,
 			title: this.title,
 			closeButtonText: this.closeButtonText,
