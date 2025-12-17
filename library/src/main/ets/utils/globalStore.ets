@@ -1,5 +1,5 @@
 import window from '@ohos.window'
-import { saveAppStorage } from './utils'
+import { mergeObject, saveAppStorage } from './utils'
 import { bundleManager, common } from '@kit.AbilityKit'
 import { IBestStorageKey } from '../model/Global.type'
 import { setIBestUIBaseStyle } from '../theme-chalk/src'
@@ -97,7 +97,12 @@ export default class GlobalStore {
 	 * 设置全局配置
 	 */
 	public static setGlobalConfig(option?: Partial<IBestGlobalConfigType>){
-		AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG, () => new IBestGlobalConfig(option))
+		let config = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG, () => new IBestGlobalConfig(option))
+		if(config){
+			mergeObject(config, option)
+		}else {
+			AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG, () => new IBestGlobalConfig(option))
+		}
 		setIBestUIBaseStyle()
 	}
 	/**
