@@ -63,7 +63,7 @@ export struct IBestCell {
 	 * 右侧箭头大小
 	 * @since 0.0.8
 	 */
-	@Param arrowSize: IBestStringNumber = convertDimensionsWidthUnit(14)
+	@Param arrowSize: IBestStringNumber = this.baseStyle.fontSizeMd as string
 	/**
 	 * 右侧箭头颜色
 	 * @since 0.0.8
@@ -88,7 +88,7 @@ export struct IBestCell {
 	/**
 	 * 左侧图标大小
 	 */
-	@Param leftIconSize: IBestStringNumber = convertDimensionsWidthUnit(16)
+	@Param leftIconSize: IBestStringNumber = this.baseStyle.fontSizeLg as string
 	/**
 	 * 左侧图标与title间距
 	 */
@@ -104,7 +104,7 @@ export struct IBestCell {
 	/**
 	 * 右侧图标大小
 	 */
-	@Param rightIconSize: IBestStringNumber = convertDimensionsWidthUnit(14)
+	@Param rightIconSize: IBestStringNumber = this.baseStyle.fontSizeMd as string
 	/**
 	 * 右侧图标与内容间距
 	 */
@@ -218,7 +218,7 @@ export struct IBestCell {
 				}
 			default:
 				return {
-					padding: convertDimensionsWidthUnit(12),
+					padding: this.baseStyle.spaceSm as string,
 					fontSize: this.titleFontSize || this.baseStyle.fontSizeMd,
 					labelFontSize: this.labelFontSize || this.baseStyle.fontSizeSm
 				}

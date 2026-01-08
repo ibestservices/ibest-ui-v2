@@ -1,10 +1,9 @@
-import { IBestIcon } from "../../../../../Index"
 import { IBestAwaitable, IBestBaseDataType, IBestStorageKey, IBestStringNumber } from "../../model/Global.type"
-import { getDefaultBaseStyle } from "../../theme-chalk/src"
 import { CONTAINER_SIZE } from "../../theme-chalk/src/container"
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from "../../theme-chalk/src/index.type"
 import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit, handleBeforeFunction } from "../../utils/utils"
 import { AppStorageV2 } from "@kit.ArkUI"
+import { IBestIcon } from "../icon"
 
 @ComponentV2
 export struct IBestReadMore{

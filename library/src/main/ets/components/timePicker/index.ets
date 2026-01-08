@@ -1,11 +1,12 @@
 import { IBestPicker } from '../picker'
 import { IBestPickerOption } from '../picker/index.type'
 import { COMPONENT_NAME, IBestTimePickerColumnType, TIME_PICKER_EVENT_NAME } from './index.type'
-import { emitter } from '../../utils/eventEmitter'
+import ibestEmitter from '../../utils/eventEmitter'
 import { convertDimensionsWidthUnit, getEventName, getResourceStr } from '../../utils/utils'
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { AppStorageV2 } from '@kit.ArkUI'
+
 @ComponentV2
 export struct IBestTimePicker {
 	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
@@ -80,6 +81,31 @@ export struct IBestTimePicker {
 	 */
 	@Param radius: Length | BorderRadiuses | LocalizedBorderRadiuses = 0
 	/**
+	 * 未选中字体颜色
+	 * @since 1.0.8
+	 */
+	@Param fontColor: ResourceColor = ''
+	/**
+	 * 未选中字体字重
+	 * @since 1.0.8
+	 */
+	@Param fontWeight: FontWeight = FontWeight.Normal
+	/**
+	 * 选中字体大小
+	 * @since 1.0.8
+	 */
+	@Param selectedFontSize: IBestStringNumber = this.baseStyle.fontSizeLg as string
+	/**
+	 * 选中文字颜色
+	 * @since 1.0.8
+	 */
+	@Param selectedFontColor: ResourceColor = ''
+	/**
+	 * 选项文字字重
+	 * @since 1.0.8
+	 */
+	@Param selectedFontWeight: FontWeight = FontWeight.Normal
+	/**
 	 * 过滤器
 	 */
 	@Event filter: (type: IBestTimePickerColumnType, options: IBestPickerOption[]) => IBestPickerOption[] = (_, options) => options
@@ -97,9 +123,7 @@ export struct IBestTimePicker {
 	@Event onChange: (value: string[]) => void = () => {}
 	@Event $value: (value: string[]) => void = () => {}
 
-	// 唯一id
 	@Local uniId: number = 0
-	// 选项列表
 	@Local options: IBestPickerOption[][] = []
 	@Local modelValue: string[] = []
 	@Monitor("value") valueChange(){
@@ -118,12 +142,12 @@ export struct IBestTimePicker {
 		this.modelValue = this.value
 		this.init()
 		if(this.groupId){
-			emitter.on(getEventName(COMPONENT_NAME, TIME_PICKER_EVENT_NAME.COLUMN_CHANGE, this.groupId), this.uniId, (uniId: number, selectedValues: string[]): void => this.handleGroupTimeChange(uniId, selectedValues))
+			ibestEmitter.on(getEventName(COMPONENT_NAME, TIME_PICKER_EVENT_NAME.COLUMN_CHANGE, this.groupId), this.uniId, (uniId: number, selectedValues: string[]): void => this.handleGroupTimeChange(uniId, selectedValues))
 		}
 	}
 	aboutToDisappear(): void {
 		if(this.groupId) {
-			emitter.off(getEventName(COMPONENT_NAME, TIME_PICKER_EVENT_NAME.COLUMN_CHANGE, this.groupId), this.uniId)
+			ibestEmitter.off(getEventName(COMPONENT_NAME, TIME_PICKER_EVENT_NAME.COLUMN_CHANGE, this.groupId), this.uniId)
 		}
 	}
 	// 初始化
@@ -223,7 +247,7 @@ export struct IBestTimePicker {
 		}
 		this.onChange(this.value)
 		if(this.groupId) {
-			emitter.emit(getEventName(COMPONENT_NAME, TIME_PICKER_EVENT_NAME.COLUMN_CHANGE, this.groupId), this.uniId, this.value)
+			ibestEmitter.emit(getEventName(COMPONENT_NAME, TIME_PICKER_EVENT_NAME.COLUMN_CHANGE, this.groupId), this.uniId, this.value)
 		}
 	}
 	// 处理同组时间变化
@@ -254,6 +278,11 @@ export struct IBestTimePicker {
 			contentHeight: this.contentHeight,
 			optionFontSize: this.optionFontSize,
 			radius: this.radius,
+			fontColor: this.fontColor,
+			fontWeight: this.fontWeight,
+			selectedFontSize: this.selectedFontSize,
+			selectedFontColor: this.selectedFontColor,
+			selectedFontWeight: this.selectedFontWeight,
 			onConfirm: (selectedValues) => {
 				this.onConfirm(selectedValues as string[])
 			},

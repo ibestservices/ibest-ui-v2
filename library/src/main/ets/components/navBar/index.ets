@@ -1,7 +1,7 @@
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestUIBaseStyle } from '../../theme-chalk/src/index.type'
-import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit } from '../../utils/utils'
+import { convertDimensionsWidthUnit, getSizeByUnit } from '../../utils/utils'
 import { IBestIcon } from '../icon'
 import { IBestNavbarColor } from './color'
 import { AppStorageV2 } from '@kit.ArkUI'
@@ -28,7 +28,7 @@ export struct IBestNavBar{
 	/**
 	 * 导航栏左右内边距
      */
-	@Param leftRightPadding: IBestStringNumber = convertDimensionsWidthUnit(16)
+	@Param leftRightPadding: IBestStringNumber = this.baseStyle.spaceMd as string
 	/**
 	 * 是否显示下边框
      */
@@ -44,7 +44,7 @@ export struct IBestNavBar{
 	/**
 	 * 标题文字大小
      */
-	@Param titleFontSize: IBestStringNumber = convertDimensionsWidthUnit(16, true)
+	@Param titleFontSize: IBestStringNumber = this.baseStyle.fontSizeLg as string
 	/**
 	 * 标题图标
      */
@@ -56,7 +56,7 @@ export struct IBestNavBar{
 	/**
 	 * 标题图标大小
      */
-	@Param titleIconSize: IBestStringNumber = convertDimensionsWidthUnit(20)
+	@Param titleIconSize: IBestStringNumber = this.baseStyle.fontSizeXl as string
 	/**
 	 * 标题图标圆角
 	 */
@@ -76,7 +76,7 @@ export struct IBestNavBar{
 	/**
 	 * 二级标题字体大小
      */
-	@Param subTitleFontSize: IBestStringNumber = convertDimensionsWidthUnit(12, true)
+	@Param subTitleFontSize: IBestStringNumber = this.baseStyle.fontSizeSm as string
 	/**
 	 * 是否显示左侧
      */
@@ -92,7 +92,7 @@ export struct IBestNavBar{
 	/**
 	 * 左侧图标大小
      */
-	@Param leftIconSize: IBestStringNumber = convertDimensionsWidthUnit(20)
+	@Param leftIconSize: IBestStringNumber = this.baseStyle.fontSizeXl as string
 	/**
 	 * 左侧图标圆角
 	 */
@@ -108,7 +108,7 @@ export struct IBestNavBar{
 	/**
 	 * 左侧文本大小
      */
-	@Param leftLabelFontSize: IBestStringNumber = convertDimensionsWidthUnit(16, true)
+	@Param leftLabelFontSize: IBestStringNumber = this.baseStyle.fontSizeLg as string
 	/**
 	 * 是否显示右侧
      */
@@ -124,7 +124,7 @@ export struct IBestNavBar{
 	/**
 	 * 右侧图标大小
      */
-	@Param rightIconSize: IBestStringNumber = convertDimensionsWidthUnit(20)
+	@Param rightIconSize: IBestStringNumber = this.baseStyle.fontSizeXl as string
 	/**
 	 * 右侧图标圆角
 	 */
@@ -140,7 +140,7 @@ export struct IBestNavBar{
 	/**
 	 * 右侧文本大小
      */
-	@Param rightLabelFontSize: IBestStringNumber = convertDimensionsWidthUnit(16, true)
+	@Param rightLabelFontSize: IBestStringNumber = this.baseStyle.fontSizeLg as string
 	/**
 	 * 是否显示状态栏
 	 */
@@ -187,36 +187,26 @@ export struct IBestNavBar{
      */
 	@Event onTitleClick: () => void = () => {}
 
-	@Local uniId: number = 0
-	// 标题区域左右宽度
 	@Local leftWidth: number = 0
 	@Local rightWidth: number = 0
-	private uiContext = this.getUIContext()
 
-	aboutToAppear(): void {
-		this.uniId = this.getUniqueId()
-	}
-	@Monitor("isShowLeft", "isShowRight")
-	initSize(){
-		setTimeout(() => {
-			let leftWidth = 0
-			let rightWidth = 0
-			if(this.isShowLeft){
-				leftWidth = getComponentsInfo(this.uiContext, `ibest_navbar_left_${this.uniId}`).width
+	getWidth(pos: "left" | "right"){
+		let maxWidth = Math.max(this.leftWidth, this.rightWidth)
+		if(GlobalStore.isApp){
+			if(pos == 'left'){
+				return this.titleBuilder || this.titleTextAlign == "left" ? this.leftWidth : maxWidth
+			}else {
+				return this.titleBuilder ? this.rightWidth : maxWidth
 			}
-			if(this.isShowRight){
-				rightWidth = getComponentsInfo(this.uiContext, `ibest_navbar_right_${this.uniId}`).width
+
+		}else{
+			let maxPadding = Math.max(maxWidth, 100)
+			if(pos == 'left'){
+				return this.titleBuilder || this.titleTextAlign == "left" ? this.leftWidth : maxPadding
+			}else {
+				return maxPadding
 			}
-			let maxWidth = Math.max(leftWidth, rightWidth)
-			if(GlobalStore.isApp){
-				this.leftWidth = this.titleBuilder ? leftWidth : maxWidth
-				this.rightWidth = this.titleBuilder ? rightWidth : maxWidth
-			}else{
-				let maxPadding = Math.max(maxWidth, 100)
-				this.leftWidth = this.titleBuilder || this.titleTextAlign == "left" ? leftWidth : maxPadding
-				this.rightWidth = maxPadding
-			}
-		}, 50)
+		}
 	}
 
 	build() {
@@ -253,7 +243,9 @@ export struct IBestNavBar{
 					.position({left: 0})
 					.zIndex(10)
 					.padding({left: getSizeByUnit(this.leftRightPadding), right: this.baseStyle.spaceXs})
-					.id(`ibest_navbar_left_${this.uniId}`)
+					.onAreaChange((_: Area, newVal: Area) => {
+						this.leftWidth = newVal.width as number
+					})
 					.onClick(() => {
 						this.onLeftClick()
 					})
@@ -304,7 +296,7 @@ export struct IBestNavBar{
 				.height(CONTAINER_SIZE.FULL)
 				.justifyContent(FlexAlign.Center)
 				.alignItems(this.titleBuilder ? HorizontalAlign.Start : HorizontalAlign.Center)
-				.padding({left: this.leftWidth, right: this.rightWidth})
+				.padding({left: this.getWidth('left'), right: this.getWidth('right')})
 				if(this.isShowRight){
 					Row({space: this.baseStyle.spaceBase}){
 						if(this.rightBuilder){
@@ -329,7 +321,9 @@ export struct IBestNavBar{
 					.position({right: 0})
 					.zIndex(10)
 					.padding({left: this.baseStyle.spaceXs, right: getSizeByUnit(this.leftRightPadding)})
-					.id(`ibest_navbar_right_${this.uniId}`)
+					.onAreaChange((_: Area, newVal: Area) => {
+						this.rightWidth = newVal.width as number
+					})
 					.onClick(() => {
 						this.onRightClick()
 					})
@@ -343,15 +337,5 @@ export struct IBestNavBar{
 		}
 		.backgroundColor(this.navBarBgColor)
 		.expandSafeArea(this.expandSafeAreaType, [SafeAreaEdge.TOP])
-		.onAppear(() => {
-			setTimeout(() => {
-				this.initSize()
-			}, 50)
-		})
-		.onVisibleAreaChange([0,1], (isExpanding: boolean) => {
-			if(isExpanding && (this.isShowLeft && !this.leftWidth || this.isShowRight && !this.rightWidth)){
-				this.initSize()
-			}
-		})
 	}
 }

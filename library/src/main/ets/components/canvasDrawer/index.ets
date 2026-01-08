@@ -1,5 +1,5 @@
 import { IBestCanvasContent } from './index.type';
-import { base64ToPixelMap, getComponentsInfo, getComponentSnapshot, getSizeByUnit, sleep } from '../../utils/utils';
+import { base64ToPixelMap, getComponentSnapshot, getSizeByUnit, sleep } from '../../utils/utils';
 import { IBestStringNumber } from '../../model/Global.type';
 
 @ComponentV2
@@ -38,8 +38,6 @@ export struct IBestCanvasDrawer{
 	@Event onDrawFinish: (pixelMap: PixelMap) => void = () => {}
 
 	@Local uniId: number = 0
-	@Local contentWidth: number = 0
-	@Local contentHeight: number = 0
 	private uiContext = this.getUIContext()
 	private context = this.uiContext.getHostContext()!
 	private settings: RenderingContextSettings = new RenderingContextSettings(true)
@@ -57,7 +55,7 @@ export struct IBestCanvasDrawer{
 	}
 	// 开始绘画
 	async startPainting() {
-		this.ctx.clearRect(0, 0, this.contentWidth, this.contentHeight)
+		this.ctx.clearRect(0, 0, this.ctx.width, this.ctx.height)
 		if(this.contentList.length){
 			for (let item of this.contentList) {
 				switch (item.type) {
@@ -78,15 +76,15 @@ export struct IBestCanvasDrawer{
 		let url = params.url
 		let width = params.width || 0
 		let height = params.height || 0
-		let top = params.bottom != undefined ? this.contentHeight - height - params.bottom : (params.top || 0)
-		let left = params.right != undefined ? this.contentWidth - width - params.right : (params.left || 0)
+		let top = params.bottom != undefined ? this.ctx.height - height - params.bottom : (params.top || 0)
+		let left = params.right != undefined ? this.ctx.width - width - params.right : (params.left || 0)
 		let borderRadius = params.borderRadius || 0
 		let deg = params.deg || 0
 		let imgModel: PixelMap | ImageBitmap
 		if (typeof url == 'string') {
 			if(url.startsWith("data:image")){ // base64
 				imgModel = await base64ToPixelMap(url)
-			} else { // 本地选择的图片 网络图片
+			} else { // 本地选择的图片/网络图片
 				imgModel = new ImageBitmap(url)
 			}
 		} else {	// Resource
@@ -120,7 +118,6 @@ export struct IBestCanvasDrawer{
 				this.ctx.arcTo(left, top + height, left, top + height - borderRadius, borderRadius)
 			}
 			this.ctx.closePath()
-			// this.ctx.stroke()	// 绘制路径
 			this.ctx.clip()
 		}
 		if (deg) {
@@ -149,15 +146,15 @@ export struct IBestCanvasDrawer{
 			left = params.left || 0,
 			right = params.right || 0,
 			lineHeight = params.lineHeight || result.height,
-			width = params.width || (this.contentWidth - (right || left)),
+			width = params.width || (this.ctx.width - (right || left)),
 			textDecoration = params.textDecoration || ''
-		let textLeft = textAlign == "center" ? width / 2 + (right || left) : textAlign == "right" ? right ? this.contentWidth - right : (left+width) : left
+		let textLeft = textAlign == "center" ? width / 2 + (right || left) : textAlign == "right" ? right ? this.ctx.width - right : (left+width) : left
 		if (maxLineNumber == 1) {
 			text = this.getLimitStr(text, text, width)
 			let textSize = this.ctx.measureText(text)
 			this.ctx.fillText(text, textLeft, top)
 			if(textDecoration){
-				let lineLeft = right ? this.contentWidth - width - right : left
+				let lineLeft = right ? this.ctx.width - width - right : left
 				this.drawTextLine(lineLeft, top + textSize.height, textDecoration, textSize, fontColor)
 			}
 		} else {
@@ -173,7 +170,7 @@ export struct IBestCanvasDrawer{
 							fillText = fillText.substring(0, fillText.length - 1) + '…'
 							this.ctx.fillText(fillText, textLeft, fillTop)
 							if(textDecoration) {
-								let lineLeft = right ? this.contentWidth - width - right : left
+								let lineLeft = right ? this.ctx.width - width - right : left
 								this.drawTextLine(lineLeft, fillTop + fillTextSize.height, textDecoration, fillTextSize, fontColor)
 							}
 							break
@@ -181,7 +178,7 @@ export struct IBestCanvasDrawer{
 					}
 					this.ctx.fillText(fillText, textLeft, fillTop)
 					if(textDecoration){
-						let lineLeft = right ? this.contentWidth - width - right : left
+						let lineLeft = right ? this.ctx.width - width - right : left
 						this.drawTextLine(lineLeft, fillTop + fillTextSize.height, textDecoration, fillTextSize, fontColor)
 					}
 					fillText = ''
@@ -191,7 +188,7 @@ export struct IBestCanvasDrawer{
 					this.ctx.fillText(fillText, textLeft, fillTop)
 					if(textDecoration){
 						let offsetLeft = textAlign == "center" ? (width - fillTextSize.width) / 2 : textAlign == "right" ? width - fillTextSize.width : 0
-						let lineLeft = (right ? this.contentWidth - width - right : left) + offsetLeft
+						let lineLeft = (right ? this.ctx.width - width - right : left) + offsetLeft
 						this.drawTextLine(lineLeft, fillTop + fillTextSize.height, textDecoration, fillTextSize, fontColor)
 					}
 				}
@@ -244,9 +241,6 @@ export struct IBestCanvasDrawer{
 			.position({ x: -2000, y: -2000})
 			.id(`ibest_poster_${this.uniId}`)
 			.onReady(() => {
-				let canvasInfo = getComponentsInfo(this.uiContext, `ibest_poster_${this.uniId}`)
-				this.contentWidth = canvasInfo.width
-				this.contentHeight = canvasInfo.height
 				this.startPainting()
 			})
 	}

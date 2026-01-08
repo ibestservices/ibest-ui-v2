@@ -97,7 +97,6 @@ export struct IBestHighlight {
 			}]
 		}
 		_keywords = _keywords.filter(e => e.text)
-		// generate chunks
 		let chunks = _keywords.reduce<Chunks>((chunks, item: IBestHighlightKeywords) => {
 			if (this.autoEscape) {
 				item.text = (item.text as string).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -121,7 +120,6 @@ export struct IBestHighlight {
 			}
 			return chunks
 		}, [])
-		// merge chunks
 		chunks = chunks
 			.sort((a, b) => a.start - b.start)
 			.reduce<Chunks>((chunks, currentChunk) => {

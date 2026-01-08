@@ -1,35 +1,27 @@
-import { clamp, convertDimensionsWidthUnit, getComponentsInfo, getResourceStr, getSizeByUnit } from '../../utils/utils';
-import { getDefaultBaseStyle } from '../../theme-chalk/src';
+import { clamp, convertDimensionsWidthUnit, getResourceStr, getSizeByUnit } from '../../utils/utils';
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container';
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type';
 import { ColumnType, IBestPickerOption } from './index.type';
 import { IBestPickerColor } from './color';
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type';
 import { AppStorageV2 } from '@kit.ArkUI';
-@Extend(Text) function ibestPickerItemStyle(itemHeight: IBestStringNumber, fontSize: IBestStringNumber){
+
+@Extend(Text) function ibestPickerItemStyle(itemHeight: IBestStringNumber){
 	.width(CONTAINER_SIZE.FULL)
 	.height(getSizeByUnit(itemHeight))
-	.padding({ left: getDefaultBaseStyle().spaceBase, right: getDefaultBaseStyle().spaceBase })
-	.fontSize(getSizeByUnit(fontSize, true))
-	.fontColor(IBestPickerColor.textColor)
 	.align(Alignment.Center)
 	.textAlign(TextAlign.Center)
 	.maxLines(1)
 	.textOverflow({ overflow: TextOverflow.Ellipsis })
 }
 
-@Extend(Text) function ibestHorizontalPickerItemStyle(itemWidth: IBestStringNumber, fontSize: IBestStringNumber){
+@Extend(Text) function ibestHorizontalPickerItemStyle(itemWidth: IBestStringNumber){
 	.width(getSizeByUnit(itemWidth))
-	.padding({ left: getDefaultBaseStyle().spaceBase, right: getDefaultBaseStyle().spaceBase })
-	.fontSize(getSizeByUnit(fontSize, true))
 	.textAlign(TextAlign.Center)
 	.maxLines(1)
 	.textOverflow({ overflow: TextOverflow.Ellipsis })
 }
 
-// 惯性滑动思路:
-// 在手指离开屏幕时，如果和上一次 move 时的间隔小于 `MOMENTUM_TIME` 且 move
-// 距离大于 `MOMENTUM_DISTANCE` 时，执行惯性滑动
 const MOMENTUM_TIME = 300
 const MOMENTUM_DISTANCE = 30
 const swipeDuration = 150
@@ -99,6 +91,31 @@ export struct IBestPicker{
 	 */
 	@Param radius: Length | BorderRadiuses | LocalizedBorderRadiuses = 0
 	/**
+	 * 未选中字体颜色
+	 * @since 1.0.8
+	 */
+	@Param fontColor: ResourceColor = ''
+	/**
+	 * 未选中字体字重
+	 * @since 1.0.8
+	 */
+	@Param fontWeight: FontWeight = FontWeight.Normal
+	/**
+	 * 选中字体大小
+	 * @since 1.0.8
+	 */
+	@Param selectedFontSize: IBestStringNumber = this.baseStyle.fontSizeLg as string
+	/**
+	 * 选中文字颜色
+	 * @since 1.0.8
+	 */
+	@Param selectedFontColor: ResourceColor = ''
+	/**
+	 * 选项文字字重
+	 * @since 1.0.8
+	 */
+	@Param selectedFontWeight: FontWeight = FontWeight.Normal
+	/**
 	 * 确认按钮点击事件
 	 */
 	@Event onConfirm: (selectedValues: IBestStringNumber[], selectTexts: string[]) => void = () => {}
@@ -112,17 +129,12 @@ export struct IBestPicker{
 	@Event onChange: (selectedValues: IBestStringNumber[], selectTexts: string[], columnIndex: number) => void = () => {}
 	@Event $value: (value: IBestStringNumber[]) => void = () => {}
 
-	// 列表类型
 	@Local columnType: ColumnType = "multiple"
-	// 每列选中索引
 	@Local indexArr: number[] = []
-	// 触摸滑动相关参数
 	@Local touchStartTime: number = 0
 	@Local startOffset: number = 0
 	@Local momentumOffset: number = 0
-	// 选项列表
 	@Local columns: IBestPickerOption[][] = []
-	// offset 列表
 	@Local offsetList: number[] = []
 	@Local itemCalcHeight: number = 0
 	@Local itemCalcWidth: number = 0
@@ -138,6 +150,9 @@ export struct IBestPicker{
 		.width(CONTAINER_SIZE.FULL)
 		.layoutWeight(1)
 		.monopolizeEvents(true)
+	}
+	@Styles ibestPickerItemCommonStyle(){
+		.padding({ left: this.baseStyle.spaceMini, right: this.baseStyle.spaceMini })
 	}
 	@Builder pickerHeader(){
 		Stack({alignContent: Alignment.Center}) {
@@ -178,7 +193,11 @@ export struct IBestPicker{
 					Column() {
 						ForEach(item, (e: IBestPickerOption, index1: number) => {
 							Text(e.text)
-								.ibestPickerItemStyle(this.itemHeight, this.optionFontSize)
+								.ibestPickerItemStyle(this.itemHeight)
+								.ibestPickerItemCommonStyle()
+								.fontSize(getSizeByUnit(index1 == this.indexArr[index] ? this.selectedFontSize : this.optionFontSize, true))
+								.fontColor(index1 == this.indexArr[index] ? this.selectedFontColor || IBestPickerColor.textColor : this.fontColor || IBestPickerColor.textColor)
+								.fontWeight(index1 == this.indexArr[index] ? this.selectedFontWeight : this.fontWeight)
 								.onAreaChange((_: Area, newVal: Area) => {
 									if(index1 == 0 && !this.itemCalcHeight){
 										this.itemCalcHeight = newVal.height as number
@@ -252,7 +271,11 @@ export struct IBestPicker{
 					Row() {
 						ForEach(item, (e: IBestPickerOption, index1: number) => {
 							Text(e.text)
-								.ibestHorizontalPickerItemStyle(this.itemWidth, this.optionFontSize)
+								.ibestHorizontalPickerItemStyle(this.itemWidth)
+								.ibestPickerItemCommonStyle()
+								.fontSize(getSizeByUnit(index1 == this.indexArr[index] ? this.selectedFontSize : this.optionFontSize, true))
+								.fontColor(index1 == this.indexArr[index] ? this.selectedFontColor || IBestPickerColor.textColor : this.fontColor || IBestPickerColor.textColor)
+								.fontWeight(index1 == this.indexArr[index] ? this.selectedFontWeight : this.fontWeight)
 								.onAreaChange((_: Area, newVal: Area) => {
 									if(index1 == 0 && !this.itemCalcWidth){
 										this.itemCalcWidth = newVal.width as number
@@ -497,15 +520,14 @@ export struct IBestPicker{
 		let distance = offset - this.momentumOffset
 		const duration = Date.now() - this.touchStartTime
 		const startMomentum = duration < MOMENTUM_TIME && Math.abs(distance) > MOMENTUM_DISTANCE
-		if (startMomentum) {	// 惯性滑动
+		if (startMomentum) {
 			const speed = Math.abs(distance / duration)
 			offset = offset + (speed / 0.03) * (distance < 0 ? -1 : 1)
 		}
 		const index = this.getIndexByOffset(columnIndex, offset)
 		this.updateOffsetByIndex(columnIndex, index)
-		if(this.indexArr[columnIndex] != index){	// 索引变更
+		if(this.indexArr[columnIndex] != index){
 			this.indexArr[columnIndex] = index
-			// 重置后面项
 			if(this.columnType == "cascade"){
 				this.resetColumnOptions(columnIndex, index)
 			}

@@ -7,7 +7,7 @@ export function DocBuilder(){
 }
 
 @Entry
-@Component
+@ComponentV2
 struct DocPage {
 	private controller: webview.WebviewController = new webview.WebviewController()
 	build() {

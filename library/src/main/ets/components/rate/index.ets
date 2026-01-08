@@ -5,6 +5,7 @@ import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src
 import { RateOption } from './index.type'
 import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { AppStorageV2 } from '@kit.ArkUI'
+
 @ComponentV2
 export struct IBestRate {
 	/**

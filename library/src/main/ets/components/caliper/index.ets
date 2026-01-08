@@ -1,10 +1,7 @@
 import { IBestStorageKey, IBestStringNumber } from "../../model/Global.type"
-import { getDefaultBaseStyle } from "../../theme-chalk/src"
 import { CONTAINER_SIZE } from "../../theme-chalk/src/container"
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from "../../theme-chalk/src/index.type"
-import {
-    addNumber,
-    convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit, measureTextSize } from "../../utils/utils"
+import { addNumber, convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit, measureTextSize } from "../../utils/utils"
 import { IBestCaliperColor } from "./color"
 import { IBestCaliperScale } from "./index.type"
 import { AppStorageV2 } from "@kit.ArkUI"
@@ -299,7 +296,7 @@ export struct IBestCaliper{
         .clip(true)
         .backgroundColor(this.bgColor)
         .opacity(this.isReady ? 1 : 0)
-        .onAreaChange((oldVal, newVal) => {
+        .onAreaChange((_, newVal) => {
             this.contentWidth = newVal.width as number
         })
     }

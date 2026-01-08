@@ -45,7 +45,7 @@ export struct IBestBadge {
 	 * 徽标图标大小
 	 * @since 1.0.0
 	 */
-	@Param iconSize: IBestStringNumber = convertDimensionsWidthUnit(12)
+	@Param iconSize: IBestStringNumber = this.baseStyle.fontSizeSm as string
 	/**
 	 * 徽标图标颜色
 	 * @since 1.0.0
@@ -138,7 +138,7 @@ export struct IBestBadge {
 				Text(this.getContent())
 					.constraintSize({ minWidth: convertDimensionsWidthUnit(16) })
 					.fontColor(IBestBadgeColor.textColor)
-					.fontSize(convertDimensionsWidthUnit(12, true))
+					.fontSize(this.baseStyle.fontSizeMd)
 					.padding({ left: convertDimensionsWidthUnit(3), right: convertDimensionsWidthUnit(3) })
 					.backgroundColor(this.color)
 					.borderRadius(this.baseStyle.borderRadiusMax)

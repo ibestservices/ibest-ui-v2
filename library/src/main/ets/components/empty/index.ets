@@ -22,7 +22,7 @@ export struct IBestEmpty {
 	/**
 	 * 描述文字大小
 	 */
-	@Param descriptionFontSize: IBestStringNumber = convertDimensionsWidthUnit(14)
+	@Param descriptionFontSize: IBestStringNumber = this.baseStyle.fontSizeMd as string
 	/**
 	 * 空占位图的高度
 	 */

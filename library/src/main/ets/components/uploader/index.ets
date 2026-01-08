@@ -7,10 +7,11 @@ import { picker } from '@kit.CoreFileKit'
 import { photoAccessHelper } from '@kit.MediaLibraryKit'
 import { IBestLoading } from '../loading'
 import fs from '@ohos.file.fs'
-import { IBestIcon, IBestImagePreview } from '../../../../../Index'
 import { convertDimensionsWidthUnit, getLengthUnit, getSizeByUnit, handleBeforeFunction } from '../../utils/utils'
 import { IBestUploaderColor } from './color'
 import { IBestStorageKey, IBestAwaitable, IBestStringNumber } from '../../model/Global.type'
+import IBestImagePreview from '../../apis/IBestImagePreview'
+import { IBestIcon } from '../icon'
 
 @ComponentV2
 export struct IBestUploader {
