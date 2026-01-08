@@ -1,13 +1,13 @@
-import dayjs from '@hview/dayjs'
 import { IBestPicker } from '../picker'
 import { IBestPickerOption } from '../picker/index.type'
 import { COMPONENT_NAME, DATE_PICKER_EVENT_NAME, DatePickerColumnType, IBestDatePickerResult } from './index.type'
-import { emitter } from '../../utils/eventEmitter'
+import ibestEmitter from '../../utils/eventEmitter'
 import { convertDimensionsWidthUnit, getEventName, getResourceStr } from '../../utils/utils'
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { AppStorageV2 } from '@kit.ArkUI'
-import { Lunar } from 'lunar'
+import dateUtils from '../../utils/dateUtils'
+import lunar from '../../utils/lunar'
 
 @ComponentV2
 export struct IBestDatePicker {
@@ -24,11 +24,11 @@ export struct IBestDatePicker {
 	/**
 	 * 最小时间
 	 */
-	@Param @Once minDate: Date = dayjs().subtract(10, 'year').toDate()
+	@Param @Once minDate: Date = dateUtils().subtract(10, 'year').toDate()
 	/**
 	 * 最大时间
 	 */
-	@Param @Once maxDate: Date = dayjs().add(10, 'year').toDate()
+	@Param @Once maxDate: Date = dateUtils().add(10, 'year').toDate()
 	/**
 	 * 是否显示日列
 	 */
@@ -88,6 +88,31 @@ export struct IBestDatePicker {
 	 */
 	@Param radius: Length | BorderRadiuses | LocalizedBorderRadiuses = 0
 	/**
+	 * 未选中字体颜色
+	 * @since 1.0.8
+	 */
+	@Param fontColor: ResourceColor = ''
+	/**
+	 * 未选中字体字重
+	 * @since 1.0.8
+	 */
+	@Param fontWeight: FontWeight = FontWeight.Normal
+	/**
+	 * 选中字体大小
+	 * @since 1.0.8
+	 */
+	@Param selectedFontSize: IBestStringNumber = this.baseStyle.fontSizeLg as string
+	/**
+	 * 选中文字颜色
+	 * @since 1.0.8
+	 */
+	@Param selectedFontColor: ResourceColor = ''
+	/**
+	 * 选项文字字重
+	 * @since 1.0.8
+	 */
+	@Param selectedFontWeight: FontWeight = FontWeight.Normal
+	/**
 	 * 过滤器
 	 */
 	@Event filter: (type: DatePickerColumnType, options: IBestPickerOption[]) => IBestPickerOption[] = (_, options) => options
@@ -105,11 +130,8 @@ export struct IBestDatePicker {
 	@Event onChange: (value: IBestDatePickerResult) => void = () => {}
 	@Event $value: (value: string[]) => void = () => {}
 
-	// 唯一id
 	@Local uniId: number = 0
-	// 列表类型
 	@Local listType: DatePickerColumnType[] = ["year", "month", "day"]
-	// 选项列表
 	@Local options: IBestPickerOption[][] = []
 	@Local modelValue: string[] = []
 	@Monitor("value") valueChange(){
@@ -128,13 +150,12 @@ export struct IBestDatePicker {
 		this.modelValue = this.value
 		this.init()
 		if(this.groupId){
-			// 监听日期picker变化
-			emitter.on(getEventName(COMPONENT_NAME, DATE_PICKER_EVENT_NAME.COLUMN_CHANGE, this.groupId),this.uniId, (uniId: number, selectedValues: string[]): void => this.handleGroupChange(uniId, selectedValues))
+			ibestEmitter.on(getEventName(COMPONENT_NAME, DATE_PICKER_EVENT_NAME.COLUMN_CHANGE, this.groupId),this.uniId, (uniId: number, selectedValues: string[]): void => this.handleGroupChange(uniId, selectedValues))
 		}
 	}
 	aboutToDisappear(): void {
 		if(this.groupId) {
-			emitter.off(getEventName(COMPONENT_NAME, DATE_PICKER_EVENT_NAME.COLUMN_CHANGE, this.groupId), this.uniId)
+			ibestEmitter.off(getEventName(COMPONENT_NAME, DATE_PICKER_EVENT_NAME.COLUMN_CHANGE, this.groupId), this.uniId)
 		}
 	}
 	// 初始化
@@ -202,7 +223,7 @@ export struct IBestDatePicker {
 			let value = this.formatValue(i)
 			let text = ''
 			if(this.lunar){
-				text = Lunar.fromDate(new Date(year, i, 1)).getMonthInChinese()
+				text = lunar(new Date(year, i, 1)).getMonthInChinese()
 			}else {
 				text = this.formatValue(i)
 			}
@@ -219,13 +240,13 @@ export struct IBestDatePicker {
 		let year = this.getValue("year")
 		let month = this.getValue("month")
 		let minDay = this.isMinYear(year) && this.isMinMonth(month) ? this.minDate.getDate() : 1
-		let maxDay = this.isMaxYear(year) && this.isMaxMonth(month) ? this.maxDate.getDate() : dayjs(year+"-"+month).daysInMonth()
+		let maxDay = this.isMaxYear(year) && this.isMaxMonth(month) ? this.maxDate.getDate() : dateUtils(year+"-"+month).daysInMonth()
 		let unit = this.showUnit ? getResourceStr($r("app.string.ibest_day")) : ""
 		for(let i = minDay; i <= maxDay; i++){
 			let value = this.formatValue(i)
 			let text = ''
 			if(this.lunar){
-				text = Lunar.fromDate(dayjs(year+"-"+month+"-"+i).toDate()).getDayInChinese()
+				text = lunar(dateUtils(year+"-"+month+"-"+i).toDate()).getDayInChinese()
 			}else{
 				text = this.formatValue(i) + unit
 			}
@@ -243,13 +264,13 @@ export struct IBestDatePicker {
 		}
 		this.onChange(this.getResult())
 		if(this.groupId) {
-			emitter.emit(getEventName(COMPONENT_NAME, DATE_PICKER_EVENT_NAME.COLUMN_CHANGE, this.groupId), this.uniId, this.modelValue)
+			ibestEmitter.emit(getEventName(COMPONENT_NAME, DATE_PICKER_EVENT_NAME.COLUMN_CHANGE, this.groupId), this.uniId, this.modelValue)
 		}
 	}
 	// 获取组件结果
 	getResult(): IBestDatePickerResult {
 		let dateStr = this.modelValue.join("-")
-		let date = dayjs(dateStr).toDate()
+		let date = dateUtils(dateStr).toDate()
 		let result: IBestDatePickerResult = {
 			date,
 			dateStr,
@@ -260,16 +281,16 @@ export struct IBestDatePicker {
 			result.day = this.modelValue[2]
 		}
 		if(this.lunar){
-			let lunar = Lunar.fromDate(date)
-			result.lunarMonth = lunar.getMonthInChinese()
-			result.lunarDay = lunar.getDayInChinese()
+			const lunarDate = lunar(date)
+			result.lunarMonth = lunarDate.getMonthInChinese()
+			result.lunarDay = lunarDate.getDayInChinese()
 		}
 		return result
 	}
 	// 处理同组日期变化
 	handleGroupChange(uniId: number, selectedValues: string[]) {
 		if(this.uniId > uniId){
-			let selectDate = dayjs(selectedValues.join("-")).toDate()
+			let selectDate = dateUtils(selectedValues.join("-")).toDate()
 			this.minDate = selectDate
 			if(selectDate > this.maxDate || selectDate < this.minDate){
 				this.modelValue = selectedValues
@@ -294,6 +315,11 @@ export struct IBestDatePicker {
 			contentHeight: this.contentHeight,
 			optionFontSize: this.optionFontSize,
 			radius: this.radius,
+			fontColor: this.fontColor,
+			fontWeight: this.fontWeight,
+			selectedFontSize: this.selectedFontSize,
+			selectedFontColor: this.selectedFontColor,
+			selectedFontWeight: this.selectedFontWeight,
 			onConfirm: () => {
 				this.onConfirm(this.getResult())
 			},

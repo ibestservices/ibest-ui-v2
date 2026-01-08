@@ -1,6 +1,4 @@
-import { IBestBadge } from '../../../../../Index'
 import { IBestShape, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
-import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { convertDimensionsWidthUnit, getSizeByUnit, random } from '../../utils/utils'
 import { IBestBadgeColor } from '../badge/color'
@@ -9,6 +7,8 @@ import { IBestIcon } from '../icon'
 import { IBestAvatarColor } from './color'
 import { AppStorageV2 } from '@kit.ArkUI'
 import { IBestGlobalConfig } from '../../model/GlobalConfig'
+import { IBestBadge } from '../badge'
+import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 
 @ComponentV2
 export struct IBestAvatar{
@@ -36,7 +36,7 @@ export struct IBestAvatar{
     /**
      * 圆角值
      */
-    @Param radius: Length | BorderRadiuses | LocalizedBorderRadiuses = convertDimensionsWidthUnit(4)
+    @Param radius: Length | BorderRadiuses | LocalizedBorderRadiuses = this.baseStyle.borderRadiusMd
     /**
      * 背景色
      */
@@ -96,7 +96,7 @@ export struct IBestAvatar{
     /**
      * 徽标图标大小
      */
-    @Param badgeIconSize: IBestStringNumber = convertDimensionsWidthUnit(12)
+    @Param badgeIconSize: IBestStringNumber = this.baseStyle.fontSizeSm as string
     /**
      * 徽标图标颜色
      */

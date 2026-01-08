@@ -41,7 +41,7 @@ export struct IBestGuide {
     /**
      * 气泡框的圆角半径
      */
-    @Param popupCornerRadius: IBestStringNumber = convertDimensionsWidthUnit(8)
+    @Param popupCornerRadius: IBestStringNumber = this.baseStyle.borderRadiusLg as string
     /**
      * 按钮间距
      */

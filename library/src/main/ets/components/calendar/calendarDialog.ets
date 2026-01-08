@@ -3,13 +3,8 @@ import { COLOR_TYPE, ColorType } from '../../theme-chalk/src/color.type'
 import { convertDimensionsWidthUnit } from '../../utils/utils'
 import { IBestPopup } from '../popup'
 import { IBestCalendar } from './index'
-import {
-	IBestCalendarConfirmResult,
-	IBestCalendarDayItem,
-	SelectedStyleType,
-	SelectType,
-	WeekDayType
-} from './index.type'
+import { IBestCalendarConfirmResult, IBestCalendarDayItem, SelectedStyleType, SelectType, WeekDayType } from './index.type'
+
 @ComponentV2
 export struct IBestCalendarDialog {
 	/**

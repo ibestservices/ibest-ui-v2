@@ -4,7 +4,7 @@ import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../theme-chalk/src/in
 import CustomContent from '../common/components/CustomContent'
 import { convertDimensionsWidthUnit, getEventName, getSizeByUnit, sleep } from '../utils/utils'
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../model/Global.type'
-import { emitter } from '../utils/eventEmitter'
+import ibestEmitter from '../utils/eventEmitter'
 import GlobalStore from '../utils/globalStore'
 class IBestNotifyOption{
 	/**
@@ -82,10 +82,10 @@ struct defaultContent{
 	// }
 	aboutToAppear(): void {
 		this.uniId = this.getUniqueId()
-		emitter.on(getEventName("NOTIFY", "HIDE"), this.uniId, (): void => this.close())
+		ibestEmitter.on(getEventName("NOTIFY", "HIDE"), this.uniId, (): void => this.close())
 	}
 	aboutToDisappear(): void {
-		emitter.off(getEventName("NOTIFY", "HIDE"), this.uniId)
+		ibestEmitter.off(getEventName("NOTIFY", "HIDE"), this.uniId)
 	}
 	close(){
 		this.transY = "-100%"
@@ -193,7 +193,7 @@ class Notify{
 				clearTimeout(this.timer)
 				this.timer = 0
 			}
-			emitter.emit(getEventName("NOTIFY", "HIDE"))
+			ibestEmitter.emit(getEventName("NOTIFY", "HIDE"))
 			// 暂不支持
 			// this.contentNode.reuse()
 			await sleep(220)

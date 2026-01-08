@@ -1,4 +1,3 @@
-import { getDefaultBaseStyle } from '../../theme-chalk/src'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { IBestCarKeyboardKey } from './index.type'
@@ -10,21 +9,16 @@ import { AppStorageV2 } from '@kit.ArkUI'
 const keyWidth = 0.09
 
 @Extend(Row) function ibestCarKeyboardKeyBoxStyle(){
-    .borderRadius(getDefaultBaseStyle().borderRadiusMd)
-    .justifyContent(FlexAlign.Center)
-    .alignItems(VerticalAlign.Center)
-    .stateStyles({
-        normal: {
-            .backgroundColor(IBestCarKeyboardColor.keyBg)
-        },
-        pressed: {
-            .backgroundColor(IBestCarKeyboardColor.activeBg)
-        }
-    })
-}
-@Extend(Text) function ibestCarKeyboardKeyTextStyle(){
-    .fontSize(getDefaultBaseStyle().fontSizeLg)
-    .fontColor(IBestCarKeyboardColor.textColor)
+	.justifyContent(FlexAlign.Center)
+	.alignItems(VerticalAlign.Center)
+	.stateStyles({
+		normal: {
+			.backgroundColor(IBestCarKeyboardColor.keyBg)
+		},
+		pressed: {
+			.backgroundColor(IBestCarKeyboardColor.activeBg)
+		}
+	})
 }
 
 @ComponentV2
@@ -65,7 +59,8 @@ export struct IBestCarKeyboardContent{
 	@Builder keyButton(item: IBestCarKeyboardKey, full: boolean = false){
 		Row(){
 			Text(item.text)
-				.ibestCarKeyboardKeyTextStyle()
+				.fontSize(this.baseStyle.fontSizeLg)
+				.fontColor(IBestCarKeyboardColor.textColor)
 		}
 		.width(keyWidth * 100 + '%')
 		.height(getSizeByUnit(this.keyHeight || convertDimensionsWidthUnit(42)))
@@ -86,6 +81,7 @@ export struct IBestCarKeyboardContent{
 		.layoutWeight(1)
 		.height(getSizeByUnit(this.keyHeight || convertDimensionsWidthUnit(42)))
 		.ibestCarKeyboardKeyBoxStyle()
+		.borderRadius(this.baseStyle.borderRadiusMd)
 		.onClick(() => {
 			this.selectKey(new IBestCarKeyboardKey("delete"))
 		})
@@ -201,7 +197,6 @@ export struct IBestCarKeyboardContent{
 						Row({space: this.space1}){
 							ForEach(item, (e: IBestCarKeyboardKey) => {
 								this.keyButton(e, index == this.numKeysList.length - 1)
-								// .layoutWeight(index == this.numKeysList.length - 1 ? 1 : 0)
 							}, (_: IBestCarKeyboardKey, i: number) => i.toString())
 							if(index == this.numKeysList.length - 2){
 								this.deleteButton()

@@ -277,8 +277,8 @@ export struct IBestDialogView {
 								.lineHeight(getSizeByUnit(this.titleLineHeight ?? convertDimensionsWidthUnit(24)))
 								.padding({
 									top: getSizeByUnit(this.titlePaddingTop ?? convertDimensionsWidthUnit(26)),
-									left: getSizeByUnit(this.titlePaddingX ?? convertDimensionsWidthUnit(24)),
-									right: getSizeByUnit(this.titlePaddingX ?? convertDimensionsWidthUnit(24))
+									left: getSizeByUnit(this.titlePaddingX ?? this.baseStyle.spaceLg),
+									right: getSizeByUnit(this.titlePaddingX ?? this.baseStyle.spaceLg)
 								})
 								.fontColor(this.getTitleColor())
 						}
@@ -293,9 +293,9 @@ export struct IBestDialogView {
 						Text(this.message)
 							.width(CONTAINER_SIZE.FULL)
 							.padding({
-								top: getSizeByUnit(this.messagePaddingTop ?? convertDimensionsWidthUnit(8)),
-								left: getSizeByUnit(this.messagePaddingX ?? convertDimensionsWidthUnit(24)),
-								right: getSizeByUnit(this.messagePaddingX ?? convertDimensionsWidthUnit(24)),
+								top: getSizeByUnit(this.messagePaddingTop ?? this.baseStyle.spaceXs),
+								left: getSizeByUnit(this.messagePaddingX ?? this.baseStyle.spaceLg),
+								right: getSizeByUnit(this.messagePaddingX ?? this.baseStyle.spaceLg),
 								bottom: getSizeByUnit(this.messagePaddingBottom ?? convertDimensionsWidthUnit(26))
 							})
 							.margin({ top: this.title ? 0 : getSizeByUnit(this.messagePaddingBottom ?? convertDimensionsWidthUnit(26)) })

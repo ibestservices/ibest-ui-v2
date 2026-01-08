@@ -1,6 +1,6 @@
 import { GRAY_COLOR } from '../../theme-chalk/src/color'
 import { IBestUIBaseStyle } from '../../theme-chalk/src/index.type'
-import { IBestStorageKey, IBestStringNumber, LoadingIconType } from '../../model/Global.type'
+import { IBestStorageKey, IBestStringNumber, IBestLoadingIconType } from '../../model/Global.type'
 import { IBestLoadingCircular } from './circular'
 import { IBestLoadingSpinner } from './spinner'
 import { convertDimensionsWidthUnit, getSizeByUnit } from '../../utils/utils'
@@ -16,7 +16,7 @@ export struct IBestLoading {
 	/**
 	 * 类型，可选值为 spinner
 	 */
-	@Param loadingIconType: LoadingIconType = 'circular'
+	@Param loadingIconType: IBestLoadingIconType = 'circular'
 	/**
 	 * loading的尺寸
 	 */

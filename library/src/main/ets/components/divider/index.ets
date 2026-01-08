@@ -30,7 +30,7 @@ export struct IBestDivider{
 	/**
 	 * 分割线高度, 仅垂直时生效
      */
-	@Param lineHeight: IBestStringNumber = convertDimensionsWidthUnit(14)
+	@Param lineHeight: IBestStringNumber = this.baseStyle.lineHeightXs as string
 	/**
 	 * 线颜色
      */
@@ -46,7 +46,7 @@ export struct IBestDivider{
 	/**
 	 * 文本大小, 仅水平时生效
      */
-	@Param texFontSize: IBestStringNumber = convertDimensionsWidthUnit(14, true)
+	@Param texFontSize: IBestStringNumber = this.baseStyle.fontSizeMd as string
 	/**
 	 * 文本与线段间距, 仅水平时生效
      */
@@ -120,8 +120,8 @@ export struct IBestDivider{
 				})
 				.margin({left: getSizeByUnit(this.leftRightMargin), right: getSizeByUnit(this.leftRightMargin)})
 		}else{
-			Row(){
-				Row({space: getSizeByUnit(this.textLineSpace)})
+			Row({space: getSizeByUnit(this.textLineSpace)}){
+				Row()
 					.width(this.leftLineWidth)
 					.height(1)
 					.layoutWeight(this.leftLineWidth ? "" : 1)

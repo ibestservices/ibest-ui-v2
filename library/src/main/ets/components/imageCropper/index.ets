@@ -1,8 +1,6 @@
-import image from '@ohos.multimedia.image'
+import { image } from '@kit.ImageKit'
 import common from '@ohos.app.ability.common'
-import fs from '@ohos.file.fs'
-import { request } from '@kit.BasicServicesKit'
-import { generateId, getComponentsInfo, getComponentSnapshot, getSizeByUnit } from '../../utils/utils'
+import { dealUrlToSandbox, getComponentsInfo, getComponentSnapshot, getSizeByUnit } from '../../utils/utils'
 import { IBestImageCropperController } from './index.type'
 import { IBestImageCropperColor } from './color'
 import GlobalStore from '../../utils/globalStore'
@@ -96,8 +94,6 @@ export struct IBestImageCropper {
 	private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings)
 	private uiContext = this.getUIContext()
 	private pageContext = this.uiContext.getHostContext() as common.UIAbilityContext
-	private resourceManager = GlobalStore.context.resourceManager
-	private sandBoxPath: string = ""
 
 	@Builder corner(angle: number = 0){
 		Path()
@@ -117,9 +113,6 @@ export struct IBestImageCropper {
 		this.controller.getResult = (callBack?: (result: PixelMap) => void): Promise<PixelMap> => this.getResult(callBack)
 		this.getCenterSize()
 	}
-	aboutToDisappear(): void {
-		this.clearCache()
-	}
 	@Monitor("enableRotate")
 	enableRotateChange(){
 		this.pinchAngle = this.angle = 0
@@ -136,12 +129,6 @@ export struct IBestImageCropper {
 			}
 		}, 50)
 	}
-	// 清理沙箱缓存
-	clearCache(){
-		try {
-			fs.unlinkSync(this.sandBoxPath)
-		}catch(e){}
-	}
 	// 根据图片信息初始化参数
 	@Monitor("url")
 	async init() {
@@ -150,35 +137,10 @@ export struct IBestImageCropper {
 			return
 		}
 		this.resetParams()
-		if(this.sandBoxPath){
-			this.clearCache()
-		}
-		let path = `${this.pageContext.cacheDir}/${generateId()}_${Date.now()}.jpg`
-		this.sandBoxPath = path
-		if (typeof this.url == 'string') {
-			if (this.url.startsWith("http")) { // 网络图片
-				let task = await request.agent.create(this.pageContext, {
-					action: request.agent.Action.DOWNLOAD,
-					url: this.url,
-					overwrite: true,
-					saveas: path
-				})
-				task.on('completed', () => {
-					this.getImageInfo(path)
-				})
-				await task.start()
-				return
-			}else if(this.url.startsWith("data:image")) { // base64
-				let base64 = this.url.replace(/^data:image\/\w+;base64,/, "")
-				let dataBuffer = buffer.from(base64, 'base64')
-				this.writeToSandBox(dataBuffer.buffer)
-			} else { // 本地选择的图片 \ 沙箱路径
-				let file = fs.openSync(this.url, fs.OpenMode.CREATE)
-				fs.copyFileSync(file.fd, path)
-			}
-		} else {	// Resource
-			this.writeToSandBox(this.resourceManager.getMediaContentSync(this.url.id, 0).buffer)
-		}
+		let path = `${this.pageContext.cacheDir}/ibestImageCropper_${this.uniId}.jpg`
+		await dealUrlToSandbox(this.pageContext, this.url, path, () => {
+			this.getImageInfo(path)
+		})
 		this.getImageInfo(path)
 	}
 	// 获取图片信息
@@ -240,12 +202,6 @@ export struct IBestImageCropper {
 		this.context.translate(this.realCenterWidth / 2, this.realCenterHeight / 2)
 		this.context.rotate(this.angle * Math.PI / 180)
 		this.context.drawImage(this.imgModel, this.offsetX - this.imgWidth / 2, this.offsetY - this.imgHeight / 2, this.imgWidth, this.imgHeight)
-	}
-	// 将arrayBuffer写入沙箱
-	writeToSandBox(arrayBuffer: ArrayBuffer | ArrayBufferLike) {
-		let file = fs.openSync(this.sandBoxPath, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE)
-		fs.writeSync(file.fd, arrayBuffer)
-		fs.closeSync(file.fd)
 	}
 	// 设置比例
 	setScale(scale: number){

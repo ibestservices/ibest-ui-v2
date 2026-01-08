@@ -1,6 +1,6 @@
 import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
-import { emitter } from '../../utils/eventEmitter'
+import ibestEmitter from '../../utils/eventEmitter'
 import { convertDimensionsWidthUnit, getEventName, getSizeByUnit } from '../../utils/utils'
 import { IBestSidebarColor } from './color'
 import { COMPONENT_NAME, LeftBarSize, SIDEBAR_EVENT_NAME } from './index.type'
@@ -79,7 +79,7 @@ export struct IBestSideBar{
 	aboutToAppear(): void {
 		this.uniId = this.getUniqueId()
 		if(this.groupId){
-			emitter.on(getEventName(COMPONENT_NAME, SIDEBAR_EVENT_NAME.CHANGE_ACTIVE, this.groupId), this.uniId, (active: number): void => this.changeActive(active))
+			ibestEmitter.on(getEventName(COMPONENT_NAME, SIDEBAR_EVENT_NAME.CHANGE_ACTIVE, this.groupId), this.uniId, (active: number): void => this.changeActive(active))
 			setTimeout(() => {
 				this.initItems()
 			}, 0)
@@ -87,12 +87,12 @@ export struct IBestSideBar{
 	}
 	aboutToDisappear(): void {
 		if(this.groupId){
-			emitter.off(getEventName(COMPONENT_NAME, SIDEBAR_EVENT_NAME.CHANGE_ACTIVE, this.groupId), this.uniId)
+			ibestEmitter.off(getEventName(COMPONENT_NAME, SIDEBAR_EVENT_NAME.CHANGE_ACTIVE, this.groupId), this.uniId)
 		}
 	}
 	@Monitor("active")
 	initItems(){
-		emitter.emit(getEventName(COMPONENT_NAME, SIDEBAR_EVENT_NAME.INIT_ITEM, this.groupId), this.active, {
+		ibestEmitter.emit(getEventName(COMPONENT_NAME, SIDEBAR_EVENT_NAME.INIT_ITEM, this.groupId), this.active, {
 			titleColor: this.titleColor,
 			titleFontSize: this.titleFontSize,
 			activeBgColor: this.activeBgColor,
