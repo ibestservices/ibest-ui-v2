@@ -82,27 +82,27 @@ export struct IBestTimePicker {
 	@Param radius: Length | BorderRadiuses | LocalizedBorderRadiuses = 0
 	/**
 	 * 未选中字体颜色
-	 * @since 1.0.8
+	 * @since 1.0.9
 	 */
 	@Param fontColor: ResourceColor = ''
 	/**
 	 * 未选中字体字重
-	 * @since 1.0.8
+	 * @since 1.0.9
 	 */
 	@Param fontWeight: FontWeight = FontWeight.Normal
 	/**
 	 * 选中字体大小
-	 * @since 1.0.8
+	 * @since 1.0.9
 	 */
 	@Param selectedFontSize: IBestStringNumber = this.baseStyle.fontSizeLg as string
 	/**
 	 * 选中文字颜色
-	 * @since 1.0.8
+	 * @since 1.0.9
 	 */
 	@Param selectedFontColor: ResourceColor = ''
 	/**
 	 * 选项文字字重
-	 * @since 1.0.8
+	 * @since 1.0.9
 	 */
 	@Param selectedFontWeight: FontWeight = FontWeight.Normal
 	/**
