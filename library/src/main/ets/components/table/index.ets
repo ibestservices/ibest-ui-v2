@@ -95,7 +95,7 @@ export struct IBestTable {
 	@Event summaryMethod?: (data: AnyType[], column: IBestTableColumnData) => IBestStringNumber[] = undefined
 	/**
 	 * 合并行列计算方法
-	 * @since 1.0.9
+	 * @since 1.1.0
 	 */
 	@Event spanMethod: (row: AnyType, column: IBestTableColumnData, rowIndex: number, columnIndex: number) => number[] = () => [1,1]
 	/**
@@ -111,7 +111,6 @@ export struct IBestTable {
 	@Provider() columnWidthList: number[] = []
 	@Local headerHeight: number = 0
 	@Local footerHeight: number = 0
-	@Local isReady: boolean = false
 	private headerScroller: Scroller = new Scroller()
 	private bodyHorizontalScroller: Scroller = new Scroller()
 	private bodyVerticalScroller: Scroller = new Scroller()
@@ -142,30 +141,25 @@ export struct IBestTable {
 	}
 	@Builder cellBodyBuilder(position: IBestCellPosition){
 		Column(){
-			Repeat<AnyType[]>(this.data)
-				.each((obj: RepeatItem<AnyType[]>) => {
-					BodyCellRow({
-						cellPosition: position,
-						item: obj.item,
-						rowIndex: obj.index,
-						headerBgColor: this.headerBgColor,
-						headerFontSize: this.headerFontSize,
-						headerTextColor: this.headerTextColor,
-						cellFontSize: this.cellFontSize,
-						cellPadding: this.cellPadding,
-						cellTextColor: this.cellTextColor,
-						showBorder: this.showBorder,
-						bdColor: this.bdColor,
-						stripe: this.stripe,
-						cellBgColor: this.cellBgColor,
-						stripeBgColor: this.stripeBgColor,
-						spanMethod: this.spanMethod
-					})
+			ForEach(this.data, (item: AnyType, index: number) => {
+				BodyCellRow({
+					cellPosition: position,
+					item,
+					rowIndex: index,
+					headerBgColor: this.headerBgColor,
+					headerFontSize: this.headerFontSize,
+					headerTextColor: this.headerTextColor,
+					cellFontSize: this.cellFontSize,
+					cellPadding: this.cellPadding,
+					cellTextColor: this.cellTextColor,
+					showBorder: this.showBorder,
+					bdColor: this.bdColor,
+					stripe: this.stripe,
+					cellBgColor: this.cellBgColor,
+					stripeBgColor: this.stripeBgColor,
+					spanMethod: this.spanMethod
 				})
-				.key((_: AnyType, index: number) => `${generateId()}_${index}`)
-				.virtualScroll({
-					onTotalCount: () => { return this.data.length }
-				})
+			}, (_: AnyType, index: number) => `${generateId()}_${index}`)
 		}
 		.alignItems(HorizontalAlign.Start)
 	}
@@ -197,7 +191,6 @@ export struct IBestTable {
 		clearTimeout(this.timer)
 		this.timer = setTimeout(() => {
 			this.columnWidthList = Array(this.columnList.length).fill(0)
-			this.isReady = true
 		}, 0)
 	}
 	updateColumn(column: IBestTableColumnInfo){
@@ -217,6 +210,9 @@ export struct IBestTable {
 				rightItem.show = column.show
 			}
 		}
+	}
+	getBodyShow(){
+		return this.columnWidthList.length && this.columnWidthList.every(e => e > 0) && this.rowHeightList.every(e => e > 0)
 	}
 
 	build() {
@@ -244,7 +240,7 @@ export struct IBestTable {
 					this.headerHeight = newValue.width as number
 				}
 			})
-			if(this.isReady) {
+			if(this.columnWidthList.length) {
 				Row() {
 					Scroll(this.bodyVerticalScroller) {
 						Scroll(this.bodyHorizontalScroller) {
@@ -297,6 +293,8 @@ export struct IBestTable {
 				}
 				.width(CONTAINER_SIZE.FULL)
 				.layoutWeight(this.fixHeight ? 1 : undefined)
+				.visibility(this.getBodyShow() ? Visibility.Visible : Visibility.Hidden)
+				.animation({duration: this.baseStyle.animationDuration as number})
 				if(this.showSummary){
 					Row(){
 						Scroll(this.footerScroller){
@@ -316,6 +314,8 @@ export struct IBestTable {
 						}
 					}
 					.width(CONTAINER_SIZE.FULL)
+					.visibility(this.getBodyShow() ? Visibility.Visible : Visibility.Hidden)
+					.animation({duration: this.baseStyle.animationDuration as number})
 					.onAreaChange((_: Area, newValue: Area) => {
 						if(this.footerHeight == 0){
 							this.footerHeight = newValue.width as number
@@ -496,10 +496,12 @@ struct BodyCellRow{
 		}
 		.alignItems(VerticalAlign.Top)
 		.onAreaChange((oldValue: Area, newValue: Area) => {
-			if(oldValue.height <= 0){
+			if(oldValue.height != newValue.height){
 				this.rowHeight = newValue.height as number
 				if(this.cellPosition == 'body'){
-					this.rowHeightList[this.rowIndex] = this.rowHeight
+					let rowHeightList = this.rowHeightList.slice()
+					rowHeightList[this.rowIndex] = this.rowHeight
+					this.rowHeightList = rowHeightList
 				}
 			}
 		})
@@ -544,7 +546,7 @@ struct TableCell{
 	}
 	getSpanArr(){
 		let arr = this.spanMethod(this.item, this.column, this.rowIndex, this.columnIndex)
-		if(arr.length != 2 || arr.some(item => item <= 0)){
+		if(arr.length != 2 || arr.some(item => item < 0)){
 			arr = [1,1]
 		}
 		return arr
@@ -654,7 +656,9 @@ struct TableCell{
 		.visibility(this.column.show ? Visibility.Visible : Visibility.None)
 		.onAreaChange((_: Area, newValue: Area) => {
 			if(this.cellType == 'body' && this.columnWidthList[this.columnIndex] == 0){
-				this.columnWidthList[this.columnIndex] = newValue.width as number
+				let columnWidthList = this.columnWidthList.slice()
+				columnWidthList[this.columnIndex] = newValue.width as number
+				this.columnWidthList = columnWidthList
 			}
 		})
 	}
