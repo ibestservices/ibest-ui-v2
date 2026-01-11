@@ -21,7 +21,7 @@ export struct IBestContactAddressForm {
 	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	/**
 	 * 省市区数据
-	 * @since 1.1.0
+	 * @since 1.1.1
 	 */
 	@Param @Require regionData: IBestCascaderOption[]
 	/**
