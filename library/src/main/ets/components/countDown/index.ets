@@ -66,7 +66,7 @@ export struct IBestCountDown{
 	@Local isCounting: boolean = false
 	@Local remain: number = 0
 	private endTime: number = 0
-	private timer: number = 0
+	private timer: number = -1
 
 	aboutToAppear(): void {
 		this.controller.start = (): void => this.startCountDown()
@@ -112,7 +112,7 @@ export struct IBestCountDown{
 	}
 	clearTimer(){
 		clearTimeout(this.timer)
-		this.timer = 0
+		this.timer = -1
 	}
 	getRemainSecond(){
 		return Math.max(this.endTime - Date.now(), 0)
