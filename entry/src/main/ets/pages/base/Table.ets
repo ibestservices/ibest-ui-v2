@@ -30,15 +30,12 @@ interface TableData1{
 	amount5: number
 }
 @ObservedV2
-class TableData2Type{
+class TableData2 {
 	@Trace name: string = ""
 	@Trace number: number = 0
-}
-class TableData2 extends TableData2Type{
-	constructor(value: TableData2Type) {
-		super()
-		this.name = value.name
-		this.number = value.number
+	constructor(name: string, number: number) {
+		this.name = name
+		this.number = number
 	}
 }
 
@@ -47,11 +44,7 @@ class TableData2 extends TableData2Type{
 struct TablePage {
 	@Param title: string = ''
 	@Local tableId: string = "table"
-	@Local data: TableData[] = [
-        { date: '2025-03-10', name: 'IBest-UI', desc: '一个轻量、简单易用、可定制主题、支持深色模式和浅色模式的鸿蒙开源UI组件库。' },
-        { date: '2025-03-09', name: 'IBest-UI', desc: '一个轻量、简单易用、可定制主题、支持深色模式和浅色模式的鸿蒙开源UI组件库。' },
-		{ date: '2025-03-08', name: 'IBest-UI', desc: '一个轻量、简单易用、可定制主题、支持深色模式和浅色模式的鸿蒙开源UI组件库。' }
-	]
+	@Local data: TableData[] = []
 	@Local data1: TableData[] = [
 		{ date: '2025-03-10', name: 'IBest-UI', desc: '一个轻量、简单易用、可定制主题、支持深色模式和浅色模式的鸿蒙开源UI组件库。' },
 		{ date: '2025-03-09', name: 'IBest-UI', desc: '一个轻量、简单易用、可定制主题、支持深色模式和浅色模式的鸿蒙开源UI组件库。' },
@@ -70,8 +63,8 @@ struct TablePage {
 		{ id: "123459999", name: "数据6", amount1: 88, amount2: 97, amount3: 85.9, amount4: 68.3, amount5: 76.9 }
 	]
 	@Local data3: TableData2[] = [
-		new TableData2({ name: "数据", number: 10 }),
-		new TableData2({ name: "数据", number: 20 })
+		new TableData2("数据", 10),
+		new TableData2("数据", 20)
 	]
 
 	@Local tableId1: string = "table1"
@@ -138,6 +131,15 @@ struct TablePage {
 			}
 		}
 		return [1, 1]
+	}
+	aboutToAppear(): void {
+		setTimeout(() => {
+			this.data = [
+				{ date: '2025-03-10', name: 'IBest-UI', desc: '一个轻量、简单易用、可定制主题、支持深色模式和浅色模式的鸿蒙开源UI组件库。' },
+				{ date: '2025-03-09', name: 'IBest-UI', desc: '一个轻量、简单易用、可定制主题、支持深色模式和浅色模式的鸿蒙开源UI组件库。' },
+				{ date: '2025-03-08', name: 'IBest-UI', desc: '一个轻量、简单易用、可定制主题、支持深色模式和浅色模式的鸿蒙开源UI组件库。' }
+			]
+		}, 500)
 	}
 	build() {
 		NavDestination() {
@@ -278,8 +280,8 @@ struct TablePage {
 								text: "修改整个数据",
 								onBtnClick: () => {
 									this.data3 = [
-										new TableData2({ name: "数据", number: 30 }),
-										new TableData2({ name: "数据", number: 40 })
+										new TableData2("数据", 30),
+										new TableData2("数据", 40)
 									]
 								}
 							})

@@ -584,7 +584,7 @@ struct Index {
 		RouterUtil.navPathStackList.push(this.navPathStack)
 		// this.getUiVersion()
 		// setTimeout(() => {
-        //     RouterUtil.push("Tree")
+        //     RouterUtil.push("Table")
 		// }, 100)
 	}
 	getTitleOpacity(){
