@@ -124,6 +124,8 @@ export struct IBestTable {
 			cellPosition: position,
 			columnList: this.getColumnList(position),
 			isMultiLevelHeader: this.isMultiLevelHeader,
+			headerHeight: this.headerHeight,
+			isFirstLevel: true,
 			headerBgColor: this.headerBgColor,
 			headerFontSize: this.headerFontSize,
 			headerTextColor: this.headerTextColor,
@@ -186,7 +188,7 @@ export struct IBestTable {
 	}
 	@Styles ibestTableFixBodyStyle(){
 		.height(this.fixHeight ? CONTAINER_SIZE.FULL : '')
-		.constraintSize({maxHeight: this.maxHeight ? `calc(${this.maxHeight} - ${this.headerHeight}vp - ${this.footerHeight}vp)` : undefined})
+		.constraintSize({maxHeight: this.maxHeight ? `calc(${getSizeByUnit(this.maxHeight)} - ${this.headerHeight}vp - ${this.footerHeight}vp)` : undefined})
 		.align(Alignment.Start)
 	}
 
@@ -205,16 +207,10 @@ export struct IBestTable {
 		}else {
 			this.columnList.push(new IBestTableColumnInfo(column))
 		}
-		if(column.fixed && !column.parentProp){
-			let fixed = column.fixed
-			if(typeof fixed == 'string' && fixed == 'right'){
-				this.rightFixedColumnList.push(new IBestTableColumnInfo(column))
-			}else{
-				this.leftFixedColumnList.push(new IBestTableColumnInfo(column))
-			}
-		}
 		clearTimeout(this.timer)
 		this.timer = setTimeout(() => {
+			this.leftFixedColumnList = this.columnList.filter(e => (typeof e.fixed == 'boolean' && e.fixed || e.fixed == 'left') && !column.parentProp)
+			this.rightFixedColumnList = this.columnList.filter(e => typeof e.fixed == 'string' && e.fixed == 'right' && !column.parentProp)
 			this.columnWidthList = Array(this.columnList.length).fill(0)
 		}, 0)
 	}
@@ -299,7 +295,7 @@ export struct IBestTable {
 			}
 			.width(CONTAINER_SIZE.FULL)
 			.onAreaChange((_: Area, newValue: Area) => {
-				this.headerHeight = newValue.width as number
+				this.headerHeight = newValue.height as number
 			})
 			if(this.columnWidthList.length) {
 				Row() {
@@ -378,7 +374,7 @@ export struct IBestTable {
 					.visibility(this.bodyShow ? Visibility.Visible : Visibility.Hidden)
 					.animation({duration: this.baseStyle.animationDuration as number})
 					.onAreaChange((_: Area, newValue: Area) => {
-						this.footerHeight = newValue.width as number
+						this.footerHeight = newValue.height as number
 					})
 				}
 			}
@@ -404,6 +400,8 @@ struct HeaderCellRow{
 	@Param @Require cellPosition: IBestCellPosition
 	@Param @Require columnList: IBestTableColumnInfo[] = []
 	@Param @Require isMultiLevelHeader: boolean = false
+	@Param headerHeight: number = 0
+	@Param isFirstLevel: boolean = false
 	@Param @Require bdColor: ResourceColor
 	@Param @Require headerBgColor: ResourceColor
 	@Param @Require headerFontSize: IBestStringNumber
@@ -444,9 +442,9 @@ struct HeaderCellRow{
 				})
 			})
 		}
-		.height(this.rowHeight || "auto")
+		.height(this.headerHeight || this.rowHeight || "auto")
 		.backgroundColor(this.headerBgColor)
-		.position(this.cellPosition == 'left' ? {left: 0, top: 0} : this.cellPosition == 'right' ? {right: 0, top: 0} : undefined)
+		.position(!this.isFirstLevel || this.cellPosition == 'body' ? undefined : this.cellPosition == 'left' ? {left: 0, top: 0} : {right: 0, top: 0})
 		.onAreaChange((oldValue: Area, newValue: Area) => {
 			if(newValue.height != oldValue.height){
 				this.rowHeight = newValue.height as number
@@ -507,6 +505,7 @@ struct BodyCellRow{
 				})
 			})
 		}
+		.height(this.rowHeightList[this.rowIndex] || "")
 		.alignItems(VerticalAlign.Top)
 		.onAreaChange((oldValue: Area, newValue: Area) => {
 			if(oldValue.height != newValue.height){
@@ -734,13 +733,11 @@ struct TableCell{
 							.height(this.getHeight())
 					}
 					Row() {
-						if (!(this.column.fixed && this.pos == 'body')) {
+						if(!(this.column.fixed && this.cellType == 'body' && this.pos == 'body')) {
 							if (this.cellType == 'header' && this.headerBuilder) {
-								this.headerBuilder({ title: this.column.title, prop: this.column.prop },
-									this.columnIndex)
+								this.headerBuilder({ title: this.column.title, prop: this.column.prop }, this.columnIndex)
 							} else if (this.cellType == 'body' && this.cellBuilder) {
-								this.cellBuilder(this.item, { title: this.column.title, prop: this.column.prop },
-									this.rowIndex, this.columnIndex)
+								this.cellBuilder(this.item, { title: this.column.title, prop: this.column.prop }, this.rowIndex, this.columnIndex)
 							} else {
 								Text(this.getText())
 									.width(CONTAINER_SIZE.FULL)
