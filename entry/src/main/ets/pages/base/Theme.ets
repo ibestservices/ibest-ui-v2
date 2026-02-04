@@ -1,10 +1,12 @@
 import {
 	IBestButton,
+	IBestCaliper,
 	IBestCheckbox,
 	IBestCircleProgress,
 	IBestProgress,
 	IBestRadio,
 	IBestRadioGroup,
+	IBestSegmented,
 	IBestSetUIBaseStyle,
 	IBestSwitch,
 	IBestTabs,
@@ -30,6 +32,9 @@ struct ThemePage {
 	@Local active: string = "1"
 	@Local switchValue: boolean = true
 	@Local progressValue: number = 50
+	@Local caliperValue: number = 0
+	@Local segmentedValue: string = "选项1"
+	private segmentedOptions: string[] = ['选项1', '选项2', '选项3', '选项4']
 	aboutToDisappear() {
 		IBestSetUIBaseStyle({ primary: '#3D8AF2' })
 	}
@@ -142,6 +147,21 @@ struct ThemePage {
 						IBestTag({
 							type: 'primary',
 							text: $r("app.string.tag")
+						})
+					}
+				}
+				ListItem() {
+					ComponentShowContainer({ title: "卡尺" }) {
+						IBestCaliper({
+							value: this.caliperValue!!
+						})
+					}
+				}
+				ListItem() {
+					ComponentShowContainer({ title: "分段控制器" }) {
+						IBestSegmented({
+							value: this.segmentedValue!!,
+							options: this.segmentedOptions
 						})
 					}
 				}

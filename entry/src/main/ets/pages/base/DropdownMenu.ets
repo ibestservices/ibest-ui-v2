@@ -18,7 +18,7 @@ export function DropdownMenuBuilder(_: string, title: string){
 struct DropdownMenuPage{
     @Param title: string = ''
     groupId: string = 'dropdown_menu'
-    @Local value: number = 1
+    @Local value: number = 10
     @Local options: IBestDropdownMenuOption[] = [
         { text: '全部商品', value: 1 },
         { text: '第一个新款商品', value: 2 },
@@ -67,7 +67,7 @@ struct DropdownMenuPage{
     groupId3: string = 'dropdown_menu_3'
     groupId4: string = 'dropdown_menu_4'
     groupId5: string = 'dropdown_menu_5'
-    @Local value2: string = ''
+    @Local value2: string = '1'
     @Local value3: string = ''
     @Local options2: IBestDropdownMenuOption[] = [
         { text: '全部商品', icon: "star", value: '1' },
@@ -172,12 +172,12 @@ struct DropdownMenuPage{
                         }){
                             IBestDropdownItem({
                                 groupId: this.groupId2,
-                                value: this.value!!,
+                                value: this.value2!!,
                                 options: this.options2
                             })
                             IBestDropdownItem({
                                 groupId: this.groupId2,
-                                value: this.value1!!,
+                                value: this.value3!!,
                                 options: this.options3
                             })
                         }

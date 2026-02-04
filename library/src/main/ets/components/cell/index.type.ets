@@ -10,4 +10,5 @@ export interface CellSizeType {
 	padding: IBestStringNumber
 	fontSize: IBestStringNumber
 	labelFontSize: IBestStringNumber
+	valueFontSize: IBestStringNumber
 }

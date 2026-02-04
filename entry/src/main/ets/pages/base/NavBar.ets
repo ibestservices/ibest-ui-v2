@@ -46,26 +46,24 @@ struct NavBarPage {
 					}
 				}
 				ListItem() {
-					ComponentShowContainer({ title: '自定义样式', titlePaddingLeft: SPACE.MD }){
-						Column({space: SPACE.XS}){
-							IBestNavBar({
-								title: $r("app.string.app_name"),
-								titleColor: COLOR_BLUE.DEFAULT,
-								titleFontSize: 14,
-								titleFontWeight: FontWeight.Bold,
-								navBarBgColor: COLOR_BLUE.MINI,
-								leftIconColor: COLOR_BLUE.DEFAULT
-							})
-							IBestNavBar({
-								title: $r("app.string.app_name"),
-								titleColor: COLOR_BLUE.DEFAULT,
-								leftIconColor: COLOR_BLUE.DEFAULT,
-								bgLinearGradient: {
-									angle: 90,
-									colors: [[0xff0000, 0.0], [0x0000ff, 0.3], [0xffff00, 1.0]]
-								}
-							})
-						}
+					ComponentShowContainer({ title: '自定义样式', titlePaddingLeft: SPACE.MD, space: SPACE.XS }){
+						IBestNavBar({
+							title: $r("app.string.app_name"),
+							titleColor: COLOR_BLUE.DEFAULT,
+							titleFontSize: 14,
+							titleFontWeight: FontWeight.Bold,
+							navBarBgColor: COLOR_BLUE.MINI,
+							leftIconColor: COLOR_BLUE.DEFAULT
+						})
+						IBestNavBar({
+							title: $r("app.string.app_name"),
+							titleColor: COLOR_BLUE.DEFAULT,
+							leftIconColor: COLOR_BLUE.DEFAULT,
+							bgLinearGradient: {
+								angle: 90,
+								colors: [[0xff0000, 0.0], [0x0000ff, 0.3], [0xffff00, 1.0]]
+							}
+						})
 					}
 				}
 				ListItem() {
@@ -79,25 +77,23 @@ struct NavBarPage {
 					}
 				}
 				ListItem() {
-					ComponentShowContainer({ title: '自定义显示区域', titlePaddingLeft: SPACE.MD }){
-						Column({space: SPACE.XS}){
-							IBestNavBar({
-								leftIcon: "https://img1.baidu.com/it/u=498751481,2849377151&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800",
-								leftLabel: $r("app.string.app_name"),
-								leftIconRadius: 999
-							})
-							IBestNavBar({
-								isShowLeft: false,
-								title: $r("app.string.app_name"),
-								titleIcon: $r("app.media.app_icon"),
-							})
-							IBestNavBar({
-								isShowLeft: false,
-								isShowRight: true,
-								rightIcon: "https://img1.baidu.com/it/u=498751481,2849377151&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800",
-								rightLabel: $r("app.string.app_name")
-							})
-						}
+					ComponentShowContainer({ title: '自定义显示区域', titlePaddingLeft: SPACE.MD, space: SPACE.XS }){
+						IBestNavBar({
+							leftIcon: "https://img1.baidu.com/it/u=498751481,2849377151&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800",
+							leftLabel: $r("app.string.app_name"),
+							leftIconRadius: 999
+						})
+						IBestNavBar({
+							isShowLeft: false,
+							title: $r("app.string.app_name"),
+							titleIcon: $r("app.media.app_icon"),
+						})
+						IBestNavBar({
+							isShowLeft: false,
+							isShowRight: true,
+							rightIcon: "https://img1.baidu.com/it/u=498751481,2849377151&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800",
+							rightLabel: $r("app.string.app_name")
+						})
 					}
 				}
 				ListItem() {
@@ -108,22 +104,20 @@ struct NavBarPage {
 					}
 				}
 				ListItem() {
-					ComponentShowContainer({ title: '自定义左右内容', titlePaddingLeft: SPACE.MD }){
-						Column({space: SPACE.XS}){
-							IBestNavBar({
-								title: $r("app.string.app_name"),
-								leftLabel: "返回",
-								isShowRight: true,
-								rightIcon: "wap-nav",
-								rightLabel: "更多"
-							})
-							IBestNavBar({
-								title: $r("app.string.app_name"),
-								leftBuilder: (): void => this.leftBuilder(),
-								isShowRight: true,
-								rightBuilder: (): void => this.rightBuilder()
-							})
-						}
+					ComponentShowContainer({ title: '自定义左右内容', titlePaddingLeft: SPACE.MD, space: SPACE.XS }){
+						IBestNavBar({
+							title: $r("app.string.app_name"),
+							leftLabel: "返回",
+							isShowRight: true,
+							rightIcon: "wap-nav",
+							rightLabel: "更多"
+						})
+						IBestNavBar({
+							title: $r("app.string.app_name"),
+							leftBuilder: (): void => this.leftBuilder(),
+							isShowRight: true,
+							rightBuilder: (): void => this.rightBuilder()
+						})
 					}
 				}
 				ListItem() {

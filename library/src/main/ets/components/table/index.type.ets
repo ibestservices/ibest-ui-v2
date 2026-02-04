@@ -61,6 +61,14 @@ class IBestTableColumnType extends IBestTableColumnData {
 	 */
 	fixed?: boolean | 'left' | 'right'
 	/**
+	 * 父标题属性
+	 */
+	parentProp: string = ""
+	/**
+	 * 子列
+	 */
+	@Trace children: IBestTableColumnInfo[] = []
+	/**
 	 * 格式化函数
 	 */
 	formatter?: (row: AnyType, column: IBestTableColumnData, rowIndex: number, columnIndex: number) => string
@@ -85,6 +93,7 @@ export class IBestTableColumnInfo extends IBestTableColumnType {
 			this.cellAlign = value.cellAlign ?? 'left'
 			this.headerAlign = value.headerAlign ?? this.cellAlign
 			this.fixed = value.fixed ?? false
+			this.parentProp = value.parentProp
 			this.formatter = value.formatter
 			this.headerBuilder = value.headerBuilder
 			this.cellBuilder = value.cellBuilder

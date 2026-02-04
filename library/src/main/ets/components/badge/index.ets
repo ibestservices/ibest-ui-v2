@@ -19,7 +19,7 @@ export struct IBestBadge {
 	/**
 	 * 徽标背景色
 	 */
-	@Param color: ResourceColor = IBestBadgeColor.badgeBgColor
+	@Param color: ResourceColor = ''
 	/**
 	 * 是否展示为小红点
 	 */
@@ -52,6 +52,16 @@ export struct IBestBadge {
 	 */
 	@Param iconColor: ResourceColor = ''
 	/**
+	 * 徽标水平方向偏移量
+	 * @since 1.1.2
+	 */
+	@Param xOffset: number = 0
+	/**
+	 * 徽标垂直方向偏移量
+	 * @since 1.1.2
+	 */
+	@Param yOffset: number = 0
+	/**
 	 * 自定义内容
 	 */
 	@BuilderParam defaultBuilder: CustomBuilder
@@ -69,23 +79,23 @@ export struct IBestBadge {
 		switch (this.badgePosition){
 			case 'top-left':
 				return {
-					left: 0,
-					top: 0
+					left: this.xOffset,
+					top: this.yOffset
 				}
 			case 'top-right':
 				return {
-					right: 0,
-					top: 0
+					right: this.xOffset,
+					top: this.yOffset
 				}
 			case 'bottom-left':
 				return {
-					left: 0,
-					bottom: 0
+					left: this.xOffset,
+					bottom: this.yOffset
 				}
 			case 'bottom-right':
 				return {
-					right: 0,
-					bottom: 0
+					right: this.xOffset,
+					bottom: this.yOffset
 				}
 		}
 	}
@@ -115,10 +125,10 @@ export struct IBestBadge {
 	}
 	build() {
 		Row() {
-			if (this.defaultBuilder) {
+			if(this.defaultBuilder) {
 				this.defaultBuilder()
 			}
-			if(this.icon){
+			if(this.icon) {
 				IBestIcon({
 					name: this.icon,
 					iconSize: this.iconSize,
@@ -126,21 +136,21 @@ export struct IBestBadge {
 				})
 					.position(this.getPosition())
 					.translate(this.getTranslate())
-			} else if (this.dot) {
+			}else if (this.dot) {
 				Text()
 					.width(convertDimensionsWidthUnit(8))
 					.aspectRatio(1)
 					.borderRadius(this.baseStyle.borderRadiusMax)
-					.backgroundColor(this.color)
+					.backgroundColor(this.color || IBestBadgeColor.badgeBgColor)
 					.position(this.getPosition())
 					.translate(this.getTranslate())
-			} else if(this.isShow()) {
+			}else if(this.isShow()) {
 				Text(this.getContent())
 					.constraintSize({ minWidth: convertDimensionsWidthUnit(16) })
 					.fontColor(IBestBadgeColor.textColor)
 					.fontSize(this.baseStyle.fontSizeMd)
 					.padding({ left: convertDimensionsWidthUnit(3), right: convertDimensionsWidthUnit(3) })
-					.backgroundColor(this.color)
+					.backgroundColor(this.color || IBestBadgeColor.badgeBgColor)
 					.borderRadius(this.baseStyle.borderRadiusMax)
 					.position(this.getPosition())
 					.translate(this.getTranslate())

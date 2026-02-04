@@ -3,8 +3,7 @@ import { CONTAINER_SIZE } from "../../theme-chalk/src/container"
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from "../../theme-chalk/src/index.type"
 import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit, handleBeforeFunction } from "../../utils/utils"
 import { IBestSegmentedColor } from "./color"
-import { IBestSegmentedOption } from "./index.type"
-import { debounce } from '../../utils/debounceThrottle'
+import { IBestSegmentedItem, IBestSegmentedOption } from "./index.type"
 import { AppStorageV2 } from "@kit.ArkUI"
 import { IBestIcon } from "../icon"
 
@@ -21,7 +20,7 @@ export struct IBestSegmented{
     /**
      * 选项列表
      */
-    @Param @Require options: (IBestStringNumber | IBestSegmentedOption)[] = []
+    @Param @Require options: (IBestStringNumber | IBestSegmentedItem)[]
     /**
      * 宽度类型
      */
@@ -45,7 +44,7 @@ export struct IBestSegmented{
     /**
      * 单个选项内边距
      */
-    @Param itemPadding: Length | Padding | LocalizedPadding = { left: convertDimensionsWidthUnit(10), right: convertDimensionsWidthUnit(10) }
+    @Param itemPadding: Length | Padding | LocalizedPadding = { left: this.baseStyle.spaceXsm, right: this.baseStyle.spaceXsm }
     /**
      * 背景色
      */
@@ -86,16 +85,13 @@ export struct IBestSegmented{
 
     @Local uniId: number = 0
     @Local isReady: boolean = false
-    // 盒子宽度
     @Local contentWidth: number = 0
-    // 宽度列表
     @Local widthList: number[] = []
-    // 标记块位移列表
     @Local translateXList: number[] = []
     private context: UIContext = this.getUIContext()
     private scroller: Scroller = new Scroller()
 
-    @Builder iconBuilder(item: IBestSegmentedOption, index: number){
+    @Builder iconBuilder(item: IBestSegmentedItem, index: number){
         IBestIcon({
             name: item.icon,
             iconSize: this.fontSize,
@@ -108,21 +104,21 @@ export struct IBestSegmented{
     }
     @Builder contentBuilder(showId: boolean = false){
         Stack({alignContent: Alignment.BottomStart}){
-            if(this.getActiveIndex() > -1 && this.getActiveIndex() < this.options.length){
+            if(this.activeIndex > -1 && this.activeIndex < this.options.length){
                 Row()
                     .height(CONTAINER_SIZE.FULL)
                     .backgroundColor(this.activeBgColor || this.baseStyle.primary)
                     .borderRadius(this.getRadius())
                     .shadow(this.activeShadow)
-                    .translate({ x: this.translateXList[this.getActiveIndex()] })
+                    .translate({ x: this.translateXList[this.activeIndex] })
                     .animation({
                         duration: this.isReady ? 300 : 0,
                         curve: "cubic-bezier(0.645,0.045,0.355,1)"
                     })
-                    .width(this.widthList[this.getActiveIndex()])
+                    .width(this.widthList[this.activeIndex])
             }
             Row(){
-                ForEach(this.options, (item: IBestStringNumber | IBestSegmentedOption, index: number) => {
+                ForEach(this.options, (item: IBestStringNumber | IBestSegmentedItem, index: number) => {
                     Row({space: this.baseStyle.spaceX}){
                         if(typeof item === "object" && item.icon && (!item.iconPosition || item.iconPosition == "left")){
                             this.iconBuilder(item, index)
@@ -168,15 +164,21 @@ export struct IBestSegmented{
     onDidBuild() {
         this.init()
     }
-    // 初始化
-    init: () => void = debounce(() => {
-        this.getWidth()
-        this.scrollCenter()
-        setTimeout(() => {
-            this.isReady = true
-        }, 50)
-    }, 100)
-    // 获取所有选项的宽度
+    init() {
+        if(this.options.length){
+            setTimeout(() => {
+                this.getWidth()
+                this.scrollCenter()
+                setTimeout(() => {
+                    this.isReady = true
+                }, 50)
+            }, 50)
+        }
+    }
+    @Monitor("options", "options.length")
+    optionsChange(){
+        this.init()
+    }
     getWidth(){
         let tabWidthList: number[] = []
         let translateXList: number[] = []
@@ -190,8 +192,8 @@ export struct IBestSegmented{
         this.contentWidth = contentInfo.width
         this.translateXList = translateXList
     }
-    // 获取选中索引
-    getActiveIndex(){
+    @Computed
+    get activeIndex(){
         return this.options.findIndex((item: IBestStringNumber | IBestSegmentedOption) => {
             if(typeof item === "object"){
                 return item.value === this.value
@@ -200,16 +202,13 @@ export struct IBestSegmented{
             }
         })
     }
-    // 获取颜色
     getColor(index: number){
-        return index == this.getActiveIndex() ? this.activeTextColor : this.inactiveTextColor
+        return index == this.activeIndex ? this.activeTextColor : this.inactiveTextColor
     }
-    // 获取圆角
     getRadius(){
         return this.round ? this.baseStyle.borderRadiusMax : getSizeByUnit(this.radius)
     }
-    // 点击选项
-    async selectItem(item: IBestStringNumber | IBestSegmentedOption){
+    async selectItem(item: IBestStringNumber | IBestSegmentedItem){
         let value = typeof item === "object" ? item.value : item
         this.onOptionClick(value)
         if(value === this.value){
@@ -223,11 +222,10 @@ export struct IBestSegmented{
         this.onChange(value)
         this.scrollCenter()
     }
-    // 滚动居中
     scrollCenter(animate: boolean = true){
         if(this.widthType == "auto"){
             this.scroller.scrollTo({
-                xOffset: this.translateXList[this.getActiveIndex()] - this.contentWidth/2 + this.widthList[this.getActiveIndex()]/2,
+                xOffset: this.translateXList[this.activeIndex] - this.contentWidth/2 + this.widthList[this.activeIndex]/2,
                 yOffset: 0,
                 animation: animate ? {
                     duration: animate ? 100 : 0,
@@ -235,14 +233,6 @@ export struct IBestSegmented{
                 } : false
             })
         }
-    }
-    // 选项变化
-    @Monitor("options", "options.length")
-    optionsChange(){
-        setTimeout(() => {
-            this.getWidth()
-            this.scrollCenter()
-        }, 10)
     }
 
     build() {
@@ -265,6 +255,8 @@ export struct IBestSegmented{
         .padding(getSizeByUnit(this.contentPadding))
         .borderRadius(this.getRadius())
         .backgroundColor(this.bgColor)
+        .opacity(this.options.length ? 1 : 0)
+        .animation({duration: this.baseStyle.animationDuration as number})
         .clip(true)
         .onAreaChange(() => {
             this.init()

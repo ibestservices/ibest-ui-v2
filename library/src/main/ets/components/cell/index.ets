@@ -24,6 +24,11 @@ export struct IBestCell {
 	 */
 	@Param titleColor: ResourceColor = IBestCellColor.titleColor
 	/**
+	 * 标题文字大小
+	 * @since 0.0.6
+	 */
+	@Param titleFontSize: IBestStringNumber = ""
+	/**
 	 * 右侧内容
 	 */
 	@Param value: ResourceStr = ''
@@ -32,6 +37,11 @@ export struct IBestCell {
 	 */
 	@Param valueColor: ResourceColor = IBestCellColor.valueColor
 	/**
+	 * 内容的文字大小
+	 * @since 1.1.2
+	 */
+	@Param valueFontSize: IBestStringNumber = ""
+	/**
 	 * 标题下方的描述信息
 	 */
 	@Param label: ResourceStr = ''
@@ -39,6 +49,11 @@ export struct IBestCell {
 	 * 描述的文字颜色 默认 #969799
 	 */
 	@Param labelColor: ResourceColor = IBestCellColor.labelColor
+	/**
+	 * 标题下方的描述信息文字大小
+	 * @since 0.0.6
+	 */
+	@Param labelFontSize: IBestStringNumber = ""
 	/**
 	 * 是否显示底部边框
 	 */
@@ -88,7 +103,7 @@ export struct IBestCell {
 	/**
 	 * 左侧图标大小
 	 */
-	@Param leftIconSize: IBestStringNumber = this.baseStyle.fontSizeLg as string
+	@Param leftIconSize: IBestStringNumber = ""
 	/**
 	 * 左侧图标与title间距
 	 */
@@ -134,16 +149,6 @@ export struct IBestCell {
 	 */
 	@Param disabled: boolean = false
 	/**
-	 * 标题文字大小
-	 * @since 0.0.6
-	 */
-	@Param titleFontSize: IBestStringNumber = ""
-	/**
-	 * 标题下方的描述信息文字大小
-	 * @since 0.0.6
-	 */
-	@Param labelFontSize: IBestStringNumber = ""
-	/**
 	 * 单元格padding
 	 * @since 0.0.8
 	 */
@@ -174,7 +179,6 @@ export struct IBestCell {
 	@Event onCellClick: () => void = () => {}
 
 	@Local borderRight: number = 0
-	// 根据arrow direction获取图标旋转角度
 	private arrowDirection2RotateDegMap: Record<string, number> = {
 		[ARROW_DIRECTION.RIGHT]: 0,
 		[ARROW_DIRECTION.TOP]: -90,
@@ -203,10 +207,6 @@ export struct IBestCell {
 		let rightInfo = getComponentsInfo(this.uiContext, `ibest_cell_right_${this.uniId}`)
 		this.borderRight = fullWidth - rightInfo.width - rightInfo.localLeft
 	}
-
-	/**
-	 * 根据size获取单元格的尺寸
-	 */
 	@Computed
 	get computedCellSize(): CellSizeType {
 		switch (this.cellSize) {
@@ -214,13 +214,15 @@ export struct IBestCell {
 				return {
 					padding: convertDimensionsWidthUnit(14),
 					fontSize: this.titleFontSize || this.baseStyle.fontSizeLg,
-					labelFontSize: this.labelFontSize || this.baseStyle.fontSizeMd
+					labelFontSize: this.labelFontSize || this.baseStyle.fontSizeMd,
+					valueFontSize: this.valueFontSize || this.baseStyle.fontSizeLg
 				}
 			default:
 				return {
 					padding: this.baseStyle.spaceSm as string,
 					fontSize: this.titleFontSize || this.baseStyle.fontSizeMd,
-					labelFontSize: this.labelFontSize || this.baseStyle.fontSizeSm
+					labelFontSize: this.labelFontSize || this.baseStyle.fontSizeSm,
+					valueFontSize: this.valueFontSize || this.baseStyle.fontSizeMd
 				}
 		}
 	}
@@ -250,7 +252,7 @@ export struct IBestCell {
 						} else if (this.leftIcon) {
 							IBestIcon({
 								name: this.leftIcon,
-								iconSize: this.leftIconSize,
+								iconSize: this.leftIconSize || this.baseStyle.fontSizeLg as string,
 								color: this.leftIconColor
 							}).margin({ right: getSizeByUnit(this.leftIconMarginRight) })
 						}
@@ -287,7 +289,7 @@ export struct IBestCell {
 						} else {
 							Text(this.value)
 								.textAlign(TextAlign.Start)
-								.fontSize(getSizeByUnit(this.computedCellSize.fontSize, true))
+								.fontSize(getSizeByUnit(this.computedCellSize.valueFontSize, true))
 								.fontColor(this.valueColor)
 						}
 					}.justifyContent(FlexAlign.End).layoutWeight(1)
