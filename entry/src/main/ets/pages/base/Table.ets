@@ -303,7 +303,13 @@ struct TablePage {
 					ComponentShowContainer({ title: '多级表头' }) {
 						IBestTable({ tableId: this.tableId10, data: this.data4 }){
 							IBestTableColumn({ tableId: this.tableId10, title: "名称", prop: "name", cellWidth: 70, fixed: true })
-							IBestTableColumn({ tableId: this.tableId10, title: "详细信息", prop: "detail", cellWidth: 150, fixed: true })
+							IBestTableColumn({
+								tableId: this.tableId10,
+								title: "详细信息",
+								prop: "detail",
+								cellWidth: 150,
+								headerBuilder: (column: IBestTableColumnData, columnIndex: number): void => this.headerBuilder(column, columnIndex),
+							})
 							IBestTableColumn({ tableId: this.tableId10, title: "信息1", prop: "info1", parentProp: "detail", cellWidth: 50 })
 							IBestTableColumn({ tableId: this.tableId10, title: "信息2", prop: "info2", parentProp: "detail" })
 							IBestTableColumn({ tableId: this.tableId10, title: "信息3", prop: "info3", parentProp: "info2", cellWidth: 50 })
