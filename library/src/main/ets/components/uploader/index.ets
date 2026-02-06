@@ -271,6 +271,7 @@ export struct IBestUploader {
 				})
 			}
 		}
+		.width(LayoutPolicy.wrapContent)
 	}
 }
 

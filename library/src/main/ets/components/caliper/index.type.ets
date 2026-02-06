@@ -10,8 +10,4 @@ export interface IBestCaliperScale {
      * 是否是大刻度
      */
     isBig: boolean
-    /**
-     * 左边距
-     */
-    localLeft: number
 }

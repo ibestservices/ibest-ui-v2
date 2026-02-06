@@ -285,7 +285,7 @@ export struct IBestCalendar{
     /**
      * 圆角
      */
-    @Param cornerRadius: Length | BorderRadiuses | LocalizedBorderRadiuses = convertDimensionsWidthUnit(10)
+    @Param cornerRadius: Length | BorderRadiuses | LocalizedBorderRadiuses = this.baseStyle.borderRadiusXl as string
     /**
      * 打卡模式
      */

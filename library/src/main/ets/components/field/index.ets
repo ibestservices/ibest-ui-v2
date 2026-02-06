@@ -288,8 +288,8 @@ export struct IBestField{
 	@Param fieldPadding: Length | Padding | LocalizedPadding = {
 		left: this.baseStyle.spaceMd,
 		right: this.baseStyle.spaceMd,
-		top: convertDimensionsWidthUnit(10),
-		bottom: convertDimensionsWidthUnit(10)
+		top: this.baseStyle.spaceXsm,
+		bottom: this.baseStyle.spaceXsm
 	}
 	/**
 	 * 底部边框线颜色

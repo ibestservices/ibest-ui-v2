@@ -334,6 +334,10 @@ struct Index {
 				{
 					name: $r("app.string.component_tab"),
 					path: "Tab"
+				},
+				{
+					name: $r("app.string.component_tabBar"),
+					path: "TabBar"
 				}
 			]
 		}
@@ -618,7 +622,7 @@ struct Index {
 		if(type == "doc"){
 			RouterUtil.push("Doc")
 		}else{
-			let url = this.context.resourceManager.getStringSync($r("app.string.company_url"))
+			let url = this.context.resourceManager.getStringSync($r("app.string.company_url").id)
 			let want: Want = {
 				action: "ohos.want.action.viewData",
 				entities: ["entity.system.browsable"],

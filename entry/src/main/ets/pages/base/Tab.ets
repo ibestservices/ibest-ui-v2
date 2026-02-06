@@ -12,28 +12,7 @@ export function TabBuilder(_: string, title: string){
 @ComponentV2
 struct TabPage {
     @Param title: string = ''
-    @Local tabsList: IBestTabItemType[] = [
-        {
-            label: "标签一",
-            name: "1"
-        },
-        {
-            label: "标签二",
-            name: "2"
-        },
-        {
-            label: "标签三",
-            name: "3"
-        },
-        {
-            label: "标签四",
-            name: "4"
-        },
-        {
-            label: "标签五",
-            name: "5"
-        }
-    ]
+    @Local tabsList: IBestTabItemType[] = []
     @Local tabsList1: IBestTabItemType[] = [
         {
             label: "标签一",
@@ -149,12 +128,39 @@ struct TabPage {
 		})
 	}
 
+    aboutToAppear() {
+        setTimeout(() => {
+            this.tabsList = [
+                {
+                    label: "标签一",
+                    name: "1"
+                },
+                {
+                    label: "标签二",
+                    name: "2"
+                },
+                {
+                    label: "标签三",
+                    name: "3"
+                },
+                {
+                    label: "标签四",
+                    name: "4"
+                },
+                {
+                    label: "标签五",
+                    name: "5"
+                }
+            ]
+        }, 1000)
+    }
+
     build() {
         NavDestination(){
 			CustomNavBar({title: this.title})
             List() {
                 ListItem() {
-                    ComponentShowContainer({ title: '基础用法', titlePaddingLeft: SPACE.MD }) {
+                    ComponentShowContainer({ title: '基础用法' }) {
                         IBestTabs({
                             tabsList: this.tabsList,
                             currentName: this.curTabName!!
@@ -162,7 +168,7 @@ struct TabPage {
                     }
                 }
                 ListItem() {
-                    ComponentShowContainer({ title: '样式风格', titlePaddingLeft: SPACE.MD }) {
+                    ComponentShowContainer({ title: '样式风格' }) {
                         IBestTabs({
                             type: "card",
                             tabsList: this.tabsList,
@@ -171,43 +177,40 @@ struct TabPage {
                     }
                 }
                 ListItem() {
-                    ComponentShowContainer({ title: '收缩布局', titlePaddingLeft: SPACE.MD }) {
-                        Column({space: 20}){
-                            IBestTabs({
-                                tabWidthType: "auto",
-                                tabsList: this.tabsList,
-                                currentName: this.curTabName!!,
-                                isShowActiveBg: true,
-                                tabBgColor: "transparent",
-                                tabLineColor: "#904742",
-                                activeBgColor: "#fff",
-                                inactiveBgColor: "#904742",
-                                inactiveTextColor: '#fff',
-                                radius: 4
-                            })
-                            IBestTabs({
-                                tabWidthType: "auto",
-                                tabsList: this.tabsList1,
-                                currentName: this.curTabName2!!
-                            })
-                            IBestTabs({
-                                tabWidthType: "auto",
-                                type: "card",
-                                tabsList: this.tabsList,
-                                currentName: this.curTabName!!
-                            })
-                            IBestTabs({
-                                tabWidthType: "auto",
-                                type: "card",
-                                tabsList: this.tabsList1,
-                                currentName: this.curTabName2!!
-                            })
-                        }
-                        .alignItems(HorizontalAlign.Start)
+                    ComponentShowContainer({ title: '收缩布局', space: SPACE.MD }) {
+                        IBestTabs({
+                            tabWidthType: "auto",
+                            tabsList: this.tabsList,
+                            currentName: this.curTabName!!,
+                            isShowActiveBg: true,
+                            tabBgColor: "transparent",
+                            tabLineColor: "#904742",
+                            activeBgColor: "#fff",
+                            inactiveBgColor: "#904742",
+                            inactiveTextColor: '#fff',
+                            radius: 4
+                        })
+                        IBestTabs({
+                            tabWidthType: "auto",
+                            tabsList: this.tabsList1,
+                            currentName: this.curTabName2!!
+                        })
+                        IBestTabs({
+                            tabWidthType: "auto",
+                            type: "card",
+                            tabsList: this.tabsList,
+                            currentName: this.curTabName!!
+                        })
+                        IBestTabs({
+                            tabWidthType: "auto",
+                            type: "card",
+                            tabsList: this.tabsList1,
+                            currentName: this.curTabName2!!
+                        })
                     }
                 }
                 ListItem() {
-                    ComponentShowContainer({ title: '固定线宽', titlePaddingLeft: SPACE.MD }) {
+                    ComponentShowContainer({ title: '固定线宽' }) {
                         IBestTabs({
                             tabsList: this.tabsList,
                             isTabLineWidthFixed: true,
@@ -218,24 +221,22 @@ struct TabPage {
                     }
                 }
                 ListItem() {
-                    ComponentShowContainer({ title: '禁用标签', titlePaddingLeft: SPACE.MD }) {
-                        Column({space: 20}){
-                            IBestTabs({
-                                tabsList: this.tabsList2,
-                                currentName: this.curTabName3!!
-                            })
-                            IBestButton({
-                                text: "禁用标签3",
-                                buttonSize: "small",
-                                onBtnClick: () => {
-                                    this.tabsList2[2].isDisable = true
-                                }
-                            })
-                        }
+                    ComponentShowContainer({ title: '禁用标签', space: SPACE.MD }) {
+                        IBestTabs({
+                            tabsList: this.tabsList2,
+                            currentName: this.curTabName3!!
+                        })
+                        IBestButton({
+                            text: "切换禁用标签3",
+                            buttonSize: "small",
+                            onBtnClick: () => {
+                                this.tabsList2[2].isDisable = !this.tabsList2[2].isDisable
+                            }
+                        })
                     }
                 }
                 ListItem() {
-                    ComponentShowContainer({ title: 'change事件', titlePaddingLeft: SPACE.MD }) {
+                    ComponentShowContainer({ title: 'change事件' }) {
                         IBestTabs({
                             tabsList: this.tabsList,
                             currentName: this.curTabName4!!,
@@ -246,26 +247,24 @@ struct TabPage {
                     }
                 }
                 ListItem() {
-                    ComponentShowContainer({ title: '自定义标签', titlePaddingLeft: SPACE.MD }) {
-                        Column({space: 20}){
-                            IBestTabs({
-                                tabsList: this.tabsList3,
-                                currentName: this.curTabName5!!
-                            })
-                            IBestButton({
-                                text: "修改数字",
-                                buttonSize: "small",
-                                onBtnClick: () => {
-                                    if(this.tabsList3[1].number != undefined){
-                                        this.tabsList3[1].number += 1
-                                    }
+                    ComponentShowContainer({ title: '自定义标签', space: SPACE.MD }) {
+                        IBestTabs({
+                            tabsList: this.tabsList3,
+                            currentName: this.curTabName5!!
+                        })
+                        IBestButton({
+                            text: "修改数字",
+                            buttonSize: "small",
+                            onBtnClick: () => {
+                                if(this.tabsList3[1].number != undefined){
+                                    this.tabsList3[1].number += 1
                                 }
-                            })
-                        }
+                            }
+                        })
                     }
                 }
 				ListItem() {
-					ComponentShowContainer({ title: '内容联动', titlePaddingLeft: SPACE.MD }) {
+					ComponentShowContainer({ title: '内容联动' }) {
 						IBestTabs({
 							tabsList: this.tabsList,
 							currentName: this.curTabName!!

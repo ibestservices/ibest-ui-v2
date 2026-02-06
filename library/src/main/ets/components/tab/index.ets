@@ -2,7 +2,6 @@ import { convertDimensionsWidthUnit, getComponentsInfo, getSizeByUnit, sleep } f
 import { IBestTabItem, IBestTabItemType, TabWidthType } from './index.type';
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type';
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container';
-import { debounce } from '../../utils/debounceThrottle';
 import { IBestTabColor } from './color';
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type';
 import { AppStorageV2 } from '@kit.ArkUI';
@@ -34,7 +33,7 @@ export struct IBestTabs{
     /**
      * tab列表
      */
-    @Param tabsList: (IBestTabItemType | IBestTabItem)[] = []
+    @Param @Require tabsList: (IBestTabItemType | IBestTabItem)[]
     /**
      * 单个tab内边距
      */
@@ -131,54 +130,23 @@ export struct IBestTabs{
 	@Event onTabClick: (name: IBestStringNumber) => void = () => {}
 	@Event $currentName: (name: IBestStringNumber) => void = () => {}
 
-	// 唯一id
 	@Provider() uniId: number = 0
     @Local isReady: boolean = false
-	// tab盒子宽度
 	@Local tabContentWidth: number = 0
-	// tab宽度列表
 	@Local tabsWidthList: TabWidthType[] = []
-	// 标记线位移列表
 	@Local translateXList: number[] = []
-	// 标记块宽度
 	@Local tabBoxWidth: number = 0
 	@Local realTabLineWidth: number = 0
-	// 标记线X偏移量
 	@Local translateX: number = 0
-	// 标记块X偏移量
 	@Local tabBoxTranslateX: number = 0
     @Local swiperIndex: number = 0
     @Local startTransX: number = 0
 	private scroller: Scroller = new Scroller()
 	private context = this.getUIContext()
 	private swiperController: SwiperController = new SwiperController()
-	// 列表变化
-	@Monitor("tabsList") tabsListChange(){
-		sleep(20).then(() => {
-			this.getTabsWidth()
-		})
-	}
-	// tabName 变化
-	@Monitor("currentName")
-    async currentNameChange(){
-        if(this.tabsWidthList.length != this.tabsList.length){
-            this.getTabsWidth()
-        }
-		if(this.tabsWidthList.length){
-			let index = this.tabsList.findIndex((item: IBestTabItem) => item.name == this.currentName)
-			// 获取并改变tabLine的宽度
-			this.getAndSetLineWidth(index)
-			// 触发回调函数
-			this.onChange(this.currentName)
-			this.scrollCenter()
-			await sleep(20)
-			// 切换swiper的index
-			this.swiperChange(index, true)
-		}
-	}
+
 	@Builder tabBoxBuilder(showId: boolean = false){
 		Stack({alignContent: Alignment.BottomStart}){
-			// 标记块
 			if(this.isShowActiveBg || this.type == "card"){
 				Row()
 					.width(this.tabBoxWidth)
@@ -212,13 +180,12 @@ export struct IBestTabs{
 						initSize: (): void => this.initSize(),
 						changeName: (name: IBestStringNumber): void => this.changeName(name)
 					})
-				}, (_: IBestTabItem, index: number) => index+'')
+				})
 			}
 			.width(this.tabWidthType == "flex" ? CONTAINER_SIZE.FULL : "")
 			.height(getSizeByUnit(this.tabHeight))
 			.borderRadius(this.outerRadius || this.baseStyle.borderRadiusSm)
 			.border({ width: this.type == "card" ? 1 : 0, color: this.getLineColor() })
-			// 标记线
 			if(this.type == "line" && this.showActiveLine){
 				Row()
 					.width(this.isTabLineWidthFixed ? getSizeByUnit(this.tabLineWidth) : this.realTabLineWidth)
@@ -241,25 +208,48 @@ export struct IBestTabs{
     aboutToAppear(): void {
         this.uniId = this.getUniqueId()
     }
-	@Monitor("isLandscape.value")
     onDidBuild(): void {
         this.initSize()
     }
-    initSize: () => void = debounce(() => {
-        let index = this.tabsList.findIndex((item: IBestTabItem) => item.name == this.currentName)
-        this.getTabsWidth()
-        this.getAndSetLineWidth(index)
-        this.scrollCenter()
-        this.swiperChange(index, false)
-        setTimeout(() => {
-            this.isReady = true
-        }, 100)
-    }, 200)
-	// 切换swiper
+    @Monitor("isLandscape.value")
+    initSize() {
+        if(this.tabsList.length){
+            setTimeout(() => {
+                let index = this.tabsList.findIndex((item: IBestTabItem) => item.name == this.currentName)
+                this.getTabsWidth()
+                this.getAndSetLineWidth(index)
+                this.scrollCenter()
+                this.swiperChange(index, false)
+                setTimeout(() => {
+                    this.isReady = true
+                }, 100)
+            }, 50)
+        }
+    }
+    @Monitor("tabsList", "tabsList.length")
+    tabsListChange(){
+        this.initSize()
+    }
+    @Monitor("currentName")
+    async currentNameChange(){
+        if(this.tabsWidthList.length != this.tabsList.length){
+            this.getTabsWidth()
+        }
+        if(this.tabsWidthList.length){
+            let index = this.tabsList.findIndex((item: IBestTabItem) => item.name == this.currentName)
+            // 获取并改变tabLine的宽度
+            this.getAndSetLineWidth(index)
+            // 触发回调函数
+            this.onChange(this.currentName)
+            this.scrollCenter()
+            await sleep(20)
+            // 切换swiper的index
+            this.swiperChange(index, true)
+        }
+    }
 	swiperChange(index: number, animated: boolean){
 		this.swiperController.changeIndex(index, animated)
 	}
-    // 获取所有tab的宽度
     getTabsWidth(){
         let tabWidthList: TabWidthType[] = []
         let translateXList: number[] = []
@@ -279,7 +269,6 @@ export struct IBestTabs{
         this.tabContentWidth = tabContentInfo.width
         this.translateXList = translateXList
     }
-    // 获取并改变line宽度 位置
     getAndSetLineWidth(index: number){
         if(index > -1) {
             let tabInfo = this.tabsWidthList[index]
@@ -305,7 +294,6 @@ export struct IBestTabs{
 		this.$currentName(name)
 		this.onTabClick(name)
 	}
-    // 滚动居中
     scrollCenter(animate: boolean = true){
         if(this.tabWidthType == "auto"){
             this.scroller.scrollTo({
@@ -367,6 +355,8 @@ export struct IBestTabs{
         .width(CONTAINER_SIZE.FULL)
         .alignItems(HorizontalAlign.Start)
         .borderRadius(getSizeByUnit(this.outerRadius))
+        .opacity(this.tabsList.length ? 1 : 0)
+        .animation({duration: this.baseStyle.animationDuration as number})
         .clip(true)
     }
 }

@@ -42,15 +42,34 @@ struct FloatBubblePage {
     @Local group: string = "bubbleGroup"
     @Local active: string = "1"
     @Local value: string = ''
+    @Local isOpen: boolean = false
     @Builder customBubble(){
-        Column({space: 6}){
-            IBestIcon({
-                name: "replay",
-                iconSize: 16,
-                color: "#fff"
+        Stack({alignContent: Alignment.Bottom}){
+            Column()
+                .width("100%")
+                .height(this.isOpen ? 150 : 60)
+                .animation({duration: 200})
+                .borderRadius(60)
+                .backgroundColor("red")
+            Column({space: 6}){
+                IBestIcon({
+                    name: "replay",
+                    iconSize: 16,
+                    color: "#fff"
+                })
+                Text("刷新").fontSize(12).fontColor("#fff")
+            }
+            .width("100%")
+            .height("100%")
+            .justifyContent(FlexAlign.Center)
+            .onClick(() => {
+                this.isOpen = !this.isOpen
             })
-            Text("刷新").fontSize(12).fontColor("#fff")
         }
+        .width(60)
+        .height(60)
+        .backgroundColor("red")
+        .borderRadius(60)
     }
 
     @Builder example() {
@@ -140,13 +159,8 @@ struct FloatBubblePage {
             IBestFloatBubble({
                 show: this.bubbleShow1,
                 dragAxis: "xy",
-                bubbleSize: 54,
-                bgColor: "#ed4040",
-                pos: {right: 0, bottom: 100},
-                bubbleShadow: {
-                    radius: 14,
-                    color: "#333"
-                }
+                bgColor: Color.Transparent,
+                pos: {right: 0, bottom: 100}
             }){
                 this.customBubble()
             }

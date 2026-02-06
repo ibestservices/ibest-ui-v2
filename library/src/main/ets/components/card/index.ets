@@ -2,7 +2,7 @@ import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { getSizeByUnit } from '../../utils/utils'
-import { IBestIcon } from '../icon'
+import { IBestCell } from '../cell'
 import { IBestCardColor } from './color'
 import { AppStorageV2 } from '@kit.ArkUI'
 
@@ -28,10 +28,10 @@ export struct IBestCard{
      * 标题内边距
      */
     @Param titlePadding: Length | Padding | LocalizedPadding = {
-        left: this.baseStyle.spaceSm as string,
-        right: this.baseStyle.spaceSm as string,
-        top: 10,
-        bottom: 10
+        left: this.baseStyle.spaceSm,
+        right: this.baseStyle.spaceSm,
+        top: this.baseStyle.spaceXsm,
+        bottom: this.baseStyle.spaceXsm
     }
     /**
      * 标题是否可点击
@@ -62,6 +62,36 @@ export struct IBestCard{
      */
     @Param shadowColor: ResourceColor = IBestCardColor.shadowColor
     /**
+     * 左侧图标
+     * @since 2.2.6
+     */
+    @Param leftIcon: ResourceStr = ''
+    /**
+     * 左侧图标颜色
+     * @since 2.2.6
+     */
+    @Param leftIconColor: ResourceColor = ''
+    /**
+     * 左侧图标大小
+     * @since 2.2.6
+     */
+    @Param leftIconSize: IBestStringNumber = ''
+    /**
+     * 右侧内容
+     * @since 2.2.6
+     */
+    @Param value: ResourceStr = ''
+    /**
+     * 内容的文字颜色
+     * @since 2.2.6
+     */
+    @Param valueColor: ResourceColor = ''
+    /**
+     * 内容的文字大小
+     * @since 2.2.6
+     */
+    @Param valueFontSize: IBestStringNumber = ''
+    /**
      * 标题点击事件, titleClickable为true时生效
      */
     @Event onTitleClick: () => void = () => {}
@@ -80,27 +110,22 @@ export struct IBestCard{
     build() {
         Column(){
             if(this.title){
-                Row({space: this.baseStyle.spaceSm}){
-                    Text(this.title)
-                        .layoutWeight(1)
-                        .fontSize(getSizeByUnit(this.titleFontSize, true))
-                        .fontColor(this.titleFontColor)
-                        .maxLines(1)
-                        .textOverflow({overflow: TextOverflow.Ellipsis})
-                    if(this.titleClickable){
-                        IBestIcon({
-                            name: 'arrow',
-                            iconSize: this.titleFontSize,
-                            color: IBestCardColor.titleFontColor
-                        })
+                IBestCell({
+                    title: this.title,
+                    titleColor: this.titleFontColor,
+                    titleFontSize: this.titleFontSize,
+                    cellPadding: this.titlePadding,
+                    leftIcon: this.leftIcon,
+                    leftIconColor: this.leftIconColor,
+                    leftIconSize: this.leftIconSize,
+                    value: this.value,
+                    valueColor: this.valueColor,
+                    valueFontSize: this.valueFontSize,
+                    isLink: this.titleClickable,
+                    borderSizeType: "full",
+                    onCellClick: () => {
+                        this.onTitleClick()
                     }
-                }
-                .width(CONTAINER_SIZE.FULL)
-                .padding(getSizeByUnit(this.titlePadding))
-                .justifyContent(FlexAlign.SpaceBetween)
-                .border({width: {bottom: 1}, color: IBestCardColor.borderColor})
-                .onClick(() => {
-                    this.titleClickable && this.onTitleClick()
                 })
             }
             Column(){

@@ -53,7 +53,7 @@ export class IBestDropdownMenuContentType{
     index?: number = 0
     @Trace value?: IBestStringNumber = ''
     @Trace title?: ResourceStr = ''
-    @Trace options?: IBestDropdownMenuOption[] = []
+    @Trace options: IBestDropdownMenuOption[] = []
     maxHeight?: IBestStringNumber = ''
     @Trace disabled?: boolean = false
     defaultBuilder?: CustomBuilder
@@ -69,7 +69,7 @@ export class IBestDropdownMenuContentParams extends IBestDropdownMenuContentType
         if(val){
             this.value = val.value
             this.title = val.title
-            this.options = val.options
+            this.options = val.options || []
             this.maxHeight = val.maxHeight
             this.disabled = val.disabled
             this.defaultBuilder = val.defaultBuilder

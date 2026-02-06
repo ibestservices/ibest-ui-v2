@@ -118,6 +118,11 @@ export struct IBestSearch {
 	 */
 	@Param outPadding: Padding | Length | LocalizedPadding = ''
 	/**
+	 * 光标颜色
+	 * @since 1.1.2
+	 */
+	@Param caretColor: ResourceColor = ""
+	/**
 	 * 自定义右侧按钮
 	 */
 	@BuilderParam customRightButton: CustomBuilder
@@ -147,9 +152,7 @@ export struct IBestSearch {
 	@Event onRightButtonClick: () => void = () => {}
 	@Event $value: (value: string) => void = () => {}
 
-	// 是否聚焦
 	@Local isFocus: boolean = false
-	// 清除锁
 	@Local clearLock: boolean = false
 
 	clear(){
@@ -186,6 +189,7 @@ export struct IBestSearch {
 							size: this.textFontSize
 						})
 						.placeholderColor(this.placeholderColor)
+						.caretColor(this.caretColor)
 						.backgroundColor("transparent")
 						.enableAutoFill(false)
 						.defaultFocus(this.autoFocus)
@@ -258,8 +262,8 @@ export struct IBestSearch {
 		.padding(this.outPadding ? getSizeByUnit(this.outPadding) : {
 			left: this.baseStyle.spaceSm,
 			right: this.customRightButton || this.showRightButton ? 0 : this.baseStyle.spaceSm,
-			top: convertDimensionsWidthUnit(10),
-			bottom: convertDimensionsWidthUnit(10)
+			top: this.baseStyle.spaceXsm,
+			bottom: this.baseStyle.spaceXsm
 		})
 		.backgroundColor(this.outBgColor)
 		.enabled(!this.disabled)

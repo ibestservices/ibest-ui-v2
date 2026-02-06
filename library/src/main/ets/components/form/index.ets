@@ -18,10 +18,16 @@ import {
 	IBestFormValidateResult
 } from './index.type'
 import { CONTAINER_SIZE } from '../../theme-chalk/src/container'
-import { IBestStringNumber } from '../../model/Global.type'
+import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
+import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
+import { AppStorageV2 } from '@kit.ArkUI'
 
 @ComponentV2
 export struct IBestForm {
+	/**
+	 * 全局公共样式
+	 */
+	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	/**
      * form id 用于验证
      */
@@ -33,7 +39,7 @@ export struct IBestForm {
 	/**
 	 * 表单项间距
   	 */
-	@Param @Once space: IBestStringNumber = convertDimensionsWidthUnit(10)
+	@Param @Once space: IBestStringNumber = this.baseStyle.spaceXsm as string
 	/**
      * 文本宽度
      */

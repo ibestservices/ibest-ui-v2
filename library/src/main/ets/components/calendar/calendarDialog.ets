@@ -1,12 +1,18 @@
-import { IBestStringNumber } from '../../model/Global.type'
+import { IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { COLOR_TYPE, ColorType } from '../../theme-chalk/src/color.type'
+import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { convertDimensionsWidthUnit } from '../../utils/utils'
 import { IBestPopup } from '../popup'
 import { IBestCalendar } from './index'
 import { IBestCalendarConfirmResult, IBestCalendarDayItem, SelectedStyleType, SelectType, WeekDayType } from './index.type'
+import { AppStorageV2 } from '@kit.ArkUI'
 
 @ComponentV2
 export struct IBestCalendarDialog {
+	/**
+	 * 全局公共样式
+	 */
+	@Local baseStyle: IBestUIBaseStyleObjType = AppStorageV2.connect(IBestUIBaseStyle, IBestStorageKey.BASE_STYLE)!
 	/**
 	 * 弹框展示状态
 	 */
@@ -33,7 +39,7 @@ export struct IBestCalendarDialog {
 	/**
 	 * 弹框圆角半径
 	 */
-	@Param cornerRadius: Length | BorderRadiuses | LocalizedBorderRadiuses = convertDimensionsWidthUnit(10)
+	@Param cornerRadius: Length | BorderRadiuses | LocalizedBorderRadiuses = this.baseStyle.borderRadiusXl as string
 	/**
 	 * 单项宽度
 	 */

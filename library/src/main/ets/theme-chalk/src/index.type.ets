@@ -37,6 +37,7 @@ export class IBestUIBaseStyle implements IBestUIBaseStyleType {
 	@Trace spaceX: string
 	@Trace spaceXs: string
 	@Trace spaceSm: string
+	@Trace spaceXsm: string
 	@Trace spaceMd: string
 	@Trace spaceLg: string
 	@Trace spaceXl: string
@@ -48,6 +49,7 @@ export class IBestUIBaseStyle implements IBestUIBaseStyleType {
 	@Trace borderRadiusSm: string
 	@Trace borderRadiusMd: string
 	@Trace borderRadiusLg: string
+	@Trace borderRadiusXl: string
 	@Trace borderRadiusMax: string
 	@Trace lineHeightXs: string
 	@Trace lineHeightXsm: string
@@ -72,6 +74,7 @@ export class IBestUIBaseStyle implements IBestUIBaseStyleType {
 		this.spaceX = value.spaceX ?? convertDimensionsWidthUnit(SPACE.X)
 		this.spaceXs = value.spaceXs ?? convertDimensionsWidthUnit(SPACE.XS)
 		this.spaceSm = value.spaceSm ?? convertDimensionsWidthUnit(SPACE.SM)
+		this.spaceXsm = value.spaceXsm ?? convertDimensionsWidthUnit(SPACE.XSM)
 		this.spaceMd = value.spaceMd ?? convertDimensionsWidthUnit(SPACE.MD)
 		this.spaceLg = value.spaceLg ?? convertDimensionsWidthUnit(SPACE.LG)
 		this.spaceXl = value.spaceXl ?? convertDimensionsWidthUnit(SPACE.XL)
@@ -83,6 +86,7 @@ export class IBestUIBaseStyle implements IBestUIBaseStyleType {
 		this.borderRadiusSm = value.borderRadiusSm ?? convertDimensionsWidthUnit(BORDER_RADIUS.SM)
 		this.borderRadiusMd = value.borderRadiusMd ?? convertDimensionsWidthUnit(BORDER_RADIUS.MD)
 		this.borderRadiusLg = value.borderRadiusLg ?? convertDimensionsWidthUnit(BORDER_RADIUS.LG)
+		this.borderRadiusXl = value.borderRadiusXl ?? convertDimensionsWidthUnit(BORDER_RADIUS.XL)
 		this.borderRadiusMax = value.borderRadiusMax ?? convertDimensionsWidthUnit(BORDER_RADIUS.MAX)
 		this.lineHeightXs = value.lineHeightXs ?? convertDimensionsWidthUnit(LINE_HEIGHT.XS)
 		this.lineHeightXsm = value.lineHeightXsm ?? convertDimensionsWidthUnit(LINE_HEIGHT.XSM)
