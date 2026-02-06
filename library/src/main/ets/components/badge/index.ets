@@ -55,12 +55,12 @@ export struct IBestBadge {
 	 * 徽标水平方向偏移量
 	 * @since 1.1.2
 	 */
-	@Param xOffset: number = 0
+	@Param xOffset: Dimension = 0
 	/**
 	 * 徽标垂直方向偏移量
 	 * @since 1.1.2
 	 */
-	@Param yOffset: number = 0
+	@Param yOffset: Dimension = 0
 	/**
 	 * 自定义内容
 	 */

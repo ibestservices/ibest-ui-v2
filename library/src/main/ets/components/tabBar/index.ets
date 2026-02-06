@@ -80,7 +80,7 @@ export struct IBestTabBar{
     /**
      * 图标大小
      */
-    @Param iconSize: IBestStringNumber = 22
+    @Param iconSize: IBestStringNumber = convertDimensionsWidthUnit(22)
     /**
      * 文字大小
      */
@@ -104,7 +104,7 @@ export struct IBestTabBar{
     /**
      * 切换标签前的回调函数
      */
-    @Event beforeChange?: (name: IBestStringNumber) => IBestAwaitable = undefined
+    @Event beforeChange?: (active: IBestStringNumber) => IBestAwaitable = undefined
     /**
      * 切换事件
      */
