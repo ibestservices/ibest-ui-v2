@@ -217,7 +217,7 @@ export struct IBestFloatBubble{
 	 */
 	@Param @Require show: boolean = false
 	/**
-	 * 气泡尺寸
+	 * 气泡尺寸, 仅使用非自定义内容时有效
 	 */
 	@Param bubbleSize: IBestStringNumber = convertDimensionsWidthUnit(48)
 	/**
