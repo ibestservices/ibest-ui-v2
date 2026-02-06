@@ -96,7 +96,7 @@ export struct IBestTable {
 	/**
 	 * 自定义合计函数
 	 */
-	@Event summaryMethod?: (data: AnyType[], column: IBestTableColumnData) => IBestStringNumber[] = undefined
+	@Event summaryMethod?: (data: AnyType[], column: IBestTableColumnData[]) => IBestStringNumber[] = undefined
 	/**
 	 * 合并行列计算方法
 	 * @since 1.1.1
@@ -111,6 +111,7 @@ export struct IBestTable {
 	@Local columnList: IBestTableColumnInfo[] = []
 	@Local leftFixedColumnList: IBestTableColumnInfo[] = []
 	@Local rightFixedColumnList: IBestTableColumnInfo[] = []
+	@Local summaryList: IBestStringNumber[] = []
 	@Provider() rowHeightList: number[] = Array(this.data.length).fill(0)
 	@Provider() columnWidthList: number[] = []
 	@Local headerHeight: number = 0
@@ -195,8 +196,7 @@ export struct IBestTable {
 			stripe: this.stripe,
 			stripeBgColor: this.stripeBgColor,
 			cellBgColor: this.cellBgColor,
-			summaryMethod: this.summaryMethod,
-			sumText: this.sumText
+			summaryList: this.summaryList
 		})
 	}
 	@Styles ibestTableFixBodyStyle(){
@@ -218,13 +218,14 @@ export struct IBestTable {
 		if(column.parentProp){
 			this.insertDataByProp(this.columnList, column)
 		}else {
-			this.columnList.push(new IBestTableColumnInfo(column))
+			this.columnList.push(new IBestTableColumnInfo(column, this.columnList.length))
 		}
 		clearTimeout(this.timer)
 		this.timer = setTimeout(() => {
 			this.leftFixedColumnList = this.columnList.filter(e => (typeof e.fixed == 'boolean' && e.fixed || e.fixed == 'left') && !column.parentProp)
 			this.rightFixedColumnList = this.columnList.filter(e => typeof e.fixed == 'string' && e.fixed == 'right' && !column.parentProp)
 			this.columnWidthList = Array(this.columnList.length).fill(0)
+			this.getSummaryList()
 		}, 0)
 	}
 	insertDataByProp(list: IBestTableColumnInfo[], data: IBestTableColumnInfo) {
@@ -277,6 +278,55 @@ export struct IBestTable {
 	}
 	getColumnList(position: IBestCellPosition){
 		return position == 'left' ? this.leftFixedColumnList : position == 'right' ? this.rightFixedColumnList : this.columnList
+	}
+	getSummaryList(){
+		if(this.summaryMethod){
+			this.summaryList = this.summaryMethod(this.data, this.columnList.map(e => {
+				const obj: IBestTableColumnData = {
+					title: e.title,
+					prop: e.prop
+				}
+				return obj
+			}))
+		}else {
+			this.summaryList = this.getSummary()
+		}
+	}
+	getSummary(){
+		let sums: string[] = []
+		this.columnList.forEach((column, index) => {
+			if (index === 0) {
+				sums[index] = getResourceStr(this.sumText)
+				return
+			}
+			const values = this.data.map((item: AnyType) => Number(item[column.prop]))
+			const precisions: number[] = []
+			let notNumber = true
+			values.forEach((value) => {
+				if (!Number.isNaN(+value)) {
+					notNumber = false
+					const decimal = `${value}`.split('.')[1]
+					precisions.push(decimal ? decimal.length : 0)
+				}
+			})
+			const precision: number = Math.max(...precisions)
+			if (!notNumber) {
+				let sum = values.reduce((prev, curr) => {
+					const value = Number(curr)
+					if (!Number.isNaN(+value)) {
+						return Number.parseFloat(
+							(prev + curr).toFixed(Math.min(precision, 20))
+						)
+					} else {
+						return prev
+					}
+				}, 0)
+				sums[index] = sum.toString()
+			} else {
+				sums[index] = ''
+			}
+		})
+		return sums
 	}
 	@Computed
 	get bodyShow(){
@@ -665,8 +715,10 @@ struct BodyCellRow{
 struct FooterCellRow{
 	@Param @Require cellPosition: IBestCellPosition
 	@Param data: AnyType[] = []
+	@Param columnIndex?: number = undefined
 	@Param @Require columnList: IBestTableColumnInfo[] = []
 	@Param @Require isMultiLevelHeader: boolean = false
+	@Param summaryList: IBestStringNumber[] = []
 	@Param @Require bdColor: ResourceColor
 	@Param @Require headerBgColor: ResourceColor
 	@Param @Require headerFontSize: IBestStringNumber
@@ -678,48 +730,9 @@ struct FooterCellRow{
 	@Param @Require stripe: boolean
 	@Param @Require stripeBgColor: ResourceColor
 	@Param @Require cellBgColor: ResourceColor
-	@Param @Require sumText: ResourceStr
-	@Param summaryList: IBestStringNumber[] = []
-	@Event summaryMethod?: (data: AnyType[], column: IBestTableColumnData) => IBestStringNumber[]
 
 	@Local rowHeight: number = 0
 
-	getSummary(){
-		let sums: string[] = []
-		this.columnList.forEach((column, index) => {
-			if (index === 0) {
-				sums[index] = getResourceStr(this.sumText)
-				return
-			}
-			const values = this.data.map((item: AnyType) => Number(item[column.prop]))
-			const precisions: number[] = []
-			let notNumber = true
-			values.forEach((value) => {
-				if (!Number.isNaN(+value)) {
-					notNumber = false
-					const decimal = `${value}`.split('.')[1]
-					precisions.push(decimal ? decimal.length : 0)
-				}
-			})
-			const precision: number = Math.max(...precisions)
-			if (!notNumber) {
-				let sum = values.reduce((prev, curr) => {
-					const value = Number(curr)
-					if (!Number.isNaN(+value)) {
-						return Number.parseFloat(
-							(prev + curr).toFixed(Math.min(precision, 20))
-						)
-					} else {
-						return prev
-					}
-				}, 0)
-				sums[index] = sum.toString()
-			} else {
-				sums[index] = ''
-			}
-		})
-		return sums
-	}
 	build() {
 		Row(){
 			ForEach(this.columnList, (column: IBestTableColumnInfo, index: number) => {
@@ -727,8 +740,9 @@ struct FooterCellRow{
 					cellType: 'footer',
 					pos: this.cellPosition,
 					column: column,
-					columnIndex: index,
+					columnIndex: column.index ?? index,
 					rowHeight: this.rowHeight,
+					summaryList: this.summaryList,
 					bdColor: this.bdColor,
 					cellFontSize: this.cellFontSize,
 					cellPadding: this.cellPadding,
@@ -739,9 +753,7 @@ struct FooterCellRow{
 					showBorder: this.showBorder,
 					stripe: this.stripe,
 					stripeBgColor: this.stripeBgColor,
-					cellBgColor: this.cellBgColor,
-					summaryList: this.summaryList.length ? this.summaryList : this.summaryMethod ? this.summaryMethod(this.data, column) : this.getSummary(),
-					sumText: this.sumText
+					cellBgColor: this.cellBgColor
 				})
 			})
 		}
@@ -764,6 +776,7 @@ struct TableCell{
 	@Param @Require column: IBestTableColumnInfo
 	@Param @Require columnIndex: number
 	@Param isMultiLevelHeader: boolean = false
+	@Param summaryList: IBestStringNumber[] = []
 	@Param @Require headerBgColor: ResourceColor
 	@Param @Require headerFontSize: IBestStringNumber
 	@Param @Require headerTextColor: ResourceColor
@@ -775,8 +788,6 @@ struct TableCell{
 	@Param @Require stripe: boolean
 	@Param @Require stripeBgColor: ResourceColor
 	@Param @Require cellBgColor: ResourceColor
-	@Param summaryList: IBestStringNumber[] = []
-	@Param sumText: ResourceStr = ''
 	@Param @Require rowHeight: number
 	@Consumer() rowHeightList: number[] = []
 	@Consumer() columnWidthList: number[] = []
@@ -944,8 +955,10 @@ struct TableCell{
 				}else {
 					FooterCellRow({
 						cellPosition: this.pos,
+						columnIndex: this.columnIndex,
 						columnList: this.column.children,
 						isMultiLevelHeader: true,
+						summaryList: this.summaryList,
 						headerBgColor: this.headerBgColor,
 						headerFontSize: this.headerFontSize,
 						headerTextColor: this.headerTextColor,
@@ -956,9 +969,7 @@ struct TableCell{
 						bdColor: this.bdColor,
 						stripe: this.stripe,
 						stripeBgColor: this.stripeBgColor,
-						cellBgColor: this.cellBgColor,
-						summaryList: this.summaryList,
-						sumText: this.sumText
+						cellBgColor: this.cellBgColor
 					})
 				}
 			}

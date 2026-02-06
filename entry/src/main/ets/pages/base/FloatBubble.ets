@@ -42,7 +42,7 @@ struct FloatBubblePage {
     @Local group: string = "bubbleGroup"
     @Local active: string = "1"
     @Local value: string = ''
-    @State isOpen: boolean = false
+    @Local isOpen: boolean = false
     @Builder customBubble(){
         Stack({alignContent: Alignment.Bottom}){
             Column()

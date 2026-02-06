@@ -37,6 +37,10 @@ export class IBestTableColumnData {
 @ObservedV2
 class IBestTableColumnType extends IBestTableColumnData {
 	/**
+	 * 列索引
+	 */
+	index?: number = undefined
+	/**
 	 * 列是否显示
 	 */
 	@Trace show?: boolean = true
@@ -82,9 +86,10 @@ class IBestTableColumnType extends IBestTableColumnData {
 	cellBuilder?: (row: AnyType, column: IBestTableColumnData, rowIndex: number, columnIndex: number) => void
 }
 export class IBestTableColumnInfo extends IBestTableColumnType {
-	constructor(value?: IBestTableColumnType) {
+	constructor(value?: IBestTableColumnType, index?: number) {
 		super()
 		if(value){
+			this.index = index
 			this.show = value.show ?? true
 			this.title = value.title ?? ""
 			this.prop = value.prop ?? ""
