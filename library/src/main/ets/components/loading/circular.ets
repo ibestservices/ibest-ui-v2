@@ -56,11 +56,11 @@ export struct IBestLoadingCircular {
 	private uiContext: UIContext = this.getUIContext()
 	aboutToAppear() {
 		this.uniId = this.getUniqueId()
-		setTimeout(() => {
+		/*setTimeout(() => {
 			let width = getComponentsInfo(this.uiContext, `ibest_circle_${this.uniId}`).width
 			this.maxPerimeter = Math.floor(Math.PI * (width + (this.ibestGlobalConfig.unit == "vp" ? 20 : 0)))
 			this.strokeDashArray = new Point(0, this.maxPerimeter)
-		}, 50)
+		}, 50)*/
 	}
 	keyframeAnimateTo() {
 		this.uiContext?.keyframeAnimateTo({ iterations: -1 }, [
@@ -120,5 +120,10 @@ export struct IBestLoadingCircular {
 		.aspectRatio(1)
 		.padding(1)
 		.id(`ibest_circle_${this.uniId}`)
+		.onAppear(() => {
+			let width = getComponentsInfo(this.uiContext, `ibest_circle_${this.uniId}`).width
+			this.maxPerimeter = Math.floor(Math.PI * (width + (this.ibestGlobalConfig.unit == "vp" ? 20 : 0)))
+			this.strokeDashArray = new Point(0, this.maxPerimeter)
+		})
 	}
 }
