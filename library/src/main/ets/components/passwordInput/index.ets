@@ -118,6 +118,11 @@ export struct IBestPasswordInput {
 	 */
 	@Param highlightType: IBestInputHighlightType = "border"
 	/**
+	 * 边框宽度, 仅有间距时有效
+	 * @since 1.1.3
+	 */
+	@Param bdWidth: Length | EdgeWidths | LocalizedEdgeWidths = 1
+	/**
 	 * 区域点击
 	 */
 	@Event onFieldClick: () => void = () => {}
@@ -220,6 +225,7 @@ export struct IBestPasswordInput {
 							highlightType: this.highlightType,
 							highlightColor: this.highlightColor,
 							isShowBorder: this.isShowBorder,
+							bdWidth: this.bdWidth,
 							bdColor: this.bdColor,
 							cellBgColor: this.cellBgColor,
 							cellTextColor: this.cellTextColor,
@@ -266,6 +272,7 @@ struct InputField {
 	@Param @Require highlightType: IBestInputHighlightType
 	@Param @Require highlightColor: ResourceColor
 	@Param @Require isShowBorder: boolean
+	@Param @Require bdWidth: Length | EdgeWidths | LocalizedEdgeWidths
 	@Param @Require bdColor: ResourceColor
 	@Param @Require cellBgColor: ResourceColor
 	@Param @Require cellTextColor: ResourceColor
@@ -325,7 +332,7 @@ struct InputField {
 		.justifyContent(FlexAlign.Center)
 		.backgroundColor(this.cellBgColor)
 		.border(this.space ? {
-			width: this.isShowBorder ? 1 : 0,
+			width: this.isShowBorder ? this.bdWidth : 0,
 			color: this.getIsFocus() ? this.highlightType == 'border' ? this.highlightColor || this.baseStyle.primary : '' : this.bdColor
 		} : {
 			width: { left: this.index > 0 && this.isShowBorder ? 1 : 0 },

@@ -92,6 +92,11 @@ export struct IBestCarInput {
 	 */
 	@Param fontSize: IBestStringNumber = this.baseStyle.fontSizeXl as string
 	/**
+	 * 边框宽度, 仅有间距时有效
+	 * @since 1.1.3
+	 */
+	@Param bdWidth: Length | EdgeWidths | LocalizedEdgeWidths = 1
+	/**
 	 * 完成
 	 */
 	onConfirm: (value: string) => void = () => {}
@@ -171,6 +176,7 @@ export struct IBestCarInput {
 							highlightType: this.highlightType,
 							highlightColor: this.highlightColor,
 							isShowBorder: this.isShowBorder,
+							bdWidth: this.bdWidth,
 							bdColor: this.bdColor,
 							bgColor: this.bgColor,
 							textColor: this.textColor,
@@ -210,6 +216,7 @@ struct InputField {
 	@Param @Require highlightType: IBestInputHighlightType
 	@Param @Require highlightColor: ResourceColor
 	@Param @Require isShowBorder: boolean
+	@Param @Require bdWidth: Length | EdgeWidths | LocalizedEdgeWidths
 	@Param @Require bdColor: ResourceColor
 	@Param @Require bgColor: ResourceColor
 	@Param @Require textColor: ResourceColor
@@ -275,7 +282,7 @@ struct InputField {
 		.justifyContent(FlexAlign.Center)
 		.backgroundColor(this.bgColor)
 		.border(this.space ? {
-			width: this.isShowBorder ? 1 : 0,
+			width: this.isShowBorder ? this.bdWidth : 0,
 			color: this.getIsFocus() ? this.highlightType == 'border' ? this.highlightColor || this.baseStyle.primary : '' : this.bdColor
 		} : {
 			width: { left: this.index > 0 && this.isShowBorder ? 1 : 0 },

@@ -117,7 +117,7 @@ struct PullRefreshPage {
 	}
 
 	onRefresh(direction: string){
-		console.log('下拉刷新', direction)
+		console.log('刷新', direction)
 		IBestToast.show(direction == 'pull' ? '下拉' : '上滑')
 		// 此处模拟请求 延时关闭
 		setTimeout(() => {
@@ -131,12 +131,7 @@ struct PullRefreshPage {
 			IBestTabs({
 				tabsList: this.tabsList,
 				currentName: this.currentTab!!,
-				tabWidthType: "auto",
-				onChange: (name: string | number) => {
-					if(name == 4){
-						this.isLoading = true
-					}
-				}
+				tabWidthType: "auto"
 			})
 			Column(){
 				if(this.currentTab == 0){
@@ -178,7 +173,11 @@ struct PullRefreshPage {
 					IBestPullRefresh({
 						loading: this.isLoading!!,
 						scroller: this.listScroller,
+						autoDirection: 'slideUp',
 						defaultContent: (): void => this.customContent(0),
+						onReady: () => {
+							this.isLoading = true
+						},
 						onRefresh: (direction): void => this.onRefresh(direction)
 					})
 				}

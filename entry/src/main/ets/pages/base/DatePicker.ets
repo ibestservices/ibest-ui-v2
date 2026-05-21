@@ -1,4 +1,4 @@
-import { IBestDatePicker, IBestPickerOption, IBestToast } from '@ibestservices/ibest-ui-v2'
+import { IBestButton, IBestDatePicker, IBestPickerOption, IBestToast } from '@ibestservices/ibest-ui-v2'
 import ComponentShowContainer from '../../components/ComponentShowContainer'
 import { modeColor, SPACE } from '../../assets/styles/BaseStyle'
 import CustomNavBar from '../../components/CustomNavBar'
@@ -19,6 +19,7 @@ struct DatePickerPage {
 	@Local selectValue4: string[] = []
 	@Local minDate: Date = dayjs().subtract(5, 'year').toDate()
 	@Local maxDate: Date = dayjs().add(5, 'year').toDate()
+	@Local showLunar: boolean = true
 	filter(type: string, options: IBestPickerOption[]): IBestPickerOption[]{
 		if (type === 'month') {
 			return options.filter((option) => Number(option.value) % 6 === 0)
@@ -97,18 +98,33 @@ struct DatePickerPage {
 						})
 					}
 				}
-				ListItem(){
+				ListItem() {
 					ComponentShowContainer({title: "显示农历", titlePaddingLeft: SPACE.SM, card: true}){
+						IBestButton({
+							text: "切换农历",
+							type: "primary",
+							onBtnClick: () => {
+								this.showLunar = !this.showLunar
+							}
+						})
 						IBestDatePicker({
 							title: "选择年月日",
 							value: this.selectValue4!!,
-							lunar: true,
+							lunar: this.showLunar,
 							showUnit: true,
 							onConfirm: (value) => {
-								IBestToast.show(value.year + "年" + value.lunarMonth + "月" + value.lunarDay)
+								if(this.showLunar){
+									IBestToast.show(value.year + "年" + value.lunarMonth + "月" + value.lunarDay)
+								}else {
+									IBestToast.show(value.dateStr)
+								}
 							},
 							onChange: (value) => {
-								IBestToast.show(value.year + "年" + value.lunarMonth + "月" + value.lunarDay)
+								if(this.showLunar){
+									IBestToast.show(value.year + "年" + value.lunarMonth + "月" + value.lunarDay)
+								}else {
+									IBestToast.show(value.dateStr)
+								}
 							}
 						})
 					}

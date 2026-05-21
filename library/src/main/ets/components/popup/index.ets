@@ -361,28 +361,10 @@ export struct IBestPopup{
 	 */
 	@Event onClose: () => void = () => {}
 	@Event $visible: (visible: boolean) => void = () => {}
+
 	private baseController: PopupBaseController = new PopupBaseController()
 	private promptAction = this.getUIContext().getPromptAction()
 	private dialogId: number = 0
-	@Monitor("visible") async visibleChange(){
-		if(this.visible){
-			this.open()
-		}else{
-			if(this.popupAlign != 'center'){
-				this.baseController.hide()
-				await sleep(hideDuration)
-			}
-			this.promptAction.closeCustomDialog(this.dialogId)
-		}
-	}
-	@Monitor("isLandscape.value") landScapeChange(){
-		if(this.visible){
-			this.$visible(false)
-			setTimeout(() => {
-				this.$visible(true)
-			}, hideDuration * 2)
-		}
-	}
 	@Builder defaultContentBuilder() {
 		IBestPopupBaseContent({
 			popupAlign: this.popupAlign,
@@ -410,6 +392,28 @@ export struct IBestPopup{
 			},
 			close: (): void => this.close()
 		})
+	}
+	aboutToAppear(){
+		this.visibleChange()
+	}
+	@Monitor("visible") async visibleChange(){
+		if(this.visible){
+			this.open()
+		}else{
+			if(this.popupAlign != 'center'){
+				this.baseController.hide()
+				await sleep(hideDuration)
+			}
+			this.promptAction.closeCustomDialog(this.dialogId)
+		}
+	}
+	@Monitor("isLandscape.value") landScapeChange(){
+		if(this.visible){
+			this.$visible(false)
+			setTimeout(() => {
+				this.$visible(true)
+			}, hideDuration * 2)
+		}
 	}
 	getAlignment() {
 		switch (this.popupAlign) {
@@ -458,7 +462,6 @@ export struct IBestPopup{
 			}
 		})
 	}
-	// 关闭弹框
 	close() {
 		this.$visible(false)
 	}

@@ -208,9 +208,6 @@ export struct IBestTabs{
     aboutToAppear(): void {
         this.uniId = this.getUniqueId()
     }
-    onDidBuild(): void {
-        this.initSize()
-    }
     @Monitor("isLandscape.value")
     initSize() {
         if(this.tabsList.length){
@@ -358,6 +355,9 @@ export struct IBestTabs{
         .opacity(this.tabsList.length ? 1 : 0)
         .animation({duration: this.baseStyle.animationDuration as number})
         .clip(true)
+        .onAreaChange(() => {
+            this.initSize()
+        })
     }
 }
 

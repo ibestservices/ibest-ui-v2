@@ -156,7 +156,7 @@ export struct IBestSwitch {
 					} else if (this.loading && this.switchBarSize) {
 						IBestLoading({
 							loadingSize: this.switchBarSize / 1.5,
-							loadingColor: this.value ? this.loadingActiveColor || this.getActiveColor() : this.loadingInactiveColor || this.getActiveColor()
+							loadingColor: this.getBooleanValue() ? this.loadingActiveColor || this.getActiveColor() : this.loadingInactiveColor || this.getActiveColor()
 						})
 					}
 				}
@@ -172,7 +172,7 @@ export struct IBestSwitch {
 				})
 				.backgroundColor(IBestSwitchColor.white)
 				.translate({
-					x: this.value ? this.transDistance : 0
+					x: this.getBooleanValue() ? this.transDistance : 0
 				})
 				.animation({
 					duration: this.baseStyle.animationDuration as number

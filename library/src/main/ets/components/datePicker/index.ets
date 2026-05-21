@@ -7,7 +7,7 @@ import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../mod
 import { IBestUIBaseStyle, IBestUIBaseStyleObjType } from '../../theme-chalk/src/index.type'
 import { AppStorageV2 } from '@kit.ArkUI'
 import dateUtils from '../../utils/dateUtils'
-import lunar from '../../utils/lunar'
+import lunar, { Lunar, LUNAR_DAY_NAMES, LUNAR_MONTH_NAMES } from '../../utils/lunar'
 
 @ComponentV2
 export struct IBestDatePicker {
@@ -133,21 +133,9 @@ export struct IBestDatePicker {
 	@Local uniId: number = 0
 	@Local listType: DatePickerColumnType[] = ["year", "month", "day"]
 	@Local options: IBestPickerOption[][] = []
-	@Local modelValue: string[] = []
-	@Monitor("value") valueChange(){
-		if(this.value.length){
-			this.modelValue = this.value
-		}
-	}
-	@Monitor("modelValue") modelValueChange(){
-		if(this.modelValue.length){
-			this.$value(this.modelValue)
-		}
-	}
 
 	aboutToAppear(): void {
 		this.uniId = this.getUniqueId()
-		this.modelValue = this.value
 		this.init()
 		if(this.groupId){
 			ibestEmitter.on(getEventName(COMPONENT_NAME, DATE_PICKER_EVENT_NAME.COLUMN_CHANGE, this.groupId),this.uniId, (uniId: number, selectedValues: string[]): void => this.handleGroupChange(uniId, selectedValues))
@@ -158,28 +146,51 @@ export struct IBestDatePicker {
 			ibestEmitter.off(getEventName(COMPONENT_NAME, DATE_PICKER_EVENT_NAME.COLUMN_CHANGE, this.groupId), this.uniId)
 		}
 	}
-	// 初始化
 	@Monitor("language.value")
 	init(){
-		let arr: IBestPickerOption[][] = []
 		if(!this.isShowDay){
 			this.listType = ["year", "month"]
 		}
-		this.listType.forEach((item) => {
-			let list = item == "year" ? this.getYearsList() : item == "month" ? this.getMonthsList() : this.getDaysList()
-			arr.push(list)
+		this.options = []
+		this.listType.forEach(item => {
+			switch(item){
+				case "year":
+					this.options.push(this.getYearsList())
+					break
+				case "month":
+					this.options.push(this.getMonthsList())
+					if(this.value.length && this.options[1].findIndex(item => item.value === this.value[1]) == -1){
+					 	this.value[1] = this.options[1][0].value.toString()
+					}
+					break
+				case "day":
+					this.options.push(this.getDaysList())
+					if(this.value.length && this.options[2].findIndex(item => item.value === this.value[2]) == -1){
+						 this.value[2] = this.options[2][0].value.toString()
+					}
+					break
+			}
 		})
-		this.options = arr
 	}
-	// 是否是最小年份
+	@Monitor("lunar")
+	lunarChange(){
+		if(this.value.length){
+			if(this.lunar){
+				const lunarDate = lunar(new Date(this.value.join("-")))
+				this.$value([this.value[0], lunarDate.getMonthInChinese(), lunarDate.getDayInChinese()])
+			}else{
+				const date = this.lunarToGregorian()
+				this.$value([this.value[0], (date.getMonth() + 1).toString(), date.getDate().toString()])
+			}
+		}
+		setTimeout(() => {
+			this.init()
+		}, 100)
+	}
 	isMinYear = (year: number): boolean => year === this.minDate.getFullYear()
-	// 是否是最大年份
 	isMaxYear = (year: number): boolean => year === this.maxDate.getFullYear()
-	// 是否是最小月份
 	isMinMonth = (month: number): boolean => month === this.minDate.getMonth() + 1
-	// 是否是最大月份
 	isMaxMonth = (month: number): boolean => month === this.maxDate.getMonth() + 1
-	// 格式化数值
 	formatValue(value: number): string {
 		return value < 10 ? "0" + value : value.toString()
 	}
@@ -187,7 +198,7 @@ export struct IBestDatePicker {
 		let minDate = this.minDate
 		let columnsType = this.listType
 		const index = columnsType.indexOf(type)
-		const value = this.modelValue[index]
+		const value = this.value[index]
 		if (value) {
 			return Number(value)
 		}
@@ -200,10 +211,9 @@ export struct IBestDatePicker {
 				return minDate.getDate()
 		}
 	}
-	// 获取年份列表
 	getYearsList(): IBestPickerOption[] {
-		let yearsList: IBestPickerOption[] = []
-		let unit = this.showUnit ? getResourceStr($r("app.string.ibest_year")) : ""
+		const yearsList: IBestPickerOption[] = []
+		const unit = this.showUnit ? getResourceStr($r("app.string.ibest_year")) : ""
 		for(let i = this.minDate.getFullYear(); i <= this.maxDate.getFullYear(); i++){
 			yearsList.push({
 				value: i.toString(),
@@ -212,88 +222,140 @@ export struct IBestDatePicker {
 		}
 		return this.filter("year", yearsList)
 	}
-	// 获取月份列表
 	getMonthsList(): IBestPickerOption[] {
-		let monthsList: IBestPickerOption[] = []
-		let year = this.getValue("year")
-		let minMonth = this.isMinYear(year) ? this.minDate.getMonth() + 1 : 1
-		let maxMonth = this.isMaxYear(year) ? this.maxDate.getMonth() + 1 : 12
-		let unit = this.showUnit ? getResourceStr($r("app.string.ibest_month")) : ""
-		for(let i = minMonth; i <= maxMonth; i++){
-			let value = this.formatValue(i)
-			let text = ''
-			if(this.lunar){
-				text = lunar(new Date(year, i, 1)).getMonthInChinese()
-			}else {
-				text = this.formatValue(i)
+		const monthsList: IBestPickerOption[] = []
+		const year = this.getValue("year")
+		const minMonth = this.isMinYear(year) ? this.minDate.getMonth() + 1 : 1
+		const maxMonth = this.isMaxYear(year) ? this.maxDate.getMonth() + 1 : 12
+		const unit = this.showUnit ? getResourceStr($r("app.string.ibest_month")) : ""
+		if(this.lunar){
+			let arr: string[] = []
+			for(let i = minMonth; i <= maxMonth; i++){
+				const minDay = this.isMinYear(year) && this.isMinMonth(i) ? this.minDate.getDate() : 1
+				const maxDay = this.isMaxYear(year) && this.isMaxMonth(i) ? this.maxDate.getDate() : dateUtils(year+"-"+i).daysInMonth()
+				const minMonth = lunar(dateUtils(year+"-"+i+"-"+minDay).toDate()).getMonthInChinese()
+				const maxMonth = lunar(dateUtils(year+"-"+i+"-"+maxDay).toDate()).getMonthInChinese()
+				if(!arr.includes(minMonth)){
+					arr.push(minMonth)
+				}
+				if(!arr.includes(maxMonth)){
+					arr.push(maxMonth)
+				}
 			}
-			monthsList.push({
-				value,
-				text: text + unit
-			})
+			for(let i = 0; i < arr.length; i++){
+				monthsList.push({
+					value: arr[i],
+					text: arr[i] + unit
+				})
+			}
+		}else {
+			for(let i = minMonth; i <= maxMonth; i++){
+				monthsList.push({
+					value: this.formatValue(i),
+					text: this.formatValue(i) + unit
+				})
+			}
 		}
 		return this.filter("month", monthsList)
 	}
-	// 获取日期列表
 	getDaysList(): IBestPickerOption[] {
-		let daysList: IBestPickerOption[] = []
-		let year = this.getValue("year")
-		let month = this.getValue("month")
-		let minDay = this.isMinYear(year) && this.isMinMonth(month) ? this.minDate.getDate() : 1
-		let maxDay = this.isMaxYear(year) && this.isMaxMonth(month) ? this.maxDate.getDate() : dateUtils(year+"-"+month).daysInMonth()
-		let unit = this.showUnit ? getResourceStr($r("app.string.ibest_day")) : ""
-		for(let i = minDay; i <= maxDay; i++){
-			let value = this.formatValue(i)
-			let text = ''
-			if(this.lunar){
-				text = lunar(dateUtils(year+"-"+month+"-"+i).toDate()).getDayInChinese()
-			}else{
-				text = this.formatValue(i) + unit
+		const daysList: IBestPickerOption[] = []
+		const year = this.getValue("year")
+		const unit = this.showUnit ? getResourceStr($r("app.string.ibest_day")) : ""
+		if(this.lunar){
+			const monthVal = this.value[1]
+			if(monthVal){
+				const monthArr = monthVal.split("")
+				const lunarMonth = monthArr.length > 1 ? monthArr[1] : monthArr[0]
+				const monthIndex = LUNAR_MONTH_NAMES.indexOf(lunarMonth) + 1
+				const dayIndex = LUNAR_DAY_NAMES.indexOf(this.value[2]) + 1
+				const lunarDate = new Lunar(Number(this.value[0]), monthIndex, dayIndex, monthArr.includes("闰"))
+				const days = lunarDate.getLunarMonthDays()
+				const minDay = this.isMinYear(year) && lunarMonth == this.options[1][0].value ? lunar(this.minDate).getDay()-1 : 0
+				const maxDay = this.isMaxYear(year) && lunarMonth == this.options[1][this.options[1].length-1].value ? lunar(this.maxDate).getDay()-1 : days
+				for(let i = minDay; i < maxDay; i++){
+					daysList.push({
+						value: LUNAR_DAY_NAMES[i],
+						text: LUNAR_DAY_NAMES[i]
+					})
+				}
+			}else {
+				const month = this.getValue("month")
+				const minDay = this.isMinYear(year) && this.isMinMonth(month) ? this.minDate.getDate() : 1
+				const maxDay = this.isMaxYear(year) && this.isMaxMonth(month) ? this.maxDate.getDate() : dateUtils(year+"-"+month).daysInMonth()
+				for(let i = minDay; i <= maxDay; i++){
+					const lunarDay = lunar(dateUtils(year+"-"+month+"-"+i).toDate()).getDayInChinese()
+					daysList.push({
+						value: lunarDay,
+						text: lunarDay
+					})
+				}
 			}
-			daysList.push({
-				value,
-				text: text
-			})
+		}else {
+			const month = this.getValue("month")
+			const minDay = this.isMinYear(year) && this.isMinMonth(month) ? this.minDate.getDate() : 1
+			const maxDay = this.isMaxYear(year) && this.isMaxMonth(month) ? this.maxDate.getDate() : dateUtils(year+"-"+month).daysInMonth()
+			for(let i = minDay; i <= maxDay; i++){
+				daysList.push({
+					value: this.formatValue(i),
+					text: this.formatValue(i) + unit
+				})
+			}
 		}
 		return this.filter("day", daysList)
 	}
-	// 列变化
+	lunarToGregorian(): Date {
+		const monthArr = this.value[1].split("")
+		const monthIndex = LUNAR_MONTH_NAMES.indexOf(monthArr.length > 1 ? monthArr[1] : monthArr[0]) + 1
+		const dayIndex = LUNAR_DAY_NAMES.indexOf(this.value[2]) + 1
+		return new Lunar(Number(this.value[0]), monthIndex, dayIndex, monthArr.includes("闰")).toDate()
+	}
 	changeColumn(columnIndex: number){
 		if(columnIndex < this.options.length - 1){
 			this.init()
 		}
 		this.onChange(this.getResult())
 		if(this.groupId) {
-			ibestEmitter.emit(getEventName(COMPONENT_NAME, DATE_PICKER_EVENT_NAME.COLUMN_CHANGE, this.groupId), this.uniId, this.modelValue)
+			ibestEmitter.emit(getEventName(COMPONENT_NAME, DATE_PICKER_EVENT_NAME.COLUMN_CHANGE, this.groupId), this.uniId, this.value)
 		}
 	}
-	// 获取组件结果
 	getResult(): IBestDatePickerResult {
-		let dateStr = this.modelValue.join("-")
-		let date = dateUtils(dateStr).toDate()
-		let result: IBestDatePickerResult = {
-			date,
-			dateStr,
-			year: this.modelValue[0],
-			month: this.modelValue[1]
-		}
-		if(this.isShowDay){
-			result.day = this.modelValue[2]
+		const result: IBestDatePickerResult = {
+			date: new Date(),
+			dateStr: '',
+			year: this.value[0],
+			month: '',
+			day: '',
+			lunarMonth: '',
+			lunarDay: ''
 		}
 		if(this.lunar){
+			const date = this.lunarToGregorian()
+			result.date = date
+			result.dateStr = dateUtils(date).format()
+			result.month = (date.getMonth() + 1).toString()
+			result.day = date.getDate().toString()
+			result.lunarMonth = this.value[1]
+			result.lunarDay = this.value[2]
+		}else {
+			const dateStr = this.value.join("-")
+			const date = dateUtils(dateStr).toDate()
 			const lunarDate = lunar(date)
+			result.date = date
+			result.dateStr = dateStr
+			result.month = this.value[1]
+			result.day = this.value[2]
 			result.lunarMonth = lunarDate.getMonthInChinese()
 			result.lunarDay = lunarDate.getDayInChinese()
 		}
 		return result
 	}
-	// 处理同组日期变化
 	handleGroupChange(uniId: number, selectedValues: string[]) {
 		if(this.uniId > uniId){
 			let selectDate = dateUtils(selectedValues.join("-")).toDate()
 			this.minDate = selectDate
 			if(selectDate > this.maxDate || selectDate < this.minDate){
-				this.modelValue = selectedValues
+				this.$value(selectedValues)
 			}
 			this.init()
 		}
@@ -302,7 +364,7 @@ export struct IBestDatePicker {
 	build() {
 		IBestPicker({
 			groupId: this.groupId,
-			value: this.modelValue!!,
+			value: this.value,
 			title: this.title,
 			options: this.options,
 			showToolBar: !this.groupId && this.showToolBar,
@@ -320,6 +382,7 @@ export struct IBestDatePicker {
 			selectedFontSize: this.selectedFontSize,
 			selectedFontColor: this.selectedFontColor,
 			selectedFontWeight: this.selectedFontWeight,
+			$value: (value): void => this.$value(value as string[]),
 			onConfirm: () => {
 				this.onConfirm(this.getResult())
 			},

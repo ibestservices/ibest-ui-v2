@@ -63,6 +63,14 @@ struct CarInputPage {
 							textColor: "#fff",
 							highlightType: "shadow"
 						})
+						IBestCarInput({
+							value: this.value3!!,
+							space: 6,
+							bdWidth: { bottom: 1 },
+							bdColor: '#999',
+							bgColor: Color.Transparent,
+							radius: 0
+						})
 					}
 				}
 			}
