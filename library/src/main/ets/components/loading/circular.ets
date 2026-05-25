@@ -113,7 +113,7 @@ export struct IBestLoadingCircular {
 		.padding(1)
 		.onAreaChange((oldVal: Area, newVal: Area) => {
 			if(newVal.width != oldVal.width){
-				this.maxPerimeter = Math.floor(Math.PI * (newVal.width as number + (this.globalConfig.unit == "vp" ? 20 : 0)))
+				this.maxPerimeter = Math.floor(Math.PI * (newVal.width as number + (this.ibestGlobalConfig.unit == "vp" ? 20 : 0)))
 				this.strokeDashArray = new Point(0, this.maxPerimeter)
 			}
 		})
