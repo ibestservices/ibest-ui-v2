@@ -63,32 +63,32 @@ export struct IBestCard{
     @Param shadowColor: ResourceColor = IBestCardColor.shadowColor
     /**
      * 左侧图标
-     * @since 2.2.6
+     * @since 1.1.2
      */
     @Param leftIcon: ResourceStr = ''
     /**
      * 左侧图标颜色
-     * @since 2.2.6
+     * @since 1.1.2
      */
     @Param leftIconColor: ResourceColor = ''
     /**
      * 左侧图标大小
-     * @since 2.2.6
+     * @since 1.1.2
      */
     @Param leftIconSize: IBestStringNumber = ''
     /**
      * 右侧内容
-     * @since 2.2.6
+     * @since 1.1.2
      */
     @Param value: ResourceStr = ''
     /**
      * 内容的文字颜色
-     * @since 2.2.6
+     * @since 1.1.2
      */
     @Param valueColor: ResourceColor = ''
     /**
      * 内容的文字大小
-     * @since 2.2.6
+     * @since 1.1.2
      */
     @Param valueFontSize: IBestStringNumber = ''
     /**

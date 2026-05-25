@@ -318,7 +318,7 @@ export struct IBestField{
 	@Param inputFilter: ResourceStr = ''
 	/**
 	 * 点击后缀时是否聚焦
-	 * @since 2.2.7
+	 * @since 1.1.3
 	 */
 	@Param focusOnClickSuffix: boolean = false
     /**
