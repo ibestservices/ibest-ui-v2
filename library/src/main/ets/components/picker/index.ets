@@ -416,8 +416,10 @@ export struct IBestPicker{
 		}
 	}
 	// 初始化多列位置
+	@Monitor("options", "value")
 	initOffset(){
-		if(this.value.length) {
+		const value: IBestStringNumber[] = this.value.length ? this.value : Array(this.options.length).fill(0)
+		if(value.length) {
 			this.isReady = false
 			this.columnType = this.getColumnType()
 			if (this.columnType == "cascade") {
@@ -425,10 +427,10 @@ export struct IBestPicker{
 			} else {
 				let options = this.options as IBestPickerOption[][]
 				if (!this.offsetList.length) {
-					this.offsetList = Array(this.value.length).fill(0)
+					this.offsetList = Array(value.length).fill(0)
 				}
 				options.forEach((item, index) => {
-					let i = item.findIndex(e => e.value == this.value[index])
+					let i = item.findIndex(e => e.value == value[index])
 					this.updateOffsetByIndex(index, i > -1 ? i : 0)
 				})
 			}

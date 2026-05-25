@@ -17,7 +17,6 @@ import { IBestCalendarColor } from './color'
 import { IBestIcon } from '../icon'
 import { IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../../model/Global.type'
 import { AppStorageV2 } from '@kit.ArkUI'
-import { getDefaultBaseStyle } from '../../theme-chalk/src'
 import dateUtils, { DateUtils } from '../../utils/dateUtils'
 import lunar from '../../utils/lunar'
 
@@ -425,6 +424,7 @@ export struct IBestCalendar{
             if(typeof dateList === 'string'){
                 dateList = [dateList]
             }
+            dateList = dateList.filter(e => e)
             if(dateList.some(e => !dateUtils(e).isValid())){
                 return
             }

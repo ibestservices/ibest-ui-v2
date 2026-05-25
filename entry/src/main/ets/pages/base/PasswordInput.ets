@@ -81,6 +81,14 @@ struct PasswordInputPage {
 							cellTextColor: "#fff",
 							highlightType: "shadow"
 						})
+						IBestPasswordInput({
+							value: this.value3!!,
+							space: 12,
+							bdWidth: { bottom: 1 },
+							bdColor: '#999',
+							cellBgColor: Color.Transparent,
+							radius: 0
+						})
 					}
 				}
 				ListItem() {

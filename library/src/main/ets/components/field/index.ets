@@ -253,6 +253,11 @@ export struct IBestField{
 	 * @since 1.0.2
 	 */
 	@Param prefixSize: IBestStringNumber = this.baseStyle.fontSizeMd as string
+	/**
+	 * 前缀内容字重
+	 * @since 1.1.3
+	 */
+	@Param prefixFontWeight: IBestStringNumber | FontWeight = FontWeight.Normal
     /**
      * 后缀内容
      */
@@ -271,6 +276,11 @@ export struct IBestField{
 	 * @since 1.0.2
 	 */
 	@Param suffixSize: IBestStringNumber = this.baseStyle.fontSizeMd as string
+	/**
+	 * 后缀内容字重
+	 * @since 1.1.7
+	 */
+	@Param suffixFontWeight: IBestStringNumber | FontWeight = FontWeight.Normal
 	/**
 	 * 底部边框线尺寸类型
 	 * @since 1.0.2
@@ -306,6 +316,11 @@ export struct IBestField{
 	 * @since 1.0.5
 	 */
 	@Param inputFilter: ResourceStr = ''
+	/**
+	 * 点击后缀时是否聚焦
+	 * @since 2.2.7
+	 */
+	@Param focusOnClickSuffix: boolean = false
     /**
      * 右侧按钮builder
      */
@@ -357,6 +372,7 @@ export struct IBestField{
 	@Local validateMessage: ResourceStr = ""
 	@Local borderRight: number = 0
     private uiContext = this.getUIContext()
+	private focusController = this.uiContext.getFocusController()
 
 	@Builder fieldLabelAsterisk(){
 		Text("*")
@@ -431,7 +447,7 @@ export struct IBestField{
 					Text(this.prefix)
 						.fontSize(getSizeByUnit(this.prefixSize, true))
 						.fontColor(this.prefixFontColor)
-						.fontWeight(this.inputFontWeight)
+						.fontWeight(this.prefixFontWeight)
 						.margin({ right: this.baseStyle.spaceBase })
 				}
 				if (this.customRightContent) {
@@ -458,6 +474,7 @@ export struct IBestField{
 							// })
 							.enableAutoFill(false)
 							.type(this.getTextAreaType())
+							.id(`ibest_field_input_${this.uniId}`)
 							.onChange((value: string) => {
 								this.formatValue(value, "onchange")
 							})
@@ -498,6 +515,7 @@ export struct IBestField{
 								// })
 								.selectionMenuHidden(true)
 								.type(this.getInputType())
+								.id(`ibest_field_input_${this.uniId}`)
 								.onChange((value: string) => {
 									this.formatValue(value, "onchange")
 								})
@@ -556,7 +574,10 @@ export struct IBestField{
 					IBestIcon({
 						name: this.suffixIcon,
 						iconSize: this.suffixSize,
-						color: this.suffixFontColor
+						color: this.suffixFontColor,
+						onIconClick: () => {
+							this.focusOnClickSuffix && this.focusInput()
+						}
 					}).margin({ left: this.baseStyle.spaceBase })
 				} else if(this.suffix) {
 					Text(this.suffix)
@@ -564,6 +585,9 @@ export struct IBestField{
 						.fontColor(this.suffixFontColor)
 						.fontWeight(this.inputFontWeight)
 						.margin({left: this.baseStyle.spaceBase})
+						.onClick(() => {
+							this.focusOnClickSuffix && this.focusInput()
+						})
 				}
 				// link箭头
 				if(this.isLink){
@@ -873,8 +897,11 @@ export struct IBestField{
 	fieldClick(){
 		this.onFieldClick()
 		if((this.disabled || this.readOnly || this.isLink) && !this.customRightContent){
-			this.uiContext.getFocusController().requestFocus(`ibest_field_focus_text_${this.uniId}`)
+			this.focusController.requestFocus(`ibest_field_focus_text_${this.uniId}`)
 		}
+	}
+	focusInput(){
+		this.focusController.requestFocus(`ibest_field_input_${this.uniId}`)
 	}
 	// 设置值
 	setValue(value: IBestFieldValueType) {

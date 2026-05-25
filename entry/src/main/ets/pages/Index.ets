@@ -588,7 +588,7 @@ struct Index {
 		RouterUtil.navPathStackList.push(this.navPathStack)
 		// this.getUiVersion()
 		// setTimeout(() => {
-        //     RouterUtil.push("Table")
+        //     RouterUtil.push("DatePicker")
 		// }, 100)
 	}
 	getTitleOpacity(){
