@@ -176,7 +176,7 @@ export struct IBestCalendarDialog {
 	// 获取日历选择结果 触发onConfirm回调函数 并关闭弹框
 	onGetCalendarResult(value: IBestCalendarConfirmResult[]) {
 		if (value.length) {
-			this.$value(value.length == 1 ? value[0].dateStr : value.map(item => item.dateStr))
+			this.$value(Array.isArray(value)&&value.length===1?value.map(item=>item.dateStr):value[0].dateStr)
 			this.onConfirm(value)
 			this.$visible(false)
 		}
