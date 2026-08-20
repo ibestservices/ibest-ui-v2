@@ -1,6 +1,7 @@
-import { AppStorageV2, componentUtils, LengthUnit, MeasureOptions } from '@kit.ArkUI'
+import { AppStorageV2, LengthUnit, MeasureOptions } from '@kit.ArkUI'
 import { IBestComInfoType, IBestAwaitable, IBestBaseDataType, IBestStorageKey, IBestStringNumber } from '../model/Global.type'
 import { AnyType } from '../model/AnyType'
+import { getComponentsInfoSafe } from './componentInfo'
 import GlobalStore from './globalStore'
 import { util } from '@kit.ArkTS'
 import { image } from '@kit.ImageKit'
@@ -139,17 +140,7 @@ export function mergeObject(target: AnyType, source: AnyType) {
  * @param {key} 组件id
  * */
 export const getComponentsInfo = (context: UIContext, key: string): IBestComInfoType => {
-	let info: componentUtils.ComponentInfo = context.getComponentUtils().getRectangleById(key)
-	return {
-		width: context.px2vp(info.size.width),
-		height: context.px2vp(info.size.height),
-		localLeft: context.px2vp(info.localOffset.x),
-		localTop: context.px2vp(info.localOffset.y),
-		screenLeft: context.px2vp(info.screenOffset.x),
-		screenTop: context.px2vp(info.screenOffset.y),
-		windowLeft: context.px2vp(info.windowOffset.x),
-		windowTop: context.px2vp(info.windowOffset.y)
-	}
+	return getComponentsInfoSafe(context as AnyType, key)
 }
 /**
  * 组件截图
