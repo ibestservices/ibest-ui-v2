@@ -12,9 +12,11 @@ export default class GlobalStore {
 	public static windowStage: window.WindowStage
 	// context
 	public static context: common.UIAbilityContext
-	// 屏幕信息
+	// 窗口信息
 	public static screenWidth: number = 0
-	public static screenHeight: number = 0
+	public static windowWidth: number = 0
+	public static windowHeight: number = 0
+	public static decorHeight: number = 0
 	public static isApp: boolean = false
 	/**
 	 * 初始化
@@ -22,61 +24,58 @@ export default class GlobalStore {
 	public static init(windowStage: window.WindowStage, context: common.UIAbilityContext){
 		GlobalStore.windowStage = windowStage
 		GlobalStore.context = context
-		// 获取屏幕尺寸 顶部和底部规避尺寸
-		GlobalStore.getScreenAndAvoidSize()
-		// 获取是否是应用
 		GlobalStore.getBundleType()
-		// 设置旋转监听
-		GlobalStore.screenRotateListener()
-		// 监听颜色模式变化
-		GlobalStore.setColorModeListener()
-		// 注册字体
-		windowStage.getMainWindowSync().getUIContext().getFont().registerFont({
-			familyName: 'ibestFont',
-			familySrc: $rawfile('ibest_font.woff')
-		})
-	}
-	/**
-	 * 获取规避尺寸
-     */
-	private static getScreenAndAvoidSize(){
+		GlobalStore.getScreenInfo()
 		try {
-			const mainWindow: window.Window = GlobalStore.getMainWindow()
-			const screenInfo: window.WindowProperties = mainWindow.getWindowProperties()
-			const avoidArea = mainWindow.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM)
-			const systemDht = mainWindow.getWindowAvoidArea(window.AvoidAreaType.TYPE_NAVIGATION_INDICATOR)
-			const topSize = GlobalStore.px2vp(avoidArea.topRect.height)
-			const navigationSize = GlobalStore.px2vp(systemDht.bottomRect.height)
-			const o = display.getDefaultDisplaySync().orientation
-			GlobalStore.screenWidth = GlobalStore.px2vp(screenInfo.windowRect.width)
-			GlobalStore.screenHeight = GlobalStore.px2vp(screenInfo.windowRect.height)
-			saveAppStorage(IBestStorageKey.IS_LANDSCAPE, o == 1 || o == 3)
-			saveAppStorage(IBestStorageKey.TOP_AVOID_HEIGHT, topSize)
-			saveAppStorage(IBestStorageKey.BOTTOM_BAR_HEIGHT, navigationSize)
-			mainWindow.on("avoidAreaChange", data => {
-				if (data.type == window.AvoidAreaType.TYPE_KEYBOARD) {
-					saveAppStorage(IBestStorageKey.KEYBOARD_HEIGHT, GlobalStore.px2vp(data.area.bottomRect.height))
-				}
+			GlobalStore.setWindowListener()
+			GlobalStore.setColorModeListener()
+			GlobalStore.getMainWindow().getUIContext().getFont().registerFont({
+				familyName: 'ibestFont',
+				familySrc: $rawfile('ibest_font.woff')
 			})
 		}catch (e) {
 			console.error(e.code, e.message)
 		}
 	}
 	/**
-	 * 监听屏幕旋转
+	 * 获取屏幕信息
 	 */
-	private static screenRotateListener() {
-		display.on("change", () => {
-			setTimeout(() => {
-				GlobalStore.getScreenAndAvoidSize()
-			}, 300)
+	private static getScreenInfo(){
+		const mainWindow: window.Window = GlobalStore.getMainWindow()
+		const screenInfo: window.WindowProperties = mainWindow.getWindowProperties()
+		GlobalStore.screenWidth = screenInfo.windowRect.width
+	}
+	/**
+	 * 获取规避尺寸
+     */
+	private static getAvoidSize(size: Size){
+		const mainWindow: window.Window = GlobalStore.getMainWindow()
+		const avoidArea = mainWindow.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM)
+		const systemDht = mainWindow.getWindowAvoidArea(window.AvoidAreaType.TYPE_NAVIGATION_INDICATOR)
+		const topSize = GlobalStore.px2vp(avoidArea.topRect.height)
+		const navigationSize = GlobalStore.px2vp(systemDht.bottomRect.height)
+		const o = display.getDefaultDisplaySync().orientation
+		const decorHeight = mainWindow.getWindowDecorHeight()
+		GlobalStore.windowWidth = GlobalStore.px2vp(size.width)
+		GlobalStore.windowHeight = GlobalStore.px2vp(size.height)
+		GlobalStore.decorHeight = decorHeight
+		saveAppStorage(IBestStorageKey.IS_LANDSCAPE, o == 1 || o == 3)
+		saveAppStorage(IBestStorageKey.TOP_AVOID_HEIGHT, topSize)
+		saveAppStorage(IBestStorageKey.BOTTOM_BAR_HEIGHT, navigationSize)
+	}
+	/**
+	 * 监听窗口尺寸变化
+	 */
+	public static setWindowListener(){
+		GlobalStore.getMainWindow().on("windowSizeChange", size => {
+			GlobalStore.getAvoidSize(size)
 		})
 	}
 	/**
 	 * 监听配置变化
      */
 	private static setColorModeListener(){
-		let appContext = GlobalStore.context.getApplicationContext()
+		const appContext = GlobalStore.context.getApplicationContext()
 		saveAppStorage(IBestStorageKey.COLOR_MODE, GlobalStore.context.config.colorMode as number)
 		saveAppStorage(IBestStorageKey.LANGUAGE, GlobalStore.context.config.language as string)
 		appContext.on('environment', {
@@ -97,7 +96,7 @@ export default class GlobalStore {
 	 * 设置全局配置
 	 */
 	public static setGlobalConfig(option?: Partial<IBestGlobalConfigType>){
-		let config = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG, () => new IBestGlobalConfig(option))
+		const config = AppStorageV2.connect(IBestGlobalConfig, IBestStorageKey.GLOBAL_CONFIG, () => new IBestGlobalConfig(option))
 		if(config){
 			mergeObject(config, option)
 		}else {

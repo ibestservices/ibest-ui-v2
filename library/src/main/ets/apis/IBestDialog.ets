@@ -26,13 +26,13 @@ class IBestDialogOption {
 	 */
 	title?: ResourceStr
 	/**
-	 * 标题的fontSize
-	 */
-	titleFontSize?: IBestStringNumber
-	/**
 	 * 标题颜色
 	 */
 	titleColor?: ResourceColor
+	/**
+	 * 标题的fontSize
+	 */
+	titleFontSize?: IBestStringNumber
 	/**
 	 * 标题的padding-top值
 	 */
@@ -54,18 +54,6 @@ class IBestDialogOption {
 	 */
 	message?: ResourceStr
 	/**
-	 * 内容区域的padding-left与padding-right值
-	 */
-	messagePaddingX?: IBestStringNumber
-	/**
-	 * 内容区域的padding-top值
-	 */
-	messagePaddingTop?: IBestStringNumber
-	/**
-	 * 内容区域的padding-bottom值
-	 */
-	messagePaddingBottom?: IBestStringNumber
-	/**
 	 * 内容区域的fontColor
 	 */
 	messageFontColor?: ResourceColor
@@ -77,6 +65,18 @@ class IBestDialogOption {
 	 * 内容区域的行高 lineHeight
 	 */
 	messageLineHeight?: IBestStringNumber
+	/**
+	 * 内容区域的padding-top值
+	 */
+	messagePaddingTop?: IBestStringNumber
+	/**
+	 * 内容区域的padding-left与padding-right值
+	 */
+	messagePaddingX?: IBestStringNumber
+	/**
+	 * 内容区域的padding-bottom值
+	 */
+	messagePaddingBottom?: IBestStringNumber
 	/**
 	 * 内容区域的文字对齐方式
 	 */
@@ -134,6 +134,14 @@ class IBestDialogOption {
 	 * 取消按钮的背景颜色
 	 */
 	cancelButtonBgColor?: ResourceColor
+	/**
+	 * 是否禁用确认按钮
+	 */
+	@Trace confirmButtonDisabled?: boolean
+	/**
+	 * 是否禁用取消按钮
+	 */
+	@Trace cancelButtonDisabled?: boolean
 	/**
 	 * 取消按钮的loading
 	 */
@@ -301,6 +309,7 @@ struct DialogContent{
 		IBestDialogView({
 			dialogWidth: this.option.dialogWidth,
 			dialogBorderRadius: this.option.dialogBorderRadius,
+			bgColor: this.option.bgColor,
 			bgImage: this.option.bgImage,
 			title: this.option.title,
 			titleFontSize: this.option.titleFontSize,
@@ -330,6 +339,8 @@ struct DialogContent{
 			confirmButtonBgColor: this.option.confirmButtonBgColor,
 			cancelButtonColor: this.option.cancelButtonColor,
 			cancelButtonBgColor: this.option.cancelButtonBgColor,
+			confirmButtonDisabled: this.option.confirmButtonDisabled,
+			cancelButtonDisabled: this.option.cancelButtonDisabled,
 			confirmButtonLoading: this.option.confirmButtonLoading,
 			cancelButtonLoading: this.option.cancelButtonLoading,
 			titleBuilder: this.option.titleBuilder,
@@ -381,14 +392,14 @@ class Dialog{
 	 * 打开弹框
 	 */
 	public async open(option: IBestDialogOption): Promise<string> {
-		let key = this.getUniKey()
-		let windowClass = GlobalStore.getMainWindow()
-		let uiContext = windowClass.getUIContext()
-		let promptAction = uiContext.getPromptAction()
-		let params = new IBestDialogParams(option)
+		const key = this.getUniKey()
+		const windowClass = GlobalStore.getMainWindow()
+		const uiContext = windowClass.getUIContext()
+		const promptAction = uiContext.getPromptAction()
+		const params = new IBestDialogParams(option)
 		params.id = key
 		params.close = (id: string): void => this.close(id)
-		let contentNode = new ComponentContent(uiContext, wrapBuilder(defaultContentBuilder), params)
+		const contentNode = new ComponentContent(uiContext, wrapBuilder(defaultContentBuilder), params)
 		params.contentNode = contentNode
 		this.contentNodeArr.push({
 			key,

@@ -1,7 +1,7 @@
 import { IBestAwaitable } from '../../model/Global.type'
-import ibestEmitter from '../../utils/eventEmitter'
-import { clamp, getComponentsInfo, getEventName, handleBeforeFunction } from '../../utils/utils'
-import { COMPONENT_NAME, IBestSwipeCellSide, SWIPECELL_EVENT_NAME } from './index.type'
+import { clamp, handleBeforeFunction } from '../../utils/utils'
+import { IBestSwipeCellSide } from './index.type'
+import ibestSwipeCellEmitter from './swiperTouchEmitter'
 
 @ComponentV2
 export struct IBestSwipeCell{
@@ -31,50 +31,80 @@ export struct IBestSwipeCell{
 	@Local centerHeight: number = 0
 	@Local transX: number = 0
 	@Local isOpen: boolean = false
-	@Local lrOpacity: number = 0
 	private leftWidth: number = 0
 	private rightWidth: number = 0
 	private startTransX: number = 0
+	private hasRegistered: boolean = false
 	private uiContext = this.getUIContext()
 
 	aboutToAppear(): void {
 		this.uniId = this.getUniqueId()
-		ibestEmitter.on(getEventName(COMPONENT_NAME, SWIPECELL_EVENT_NAME.SWIPECELL_TOUCH), this.uniId, (uniId: number): void => this.onSwipeCellTouch(uniId))
 	}
-	aboutToDisappear(): void {
-		ibestEmitter.off(getEventName(COMPONENT_NAME, SWIPECELL_EVENT_NAME.SWIPECELL_TOUCH), this.uniId)
+	onDidBuild() {
+		ibestSwipeCellEmitter.ensureInstalled(this.uiContext)
+		if (!this.hasRegistered) {
+			ibestSwipeCellEmitter.add(this.uiContext, this.uniId, (event: TouchEvent) => {
+				this.handleRootTouch(event)
+			})
+			this.hasRegistered = true
+		}
 	}
-	emitTouch(){
-		ibestEmitter.emit(getEventName(COMPONENT_NAME, SWIPECELL_EVENT_NAME.SWIPECELL_TOUCH), this.uniId)
+	aboutToDisappear() {
+		if (this.hasRegistered) {
+			ibestSwipeCellEmitter.remove(this.uiContext, this.uniId)
+			this.hasRegistered = false
+		}
+	}
+	handleRootTouch(event: TouchEvent): void {
+		if (event.type !== TouchType.Down) {
+			return
+		}
+		if (!event.touches || event.touches.length === 0) {
+			return
+		}
+		const isInside = this.isTouchInsideSelf(event)
+		if (!isInside && this.isOpen) {
+			this.close("out")
+		}
+	}
+	isTouchInsideSelf(event: TouchEvent): boolean {
+		const frameNode = this.uiContext.getFrameNodeById(`ibest_swipe_cell_${this.uniId}`)
+		if (!frameNode) {
+			return false
+		}
+		if (!event.touches || event.touches.length === 0) {
+			return false
+		}
+		const touch = event.touches[0]
+		const position = frameNode.getPositionToWindow()
+		const size = frameNode.getMeasuredSize()
+		const widthVp = this.uiContext.px2vp(size.width)
+		const heightVp = this.uiContext.px2vp(size.height)
+		const left = position.x
+		const right = position.x + widthVp
+		const top = position.y
+		const bottom = position.y + heightVp
+		const x = touch.windowX
+		const y = touch.windowY
+		return x >= left && x <= right && y >= top && y <= bottom
 	}
 	onSwipeCellTouch(uniId: number){
 		if(uniId != this.uniId && this.isOpen){
 			this.close("center")
 		}
 	}
-	getContentWidth(){
-		let leftInfo = getComponentsInfo(this.uiContext, "ibest_swipe_left_" + this.uniId)
-		let rightInfo = getComponentsInfo(this.uiContext, "ibest_swipe_right_" + this.uniId)
-		let centerInfo = getComponentsInfo(this.uiContext, "ibest_swipe_center_" + this.uniId)
-		this.leftWidth = leftInfo.width
-		this.rightWidth = rightInfo.width
-		this.centerHeight = centerInfo.height
-		this.lrOpacity = 1
-	}
 	onTouchStart(){
 		this.startTransX = this.transX
 	}
-	// 手指移动
 	onTouchMove(event: GestureEvent): void {
-		let bl = event.offsetX
+		const bl = event.offsetX
 		this.transX = clamp(bl + this.startTransX, -this.rightWidth, this.leftWidth)
 	}
-	// 手指离开
 	onTouchEnd(): void {
 		const offset = Math.abs(this.transX)
 		const THRESHOLD = 0.15
 		const threshold = this.isOpen ? 1 - THRESHOLD : THRESHOLD
-		let side: IBestSwipeCellSide = this.transX > 0 ? 'left' : 'right'
+		const side: IBestSwipeCellSide = this.transX > 0 ? 'left' : 'right'
 		const width = side === 'left' ? this.leftWidth : this.rightWidth
 		if (width && offset > width * threshold) {
 			this.open(side)
@@ -82,14 +112,13 @@ export struct IBestSwipeCell{
 			this.close("center")
 		}
 	}
-	open (side: IBestSwipeCellSide) {
+	open(side: IBestSwipeCellSide) {
 		this.transX = side === 'left' ? this.leftWidth : -this.rightWidth
 		if (!this.isOpen) {
 			this.isOpen = true
-			this.emitTouch()
 		}
 	}
-	async close (position: IBestSwipeCellSide){
+	async close(position: IBestSwipeCellSide){
 		if (this.beforeClose) {
 			const status = await handleBeforeFunction(this.beforeClose, position)
 			if (!status) {
@@ -109,11 +138,12 @@ export struct IBestSwipeCell{
 					Row(){
 						this.leftContent()
 					}
-					.height(this.centerHeight)
-					.id("ibest_swipe_left_" + this.uniId)
+					.height(this.centerHeight || "auto")
 					.position({ left: 0 })
 					.translate({ x: "-100%" })
-					.opacity(this.lrOpacity)
+					.onAreaChange((_: Area, newVal: Area) => {
+						this.leftWidth = newVal.width as number
+					})
 					.parallelGesture(
 						TapGesture({fingers: 1})
 							.onAction(() => {
@@ -125,7 +155,9 @@ export struct IBestSwipeCell{
 					Row(){
 						this.defaultContent()
 					}
-					.id("ibest_swipe_center_" + this.uniId)
+					.onAreaChange((_: Area, newVal: Area) => {
+						this.centerHeight = newVal.height as number
+					})
 					.parallelGesture(
 						TapGesture({fingers: 1})
 							.onAction(() => {
@@ -133,7 +165,6 @@ export struct IBestSwipeCell{
 									this.close("center")
 								}else if(Math.abs(this.transX) == 0){
 									this.onContentClick()
-									this.emitTouch()
 								}
 							})
 					)
@@ -142,11 +173,12 @@ export struct IBestSwipeCell{
 					Row(){
 						this.rightContent()
 					}
-					.height(this.centerHeight)
-					.id("ibest_swipe_right_" + this.uniId)
+					.height(this.centerHeight || "auto")
 					.position({ right: 0 })
 					.translate({ x: "100%" })
-					.opacity(this.lrOpacity)
+					.onAreaChange((_: Area, newVal: Area) => {
+						this.rightWidth = newVal.width as number
+					})
 					.parallelGesture(
 						TapGesture({fingers: 1})
 							.onAction(() => {
@@ -156,9 +188,7 @@ export struct IBestSwipeCell{
 				}
 			}
 			.translate({ x: this.transX })
-			.animation({
-				duration: 200
-			})
+			.animation({ duration: 200 })
 			.parallelGesture(
 				PanGesture({fingers: 1, direction: PanDirection.Horizontal, distance: 1})
 					.onActionStart(() => {
@@ -172,16 +202,7 @@ export struct IBestSwipeCell{
 					})
 			)
 		}
+		.id(`ibest_swipe_cell_${this.uniId}`)
 		.clip(true)
-		.onAppear(() => {
-			setTimeout(() => {
-				this.getContentWidth()
-			}, 50)
-		})
-		.onVisibleAreaChange([0,1], (isExpanding: boolean) => {
-			if(isExpanding && !this.centerHeight){
-				this.getContentWidth()
-			}
-		})
 	}
 }

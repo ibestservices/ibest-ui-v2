@@ -179,7 +179,7 @@ export struct IBestDropdownMenu{
     }
     getMaskTop() {
         let info = getComponentsInfo(this.uiContext, `ibest_dropdown_menu_${this.uniId}`)
-        return info.screenTop + info.height
+        return info.windowTop + info.height - GlobalStore.decorHeight
     }
     getOpenIndex() {
         return this.menuList.findIndex(item => item.dialogId !== '')
@@ -204,7 +204,7 @@ export struct IBestDropdownMenu{
             return
         }
         let y = this.getMaskTop()
-        let maskHeight = GlobalStore.screenHeight - y
+        let maskHeight = GlobalStore.windowHeight - y
         this.activeIndex = index
         this.promptAction.openCustomDialog({
             builder: () => this.menuContentBuilder(maskHeight),
@@ -413,6 +413,7 @@ struct IBestDropdownMenuContent{
             .opacity(this.transY == 0 ? 1 : 0)
             .animation({ duration: popupDuration, curve: Curve.EaseInOut })
             .edgeEffect(EdgeEffect.None)
+            .cachedCount(this.option.options.length/2)
             .onAppear(() => {
                 setTimeout(() => {
                     this.transY = 0
