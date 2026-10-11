@@ -127,13 +127,11 @@ export struct IBestCalendarDialog {
 	@Event onConfirm: (value: IBestCalendarConfirmResult[]) => void = () => {}
 	@Event $visible: (value: boolean) => void = () => {}
 	@Event $value: (value: string | string[]) => void = () => {}
-	// 已选日期
 	@Local selectedValue: string | string[] = []
-	@Event $selectedValue: (value: string | string[]) => void = () => {}
 
 	@Builder baseBuilder() {
 		IBestCalendar({
-			value: this.selectedValue,
+			value: this.selectedValue!!,
 			itemWidth: this.itemWidth,
 			isShowLunar: this.isShowLunar,
 			selectType: this.selectType,
@@ -155,7 +153,6 @@ export struct IBestCalendarDialog {
 			isShowUnClock: this.isShowUnClock,
 			unClockText: this.unClockText,
 			dayItemBuilder: this.dayItemBuilder,
-			$value: (value: string | string[]): void => this.$selectedValue(value),
 			onConfirm: (value): void => this.onGetCalendarResult(value)
 		})
 	}
@@ -176,7 +173,7 @@ export struct IBestCalendarDialog {
 	// 获取日历选择结果 触发onConfirm回调函数 并关闭弹框
 	onGetCalendarResult(value: IBestCalendarConfirmResult[]) {
 		if (value.length) {
-			this.$value(value.length == 1 ? value[0].dateStr : value.map(item => item.dateStr))
+			this.$value(this.selectedValue)
 			this.onConfirm(value)
 			this.$visible(false)
 		}

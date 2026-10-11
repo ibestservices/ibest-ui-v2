@@ -705,7 +705,7 @@ struct subjectItem{
 		IBestCellGroup({title: `学科${this.index+1}(左滑删除)`, hasBorder: false}){
 			IBestField({
 				formId: this.formId,
-				prop: `type.${this.index}`,
+				prop: `list.type.${this.index}`,
 				label: '学科',
 				value: this.item.name,
 				placeholder: "请选择学科",
@@ -716,7 +716,7 @@ struct subjectItem{
 			})
 			IBestField({
 				formId: this.formId,
-				prop: `score.${this.index}`,
+				prop: `list.score.${this.index}`,
 				label: "分数",
 				value: this.item.score!!,
 				type: "number",
